@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Hidden, Button, Toolbar, withStyles } from '@material-ui/core';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const styles = theme => ({
     logoButton: {
@@ -11,15 +11,11 @@ const styles = theme => ({
 
 class MainToolbar extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { classes } = this.props;
 
         return (
-            <AppBar>
+            <AppBar position="static">
                 <Toolbar>
                     <Hidden mdDown={ true }>
                         <Button className={ classes.logoButton }>
