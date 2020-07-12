@@ -2,16 +2,12 @@ import React from 'react';
 
 const errorConfiguration = [
     {
-        routes : [
-            {
-                path : '/error/404',
-                component : React.lazy(() => import('./Error404'))
-            },
-            {
-                path : '/error/500',
-                component : React.lazy(() => import('./Error500'))
-            }
-        ]
+        path : '/error/404',
+        component : React.lazy(() => import('./Error404'))
+    },
+    {
+        path : '/error/500',
+        component : React.lazy(() => import('./Error500'))
     }
 ];
 
