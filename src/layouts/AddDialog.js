@@ -6,6 +6,9 @@ import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 
+import { connect } from 'react-redux';
+import { newAccount, newSubscription, newInvoice, newPlan } from '../actions';
+
 const useStyles = makeStyles(theme => ({
   root: {
     minHeight: 260,
@@ -56,17 +59,20 @@ const groups = [
             {
                 id: 'account',
                 title: 'Account',
-                icon: 'account_circle'
+                icon: 'account_circle',
+                action: 'newAccount'
             },
             {
                 id: 'subscription',
                 title: 'Subscription',
-                icon: 'autorenew'
+                icon: 'autorenew',
+                action: 'newSubscription'
             },
             {
                 id: 'invoice',
                 title: 'Invoice',
-                icon: 'receipt'
+                icon: 'receipt',
+                action: 'newInvoice'
             }
         ]
     },
@@ -76,7 +82,8 @@ const groups = [
             {
                 id: 'plan',
                 title: 'Plan',
-                icon: 'local_offer'
+                icon: 'local_offer',
+                action: 'newPlan'
             }
         ]
     }
@@ -85,6 +92,11 @@ const groups = [
 function AddDialog(props) {
     const classes = useStyles();
     const { onClose, open, anchor } = props;
+
+    const makeHandler = (link) => () => {
+        onClose();
+        props[link.action]();
+    }
 
     return (
         <Popover
@@ -108,7 +120,7 @@ function AddDialog(props) {
                             {
                                 group.links.map((link, index) => (
                                     <Grid item={ true }>
-                                        <div className={ classes.add } onClick={ () => onClose(link.id) }>
+                                        <div className={ classes.add } onClick={ makeHandler(link) }>
                                             <Icon className={ classes.icon }>{ link.icon }</Icon>
                                             <Typography className={ classes.linkTitle }>{ link.title }</Typography>
                                         </div>
@@ -129,4 +141,11 @@ AddDialog.propTypes = {
     selectedValue: PropTypes.string.isRequired
 };
 
-export default AddDialog;
+const mapDispatchToProps = {
+    newAccount,
+    newSubscription,
+    newInvoice,
+    newPlan
+};
+
+export default connect(null, mapDispatchToProps)(AddDialog);

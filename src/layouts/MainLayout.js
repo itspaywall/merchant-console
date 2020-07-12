@@ -4,7 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { renderRoutes } from 'react-router-config'
 import MainToolbar from './MainToolbar';
 import MainDrawer from './MainDrawer';
+import { connect } from 'react-redux';
+
 import routes from '../routes';
+import NewAccount from '../workspace/account/NewAccount';
 
 const miniDrawerWidth = 60;
 const drawerWidth = 240;
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 // TODO: The layouts should be configurable.
 // TODO: Show drawer instead of toolbar for smaller screens.
 function MainLayout(props) {
+    const { openDialog } = props;
     const [ drawerOpen, setDrawerOpen ] = React.useState(false);
     const classes = useStyles();
 
@@ -56,8 +60,18 @@ function MainLayout(props) {
 
                 { /* <MainFooter /> */ }
             </div>
+
+            { (openDialog == 'NEW_ACCOUNT') && <NewAccount /> }
         </React.Fragment>
     );
 }
 
-export default MainLayout;
+function mapStateToProps(state) {
+    return {
+        openDialog: state.openDialog
+    };
+}
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

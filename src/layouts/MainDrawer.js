@@ -128,11 +128,10 @@ function MainDrawer(props) {
             })}
             classes={{
                 paper: clsx({
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
+                    [ classes.drawerOpen ]: open,
+                    [ classes.drawerClose ]: !open,
                 })
-            }}
-        >
+            }}>
             <div className={classes.toolbar}>
                 <IconButton onClick={ handleCloseDrawer }>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}

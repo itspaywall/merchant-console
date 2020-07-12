@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
         color: theme.palette.primary,
-        background: 'white',
+        background: 'white'
     },
     appBarShift: {
         marginLeft: drawerWidth,
@@ -32,11 +32,10 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    toolbar: {
+    },
     hide: {
         display: 'none',
-    },
-    menuButton: {
-        marginRight: 36
     },
     buttons: {
         marginLeft: 'auto'
@@ -58,11 +57,11 @@ function MainToolbar(props) {
 
     return (
         <AppBar position="fixed" className={ clsx(classes.appBar, { [classes.appBarShift]: drawerOpen }) }>
-            <Toolbar>
+            <Toolbar className={ classes.toolbar }>
                 <IconButton
                     onClick={ toggleDrawer }
                     edge="start"
-                    className={ clsx(classes.menuButton, { [ classes.hide ]: drawerOpen }) }>
+                    className={{ [ classes.hide ]: drawerOpen }}>
                     <MenuIcon />
                 </IconButton>
 
