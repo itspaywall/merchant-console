@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import consoleConfiguration from './console/configuration';
+import errorConfiguration from './error/configuration';
 
 function generateRoutes(configurations) {
     const routes = [];
@@ -9,8 +10,13 @@ function generateRoutes(configurations) {
     return routes;
 }
 
+const unpackedRoutes = [
+    ...consoleConfiguration,
+    ...errorConfiguration
+];
+
 const routes = [
-    ...generateRoutes(consoleConfiguration),
+    ...generateRoutes(unpackedRoutes),
     {
         path : '/',
         exact : true,
