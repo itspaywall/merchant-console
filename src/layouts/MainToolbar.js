@@ -1,7 +1,11 @@
 import React from 'react';
-import { AppBar, Hidden, Button, Toolbar, makeStyles, Icon, useTheme, IconButton } from '@material-ui/core';
+import { AppBar, Button, Toolbar, makeStyles, IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
+import AddDialog from './AddDialog';
+
+import AddIcon from '@material-ui/icons/Add';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 
@@ -34,12 +38,23 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: 36
     },
+    buttons: {
+        marginLeft: 'auto'
+    },
+    addButton: {
+        height: 64,
+        width: 160
+    }
 }));
 
 function MainToolbar(props) {
-    const theme = useTheme();
     const { toggleDrawer, drawerOpen } = props;
     const classes = useStyles();
+
+    const [ addDialogAnchor, setAddDialogAnchor ] = React.useState(null);
+
+    const handleOpenAddDialog = event => setAddDialogAnchor(event.currentTarget);
+    const handleCloseAddDialog = () => setAddDialogAnchor(null);
 
     return (
         <AppBar position="fixed" className={ clsx(classes.appBar, { [classes.appBarShift]: drawerOpen }) }>
@@ -48,13 +63,20 @@ function MainToolbar(props) {
                     onClick={ toggleDrawer }
                     edge="start"
                     className={ clsx(classes.menuButton, { [ classes.hide ]: drawerOpen }) }>
-                    <Icon>menu</Icon>
+                    <MenuIcon />
                 </IconButton>
-                <Hidden mdDown={ true }>
-                    <Button className={ classes.logoButton }>
-                        <img src="assets/images/hubble.png" alt="Hubble logo" height="40px" />
+
+                <Button className={ classes.logoButton }>
+                    <img src="assets/images/hubble.png" alt="Hubble logo" height="40px" />
+                </Button>
+                <div className={ classes.buttons }>
+                    <Button className={ classes.addButton } variant="text" size="small" color="primary" onClick={ handleOpenAddDialog }>
+                        <AddIcon />
+                        Quick Add
                     </Button>
-                </Hidden>
+                </div>
+
+                <AddDialog open={ Boolean(addDialogAnchor) } onClose={ handleCloseAddDialog } anchor={ addDialogAnchor } />
             </Toolbar>
         </AppBar>
     );

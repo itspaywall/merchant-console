@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { renderRoutes } from 'react-router-config'
@@ -48,7 +48,9 @@ function MainLayout(props) {
                 <MainToolbar drawerOpen={ drawerOpen } toggleDrawer={ toggleDrawer } />
                 
                 <main className={ clsx(classes.content, { [classes.contentShift]: drawerOpen }) }>
-                    { renderRoutes(routes) }
+                    <Suspense fallback={<div>Loading...</div>}>
+                        { renderRoutes(routes) }
+                    </Suspense>
                     { props.children }
                 </main>
 
