@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 // TODO: The layouts should be configurable.
 // TODO: Show drawer instead of toolbar for smaller screens.
 function MainLayout(props) {
-    const { openDialog } = props;
+    const { openDialog, notification } = props;
     const [ drawerOpen, setDrawerOpen ] = React.useState(false);
     const classes = useStyles();
 
@@ -61,14 +61,17 @@ function MainLayout(props) {
                 { /* <MainFooter /> */ }
             </div>
 
-            { (openDialog == 'NEW_ACCOUNT') && <NewAccount /> }
+            { (openDialog === 'NEW_ACCOUNT') && <NewAccount /> }
+
+            { notification && <div>{ notification.message }</div> }
         </React.Fragment>
     );
 }
 
 function mapStateToProps(state) {
     return {
-        openDialog: state.openDialog
+        openDialog: state.openDialog,
+        notification: state.notification
     };
 }
 

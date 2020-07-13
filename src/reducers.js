@@ -1,22 +1,38 @@
 import { combineReducers } from 'redux';
 import * as ActionTypes from './actionTypes';
 
-function openDialogReducer(state = null, action) {
-	let result = state;
+function dialogReducer(state = null, action) {
 	switch (action.type) {
 		case ActionTypes.NEW_ACCOUNT:
 		case ActionTypes.NEW_SUBSCRIPTION:
 		case ActionTypes.NEW_INVOICE:
 		case ActionTypes.NEW_PLAN: {
-			result = action.type;
-			break;
+			return action.type;
+		}
+
+		case ActionTypes.CLOSE_DIALOG: {
+			return null;
+		}
+
+		default: {
+			return state;
 		}
 	}
-	return result;
+}
+
+function notificationReducer(state = null, action) {
+	if (action.type == 'SHOW_NOTIFICATION') {
+		return {
+			message: action.payload.message,
+			category: action.payload.category
+		};
+	}
+	return state;
 }
 
 const rootReducer = combineReducers({
-	openDialog: openDialogReducer
+	openDialog: dialogReducer,
+	notification: notificationReducer
 });
 
 export default rootReducer;

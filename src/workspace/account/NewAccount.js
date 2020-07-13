@@ -1,15 +1,14 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/styles';
 import RecordForm from '../RecordForm';
+import * as actions from '../../actions';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     extraAction: {
@@ -44,16 +43,31 @@ const useStyles = makeStyles(theme => ({
 
 // text, large_text, number, date_picker, date_range_picker, switch, phone_number, email_address
 // multiple_options (multiselect), single_option (drop down)
-// lookup - organization, user, contact 
+// lookup - organization, user, account 
 
 // Only top level children can have quickAdd. Groups cannot have required, unique, multipleValues, mininmumValues, maximumValues.
 // Groups can have readOnly, hidden, tooltip
 // The same person can work in multiple organizations. But such cases are rare. Therefore, the system should be kept
 // simple and not accomodate such cases. given, there are other work arounds.
+
+// The user name should be unique across your organization.
 const groups = [
     {
         label: 'Basic',
         children: [
+            {
+                label: 'User Name',
+                identifier: 'userName',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: true,
+                unique: false,
+                hidden: false,
+                tooltip: 'The user name of the account.',
+                multipleValues: false,
+                defaultValue: ''
+            },
             {
                 label: 'First Name',
                 identifier: 'firstName',
@@ -63,8 +77,9 @@ const groups = [
                 quickAdd: true,
                 unique: false,
                 hidden: false,
-                tooltip: 'The first name of the contact.',
-                multipleValues: false
+                tooltip: 'The first name of the account.',
+                multipleValues: false,
+                defaultValue: ''
             },
             {
                 label: 'Last Name',
@@ -75,45 +90,131 @@ const groups = [
                 quickAdd: true,
                 unique: false,
                 hidden: false,
-                tooltip: 'The last name of the contact.',
-                multipleValues: false
+                tooltip: 'The last name of the account.',
+                multipleValues: false,
+                defaultValue: ''
             },
             {
                 label: 'Email Address',
                 identifier: 'emailAddress',
                 type: 'email_address',
-                required: true,
+                required: false,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
                 hidden: false,
-                tooltip: 'The email address of the contact.',
-                multipleValues: true
+                tooltip: 'The email address of the account.',
+                multipleValues: true,
+                defaultValue: ''
             },
             {
                 label: 'Phone Number',
                 identifier: 'phoneNumber',
                 type: 'phone_number',
-                required: true,
+                required: false,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
                 hidden: false,
-                tooltip: 'The phone number of the contact.',
-                multipleValues: true
+                tooltip: 'The phone number of the account.',
+                multipleValues: true,
+                defaultValue: ''
             },
             {
-                label: 'Organization',
-                id: 'organization',
-                name: 'organization',
-                type: 'organization',
-                required: true,
+                label: 'Address Line 1',
+                identifier: 'addressLine1',
+                type: 'text_field',
+                required: false,
                 readOnly: false,
-                quickAdd: true,
+                quickAdd: false,
                 unique: false,
                 hidden: false,
-                tooltip: 'The organization for which the contact works.',
-                multipleValues: false
+                tooltip: 'The first line of address.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'Address Line 2',
+                identifier: 'addressLine2',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The first line of address.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'City',
+                identifier: 'city',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The city.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'State',
+                identifier: 'state',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The state where the customer resides.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'Country',
+                identifier: 'country',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The country where the customer resides.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'Zip Code',
+                identifier: 'zipCode',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The zip code of the location where the customer resides.',
+                multipleValues: false,
+                defaultValue: ''
+            }
+        ]
+    },
+    {
+        label: 'Organization',
+        children: [
+            {
+                label: 'Name',
+                identifier: 'companyName',
+                type: 'text_field',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The last name of the account.',
+                multipleValues: false,
+                defaultValue: ''
             },
             {
                 label: 'Position',
@@ -125,27 +226,75 @@ const groups = [
                 quickAdd: false,
                 unique: false,
                 hidden: false,
-                tooltip: 'The position of the contact in the organization.',
-                multipleValues: false
+                tooltip: 'The position of the account in the organization.',
+                multipleValues: false,
+                defaultValue: ''
+            },
+            {
+                label: 'Email Address',
+                identifier: 'companyEmailAddress',
+                type: 'email_address',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The email address of the account.',
+                multipleValues: true,
+                defaultValue: ''
+            },
+            {
+                label: 'Phone Number',
+                identifier: 'companyPhoneNumber',
+                type: 'phone_number',
+                required: false,
+                readOnly: false,
+                quickAdd: false,
+                unique: false,
+                hidden: false,
+                tooltip: 'The phone number of the account.',
+                multipleValues: true,
+                defaultValue: ''
             }
         ]
     }
 ];
 
-export default function NewAccount(props) {
-    const { onClose } = props;
-    // TODO: onClose
+function extractValues(groups) {
+    const result = [];
+    groups.forEach(group => {
+        const values = group.children.map(field => ({
+            identifier: field.identifier,
+            value: field.defaultValue
+        }));
+        result.push(values);
+    });
+    return result;
+}
+
+function NewAccount(props) {
+    const { closeDialog, createAccount } = props;
     const classes = useStyles(props);
     const [ showMore, setShowMore ] = React.useState(false);
+    const [ values, setValues ] = React.useState(extractValues(groups));
     const handleShowMore = () => {
         setShowMore(!showMore);
     }
+    const handleSave = () => {
+        closeDialog();
+        createAccount(values);
+    }
+    const handleValueChange = (group, field, value) => {
+        const newValues = Object.assign({}, values);
+        newValues[group][field].value = value;
+        setValues(newValues);
+    }
 
     return (
-        <Dialog open={ true } onClose={ onClose } aria-labelledby="form-dialog-title" className={ showMore? classes.mainMore : classes.mainLess }>
-            <DialogTitle id="form-dialog-title">New Contact</DialogTitle>
+        <Dialog open={ true } onClose={ closeDialog } aria-labelledby="form-dialog-title" className={ showMore? classes.mainMore : classes.mainLess }>
+            <DialogTitle id="form-dialog-title">New Account</DialogTitle>
             <DialogContent>
-                <RecordForm showMore={ showMore } onShowMore={ handleShowMore } groups={ groups } />
+                <RecordForm showMore={ showMore } onShowMore={ handleShowMore } groups={ groups } values={ values } onValueChange={ handleValueChange } />
             </DialogContent>
             <DialogActions>
                 <div className={ classes.extraActions }>
@@ -161,13 +310,20 @@ export default function NewAccount(props) {
                     </Button>*/}
                 </div>
                 <div className={ classes.dialogActions }>
-                    <Button onClick={onClose} color="primary" className={ classes.dialogAction }>
+                    <Button onClick={ handleSave } color="primary" className={ classes.dialogAction }>
                         Save
                     </Button>
-                    <Button onClick={ onClose } color="primary" className={ classes.dialogAction }>
+                    <Button onClick={ closeDialog } color="primary" className={ classes.dialogAction }>
                         Cancel
                     </Button>
                 </div>
             </DialogActions>
         </Dialog>);
 }
+
+const mapDispatchToProps = {
+    closeDialog: actions.closeDialog,
+    createAccount: actions.createAccount
+};
+
+export default connect(null, mapDispatchToProps)(NewAccount);
