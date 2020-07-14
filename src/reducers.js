@@ -21,11 +21,14 @@ function dialogReducer(state = null, action) {
 }
 
 function notificationReducer(state = null, action) {
-	if (action.type == 'SHOW_NOTIFICATION') {
+	if (action.type === 'SHOW_NOTIFICATION') {
 		return {
 			message: action.payload.message,
 			category: action.payload.category
 		};
+	}
+	else if (action.type === 'CLOSE_NOTIFICATION') {
+		return null;
 	}
 	return state;
 }

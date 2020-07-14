@@ -272,6 +272,15 @@ function extractValues(groups) {
     return result;
 }
 
+function extractRecord(groups) {
+    const result = {};
+    groups.forEach(group =>
+        group.forEach(field =>
+            result[field.identifier] = field.value)
+    );
+    return result;
+}
+
 function NewAccount(props) {
     const { closeDialog, createAccount } = props;
     const classes = useStyles(props);
@@ -282,11 +291,13 @@ function NewAccount(props) {
     }
     const handleSave = () => {
         closeDialog();
-        createAccount(values);
+        createAccount(extractRecord(values));
     }
+    // TODO: Create a deep copy without serializing !
     const handleValueChange = (group, field, value) => {
-        const newValues = Object.assign({}, values);
+        const newValues = JSON.parse(JSON.stringify(values));
         newValues[group][field].value = value;
+
         setValues(newValues);
     }
 

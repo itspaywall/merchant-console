@@ -1,5 +1,4 @@
 import mock from './mock';
-import axios from 'axios';
 import faker from 'faker';
 
 const accounts = [];

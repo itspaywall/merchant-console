@@ -66,7 +66,7 @@ export default function RecordForm(props) {
                                                         variant="outlined"
                                                         fullWidth={ true }
                                                         required={ field.required }
-                                                        value={ field.value }
+                                                        value={ values[groupIndex][fieldIndex].value }
                                                         onChange={ makeChangeHandler(groupIndex, fieldIndex) }
                                                     />)
                                                 }

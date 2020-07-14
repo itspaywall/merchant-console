@@ -46,14 +46,21 @@ export function showNotification(message, category) {
 	}
 }
 
+export function closeNotification() {
+	return {
+		type: ActionTypes.CLOSE_NOTIFICATION,
+		payload: null
+	}
+}
+
 // TODO: Error boundaries
 export function createAccount(account) {
 	return dispatch => {
-		dispatch(showNotification('Saving account', 'LOADING'));
+		dispatch(showNotification('Saving account...', 'LOADING'));
 		return axios.post('/api/v1/accounts', account)
 			.then(response => {
-				const newAccount = response.data;
-				dispatch(showNotification('Successfully created an account.', 'LOAD_COMPLETE'));
+				// const newAccount = response.data;
+				dispatch(showNotification('Successfully created an account', 'SUCCESS'));
 			});
 	};
 }

@@ -1,6 +1,11 @@
 import React, { Suspense } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+// TODO: Update this import when Material UI moves this to production.
+import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { renderRoutes } from 'react-router-config'
 import MainToolbar from './MainToolbar';
 import MainDrawer from './MainDrawer';
@@ -8,9 +13,15 @@ import { connect } from 'react-redux';
 
 import routes from '../routes';
 import NewAccount from '../workspace/account/NewAccount';
+import * as actions from '../actions';
 
 const miniDrawerWidth = 60;
 const drawerWidth = 240;
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,17 +43,42 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    progress: {
+        maxWidth: 24,
+        maxHeight: 24,
+        color: 'white'
+    }
 }));
 
 // TODO: The layouts should be configurable.
 // TODO: Show drawer instead of toolbar for smaller screens.
 function MainLayout(props) {
-    const { openDialog, notification } = props;
+    const { openDialog, notification, closeNotification } = props;
     const [ drawerOpen, setDrawerOpen ] = React.useState(false);
     const classes = useStyles();
 
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
+    };
+
+    const handleCloseNotification = (event, reason) => {
+        if (reason !== 'clickaway') {
+            closeNotification();
+        }
+    };
+
+    const renderNotification = notification => {
+        if (notification) {
+            if (notification.category === 'LOADING') {
+                return (<Snackbar open={ true } autoHideDuration={6000} onClose={ handleCloseNotification }>
+                        <SnackbarContent message={ notification.message } action={ <CircularProgress className={ classes.progress } /> } />    
+                    </Snackbar>);
+            }
+            return (<Snackbar open={ true } autoHideDuration={6000} onClose={ handleCloseNotification }>
+                    <Alert severity="success" onClose={ handleCloseNotification }>{ notification.message }</Alert>
+                </Snackbar>);
+        }
+        return null;
     };
 
     return (
@@ -63,7 +99,7 @@ function MainLayout(props) {
 
             { (openDialog === 'NEW_ACCOUNT') && <NewAccount /> }
 
-            { notification && <div>{ notification.message }</div> }
+            { renderNotification(notification) }
         </React.Fragment>
     );
 }
@@ -75,6 +111,6 @@ function mapStateToProps(state) {
     };
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { closeNotification: actions.closeNotification };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

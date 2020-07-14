@@ -1,2 +1,2 @@
-import mock from './mock';
+import './mock';
 import './backend';
