@@ -50,7 +50,7 @@ export function showNotification(message, category) {
 export function createAccount(account) {
 	return dispatch => {
 		dispatch(showNotification('Saving account', 'LOADING'));
-		return axios.post('localhost:3001/accounts', account)
+		return axios.post('/api/v1/accounts', account)
 			.then(response => {
 				const newAccount = response.data;
 				dispatch(showNotification('Successfully created an account.', 'LOAD_COMPLETE'));
