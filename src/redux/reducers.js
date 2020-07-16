@@ -32,9 +32,22 @@ function notificationReducer(state = null, action) {
 	return state;
 }
 
+function accountsReducer(state = [], action) {
+	switch (action.type) {
+		case ActionTypes.FETCH_ACCOUNTS_COMPLETE: {
+			return action.payload;
+		}
+
+		default: {
+			return state;
+		}
+	}
+}
+
 const rootReducer = combineReducers({
 	openDialog: dialogReducer,
 	notification: notificationReducer,
+	accounts: accountsReducer
 });
 
 export default rootReducer;

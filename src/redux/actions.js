@@ -65,3 +65,21 @@ export function createAccount(account) {
 		});
 	};
 }
+
+export function fetchAccountsComplete(accounts) {
+	return {
+		type: ActionTypes.FETCH_ACCOUNTS_COMPLETE,
+		payload: accounts
+	};
+}
+
+export function fetchAccounts() {
+	return dispatch => {
+		// dispatch(showNotification('Loading accounts...', 'LOADING'));
+		return axios.get('/api/v1/accounts')
+			.then(response => {
+				const accounts = response.data;
+				dispatch(fetchAccountsComplete(accounts));
+			});
+	};
+}

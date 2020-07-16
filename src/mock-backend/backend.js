@@ -34,3 +34,7 @@ mock.onPost("/api/v1/accounts").reply((request) => {
 
 	return [200, account];
 });
+
+mock.onGet('/api/v1/accounts').reply(request => {
+	return [ 200, accounts ];
+});
