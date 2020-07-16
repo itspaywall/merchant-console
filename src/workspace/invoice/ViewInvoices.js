@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function ViewInvoices() {
 	return <div>View Invoices</div>;

@@ -1,5 +1,5 @@
-import mock from './mock';
-import faker from 'faker';
+import mock from "./mock";
+import faker from "faker";
 
 const accounts = [];
 
@@ -19,8 +19,7 @@ function generateFakeData() {
 			city: faker.address.city(),
 			state: faker.address.state(),
 			country: faker.address.country(),
-			zipCode: faker.address.zipCode()
-
+			zipCode: faker.address.zipCode(),
 		});
 	}
 	console.log(accounts);
@@ -28,10 +27,10 @@ function generateFakeData() {
 
 generateFakeData();
 
-mock.onPost('/api/v1/accounts').reply(request => {
+mock.onPost("/api/v1/accounts").reply((request) => {
 	const account = JSON.parse(request.data);
 	account.id = faker.random.uuid();
 	accounts.push(account);
 
-	return [ 200, account ];
+	return [200, account];
 });

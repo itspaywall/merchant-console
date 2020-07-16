@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux';
-import * as ActionTypes from './actionTypes';
+import { combineReducers } from "redux";
+import * as ActionTypes from "./actionTypes";
 
 function dialogReducer(state = null, action) {
 	switch (action.type) {
@@ -21,13 +21,12 @@ function dialogReducer(state = null, action) {
 }
 
 function notificationReducer(state = null, action) {
-	if (action.type === 'SHOW_NOTIFICATION') {
+	if (action.type === "SHOW_NOTIFICATION") {
 		return {
 			message: action.payload.message,
-			category: action.payload.category
+			category: action.payload.category,
 		};
-	}
-	else if (action.type === 'CLOSE_NOTIFICATION') {
+	} else if (action.type === "CLOSE_NOTIFICATION") {
 		return null;
 	}
 	return state;
@@ -35,7 +34,7 @@ function notificationReducer(state = null, action) {
 
 const rootReducer = combineReducers({
 	openDialog: dialogReducer,
-	notification: notificationReducer
+	notification: notificationReducer,
 });
 
 export default rootReducer;
