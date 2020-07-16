@@ -1,37 +1,37 @@
-import React from 'react';
+import React from "react";
 
 const workspaceConfiguration = [
-    // Account
+  // Account
 
-    {
-        path : '/accounts',
-        component : React.lazy(() => import('./account/ViewAccounts'))
-    },
-    {
-        path : '/accounts/new',
-        component : React.lazy(() => import('./account/NewAccount'))
-    },
+  {
+    path: "/accounts",
+    component: React.lazy(() => import("./account/ViewAccounts")),
+  },
+  {
+    path: "/accounts/new",
+    component: React.lazy(() => import("./account/NewAccount")),
+  },
 
-    // Invoice
+  // Invoice
 
-    {
-        path : '/invoices',
-        component : React.lazy(() => import('./invoice/ViewInvoices'))
-    },
+  {
+    path: "/invoices",
+    component: React.lazy(() => import("./invoice/ViewInvoices")),
+  },
 
-    // Subscription
+  // Subscription
 
-    {
-        path : '/subscriptions',
-        component : React.lazy(() => import('./subscription/ViewSubscriptions'))
-    },
+  {
+    path: "/subscriptions",
+    component: React.lazy(() => import("./subscription/ViewSubscriptions")),
+  },
 
-    // Transaction
+  // Transaction
 
-    {
-        path : '/transactions',
-        component : React.lazy(() => import('./transaction/ViewTransactions'))
-    }
+  {
+    path: "/transactions",
+    component: React.lazy(() => import("./transaction/ViewTransactions")),
+  },
 ];
 
 export default workspaceConfiguration;

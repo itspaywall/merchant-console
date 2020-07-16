@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 function ViewTransactions() {
-	return <div>View Transactions</div>;
+  return <div>View Transactions</div>;
 }
 
 export default ViewTransactions;
