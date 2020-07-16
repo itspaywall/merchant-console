@@ -11,17 +11,17 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./redux/reducers";
 
 const store = createStore(
-  rootReducer,
-  compose(applyMiddleware(thunk), composeWithDevTools())
+	rootReducer,
+	compose(applyMiddleware(thunk), composeWithDevTools())
 );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+	<React.StrictMode>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</React.StrictMode>,
+	document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

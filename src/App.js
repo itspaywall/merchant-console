@@ -4,14 +4,14 @@ import { CssBaseline } from "@material-ui/core";
 import { PrimaryLayout } from "./common";
 
 function App() {
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <BrowserRouter>
-        <PrimaryLayout />
-      </BrowserRouter>
-    </React.Fragment>
-  );
+	return (
+		<React.Fragment>
+			<CssBaseline />
+			<BrowserRouter>
+				<PrimaryLayout />
+			</BrowserRouter>
+		</React.Fragment>
+	);
 }
 
 export default App;
