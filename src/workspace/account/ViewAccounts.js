@@ -17,17 +17,39 @@ const useStyles = makeStyles((theme) => ({
 
 const headers = [
     { identifier: "name", numeric: false, disablePadding: true, label: "Name" },
-    { identifier: "email", numeric: false, disablePadding: false, label: "Email" },
-    { identifier: "company", numeric: false, disablePadding: false, label: "Company" },
-    { identifier: "created", numeric: false, disablePadding: false, label: "Created" },
-    { identifier: "plans", numeric: false, disablePadding: false, label: "Plans" },
+    {
+        identifier: "email",
+        numeric: false,
+        disablePadding: false,
+        label: "Email",
+    },
+    {
+        identifier: "company",
+        numeric: false,
+        disablePadding: false,
+        label: "Company",
+    },
+    {
+        identifier: "created",
+        numeric: false,
+        disablePadding: false,
+        label: "Created",
+    },
+    {
+        identifier: "plans",
+        numeric: false,
+        disablePadding: false,
+        label: "Plans",
+    },
 ];
 
 const filterFields = [
     {
         identifier: "time_range",
-        type: "select",
+        type: "time_range",
         title: "Time Range",
+        startTitle: "Start Date",
+        endTitle: "End Date",
         options: [
             {
                 value: "all_time",
@@ -62,7 +84,11 @@ const filterFields = [
                 title: "Custom",
             },
         ],
-        defaultValue: "all_time",
+        defaultValue: {
+            option: "all_time",
+            startDate: null,
+            endDate: null,
+        },
     },
     {
         identifier: "account_status",
@@ -136,11 +162,10 @@ function ViewAccounts(props) {
     const [selected, setSelected] = useState([]);
     const [openFilter, setOpenFilter] = useState(false);
     const [compact, setCompact] = useState(false);
-    
+
     // TODO: Should we cache this?
     const defaultFilterValues = extractFilterState(filterFields);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
-    console.log(defaultFilterValues);
 
     const toggleFilter = () => {
         setOpenFilter(!openFilter);
@@ -154,12 +179,13 @@ function ViewAccounts(props) {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
+
+        console.log(newValues);
     };
 
     const onFilterClear = () => {
         const defaultValues = extractFilterState(filterFields);
         setFilterValues(defaultValues);
-        console.log(defaultValues);
     };
 
     useEffect(() => {
