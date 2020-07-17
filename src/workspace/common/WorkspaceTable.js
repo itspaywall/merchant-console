@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import WorkspaceTableHead from './WorkspaceTableHead';
+import WorkspaceTableHead from "./WorkspaceTableHead";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -22,7 +22,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-    return order === 'desc'
+    return order === "desc"
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -64,10 +64,10 @@ const useStyles = makeStyles((theme) => ({
 export default function WorkspaceTable(props) {
     const classes = useStyles();
     const { onSelected, rows, headers, selected, compact } = props;
-    const [ order, setOrder ] = React.useState("asc");
-    const [ orderBy, setOrderBy ] = React.useState("calories");
-    const [ page, setPage ] = React.useState(0);
-    const [ rowsPerPage, setRowsPerPage ] = React.useState(15);
+    const [order, setOrder] = React.useState("asc");
+    const [orderBy, setOrderBy] = React.useState("calories");
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -75,12 +75,11 @@ export default function WorkspaceTable(props) {
         setOrderBy(property);
     };
 
-    const handleSelectAllClick = event => {
+    const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelection = rows.map(row => row.id);
+            const newSelection = rows.map((row) => row.id);
             onSelected(newSelection);
-        }
-        else {
+        } else {
             onSelected([]);
         }
     };
@@ -98,7 +97,7 @@ export default function WorkspaceTable(props) {
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
+                selected.slice(selectedIndex + 1)
             );
         }
 
@@ -116,7 +115,8 @@ export default function WorkspaceTable(props) {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows =
+        rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
@@ -124,7 +124,8 @@ export default function WorkspaceTable(props) {
                 <TableContainer>
                     <Table
                         className={classes.table}
-                        size={compact? "small" : "medium"}>
+                        size={compact ? "small" : "medium"}
+                    >
                         <WorkspaceTableHead
                             classes={classes}
                             selectionCount={selected.length}
@@ -137,7 +138,10 @@ export default function WorkspaceTable(props) {
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .slice(
+                                    page * rowsPerPage,
+                                    page * rowsPerPage + rowsPerPage
+                                )
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -145,26 +149,46 @@ export default function WorkspaceTable(props) {
                                     return (
                                         <TableRow
                                             hover={true}
-                                            onClick={event => handleClick(event, row.id)}
+                                            onClick={(event) =>
+                                                handleClick(event, row.id)
+                                            }
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={row.id}
-                                            selected={isItemSelected}>
+                                            selected={isItemSelected}
+                                        >
                                             <TableCell padding="checkbox">
-                                                <Checkbox checked={isItemSelected} />
+                                                <Checkbox
+                                                    checked={isItemSelected}
+                                                />
                                             </TableCell>
-                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                {row.firstName + " " + row.lastName}
+                                            <TableCell
+                                                component="th"
+                                                id={labelId}
+                                                scope="row"
+                                                padding="none"
+                                            >
+                                                {row.firstName +
+                                                    " " +
+                                                    row.lastName}
                                             </TableCell>
-                                            <TableCell>{row.emailAddress}</TableCell>
-                                            <TableCell>{row.companyName}</TableCell>
+                                            <TableCell>
+                                                {row.emailAddress}
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.companyName}
+                                            </TableCell>
                                             <TableCell>03/05/1999</TableCell>
                                             <TableCell>TODO</TableCell>
                                         </TableRow>
                                     );
                                 })}
-                            {(emptyRows > 0) && (
-                                <TableRow style={{ height: (compact? 33 : 53) * emptyRows }}>
+                            {emptyRows > 0 && (
+                                <TableRow
+                                    style={{
+                                        height: (compact ? 33 : 53) * emptyRows,
+                                    }}
+                                >
                                     <TableCell colSpan={6} />
                                 </TableRow>
                             )}

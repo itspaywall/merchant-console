@@ -66,3 +66,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+## Prettier Integration
+
+We use Prettier with Pretty Quick and the pre-commit tool Husky. This reformats our files that are marked as "staged" via `git add` before committing.

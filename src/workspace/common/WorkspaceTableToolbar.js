@@ -16,33 +16,34 @@ import CompactIcon from "@material-ui/icons/ViewCompact";
 const useToolbarStyles = makeStyles((theme) => ({
     appBar: {
         color: theme.palette.primary,
-        background: "white"
+        background: "white",
     },
     toolbar: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(1),
     },
     buttons: {
-        marginLeft: "auto"
+        marginLeft: "auto",
     },
     action: {
-        textTransform: 'none',
+        textTransform: "none",
         paddingLeft: 16,
-        paddingRight: 16
+        paddingRight: 16,
     },
     title: {
         color: theme.palette.text.primary,
-        fontWeight: 500
+        fontWeight: 500,
     },
-    highlight: (theme.palette.type === 'light')?
-        {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        } :
-        {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-        }
+    highlight:
+        theme.palette.type === "light"
+            ? {
+                  color: theme.palette.secondary.main,
+                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+              }
+            : {
+                  color: theme.palette.text.primary,
+                  backgroundColor: theme.palette.secondary.dark,
+              },
 }));
 
 function WorkspaceTableToolbar(props) {
@@ -53,56 +54,103 @@ function WorkspaceTableToolbar(props) {
         onNew,
         compact,
         toggleCompact,
-        toggleFilter
+        toggleFilter,
     } = props;
 
-    const normalTitle =
-        (<Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-            { title }
-        </Typography>);
+    const normalTitle = (
+        <Typography
+            className={classes.title}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+        >
+            {title}
+        </Typography>
+    );
 
-    const selectedTitle =
-        (<Typography className={classes.title} variant="subtitle1" component="div">
+    const selectedTitle = (
+        <Typography
+            className={classes.title}
+            variant="subtitle1"
+            component="div"
+        >
             {selectionCount} selected
-        </Typography>);
+        </Typography>
+    );
 
-    const recordButtons =
-        (<Button className={classes.action} variant="text" size="small" color="primary">
+    const recordButtons = (
+        <Button
+            className={classes.action}
+            variant="text"
+            size="small"
+            color="primary"
+        >
             <DeleteIcon />
             Delete
-        </Button>);
+        </Button>
+    );
     const selected = selectionCount > 0;
 
-    const normalButtons =
-        (<React.Fragment>
-            <Button className={classes.action} variant="text" size="small" color="primary" onClick={onNew}>
+    const normalButtons = (
+        <React.Fragment>
+            <Button
+                className={classes.action}
+                variant="text"
+                size="small"
+                color="primary"
+                onClick={onNew}
+            >
                 <AddIcon />
                 New
             </Button>
-            <Button className={classes.action} variant="text" size="small" color="primary" onClick={toggleFilter}>
+            <Button
+                className={classes.action}
+                variant="text"
+                size="small"
+                color="primary"
+                onClick={toggleFilter}
+            >
                 <FilterIcon />
                 Filter
             </Button>
-            <Button className={classes.action} variant="text" size="small" color="primary" onClick={toggleCompact}>
-                {compact?
-                    (<React.Fragment><ListIcon />Default View</React.Fragment>) :
-                    (<React.Fragment><CompactIcon />Compact</React.Fragment>)}
-
+            <Button
+                className={classes.action}
+                variant="text"
+                size="small"
+                color="primary"
+                onClick={toggleCompact}
+            >
+                {compact ? (
+                    <React.Fragment>
+                        <ListIcon />
+                        Default View
+                    </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                        <CompactIcon />
+                        Compact
+                    </React.Fragment>
+                )}
             </Button>
-        </React.Fragment>);
+        </React.Fragment>
+    );
 
     return (
         <AppBar position="static" elevation={1} className={classes.appBar}>
-            <Toolbar className={clsx(classes.toolbar, { [classes.highlight]: selected })}>
-                {selected? selectedTitle : normalTitle}
+            <Toolbar
+                className={clsx(classes.toolbar, {
+                    [classes.highlight]: selected,
+                })}
+            >
+                {selected ? selectedTitle : normalTitle}
 
                 <div className={classes.buttons}>
-                    {selected? recordButtons : normalButtons}
+                    {selected ? recordButtons : normalButtons}
                 </div>
             </Toolbar>
         </AppBar>
     );
-};
+}
 
 WorkspaceTableToolbar.propTypes = {
     selectionCount: PropTypes.number.isRequired,

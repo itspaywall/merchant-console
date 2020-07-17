@@ -15,9 +15,9 @@ export default function WorkspaceTableHead(props) {
         selectionCount,
         rowCount,
         onRequestSort,
-        headers
+        headers,
     } = props;
-    const createSortHandler = property => event => {
+    const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
 
@@ -26,25 +26,31 @@ export default function WorkspaceTableHead(props) {
             <TableRow>
                 <TableCell padding="checkbox">
                     <Checkbox
-                        indeterminate={(selectionCount > 0) && (selectionCount < rowCount)}
-                        checked={(rowCount > 0) && (selectionCount === rowCount)}
+                        indeterminate={
+                            selectionCount > 0 && selectionCount < rowCount
+                        }
+                        checked={rowCount > 0 && selectionCount === rowCount}
                         onChange={onSelectAll}
                     />
                 </TableCell>
-                {headers.map(header => (
+                {headers.map((header) => (
                     <TableCell
                         key={header.id}
-                        align={header.numeric? "right" : "left"}
-                        padding={header.disablePadding? "none" : "default"}
-                        sortDirection={(orderBy === header.id)? order : false}>
+                        align={header.numeric ? "right" : "left"}
+                        padding={header.disablePadding ? "none" : "default"}
+                        sortDirection={orderBy === header.id ? order : false}
+                    >
                         <TableSortLabel
                             active={orderBy === header.id}
-                            direction={orderBy === header.id? order : "asc"}
-                            onClick={createSortHandler(header.id)}>
+                            direction={orderBy === header.id ? order : "asc"}
+                            onClick={createSortHandler(header.id)}
+                        >
                             {header.label}
-                            {(orderBy === header.id)? (
+                            {orderBy === header.id ? (
                                 <span className={classes.visuallyHidden}>
-                                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                                    {order === "desc"
+                                        ? "sorted descending"
+                                        : "sorted ascending"}
                                 </span>
                             ) : null}
                         </TableSortLabel>
