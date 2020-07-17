@@ -2,57 +2,6 @@ import * as ActionTypes from "./actionTypes";
 import axios from "axios";
 
 export function newAccount() {
-<<<<<<< HEAD:src/redux/actions.js
-	return {
-		type: ActionTypes.NEW_ACCOUNT,
-		payload: null,
-	};
-}
-
-export function newSubscription() {
-	return {
-		type: ActionTypes.NEW_SUBSCRIPTION,
-		payload: null,
-	};
-}
-
-export function newInvoice() {
-	return {
-		type: ActionTypes.NEW_INVOICE,
-		payload: null,
-	};
-}
-
-export function newPlan() {
-	return {
-		type: ActionTypes.NEW_PLAN,
-		payload: null,
-	};
-}
-
-export function closeDialog() {
-	return {
-		type: ActionTypes.CLOSE_DIALOG,
-		payload: null,
-	};
-}
-
-export function showNotification(message, category) {
-	return {
-		type: ActionTypes.SHOW_NOTIFICATION,
-		payload: {
-			message,
-			category,
-		},
-	};
-}
-
-export function closeNotification() {
-	return {
-		type: ActionTypes.CLOSE_NOTIFICATION,
-		payload: null,
-	};
-=======
     return {
         type: ActionTypes.NEW_ACCOUNT,
         payload: null,
@@ -102,22 +51,10 @@ export function closeNotification() {
         type: ActionTypes.CLOSE_NOTIFICATION,
         payload: null,
     };
->>>>>>> 7771f42... Integrated Prettier format the source files on each commit.:src/actions.js
 }
 
 // TODO: Error boundaries
 export function createAccount(account) {
-<<<<<<< HEAD:src/redux/actions.js
-	return (dispatch) => {
-		dispatch(showNotification("Saving account...", "LOADING"));
-		return axios.post("/api/v1/accounts", account).then((response) => {
-			// const newAccount = response.data;
-			dispatch(
-				showNotification("Successfully created an account", "SUCCESS")
-			);
-		});
-	};
-=======
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return axios.post("/api/v1/accounts", account).then((response) => {
@@ -127,7 +64,6 @@ export function createAccount(account) {
             );
         });
     };
->>>>>>> 7771f42... Integrated Prettier format the source files on each commit.:src/actions.js
 }
 
 export function fetchAccountsComplete(accounts) {

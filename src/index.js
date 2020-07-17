@@ -2,29 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import "./mock-backend";
 
 import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-<<<<<<< HEAD
+
+import "./mock-backend";
 import rootReducer from "./redux/reducers";
-
-const store = createStore(
-	rootReducer,
-	compose(applyMiddleware(thunk), composeWithDevTools())
-);
-
-ReactDOM.render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<App />
-		</Provider>
-	</React.StrictMode>,
-	document.getElementById("root")
-=======
-import rootReducer from "./reducers";
 
 const store = createStore(
     rootReducer,
@@ -38,7 +23,6 @@ ReactDOM.render(
         </Provider>
     </React.StrictMode>,
     document.getElementById("root")
->>>>>>> 7771f42... Integrated Prettier format the source files on each commit.
 );
 
 // If you want your app to work offline and load faster, you can change

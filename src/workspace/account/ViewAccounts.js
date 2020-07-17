@@ -7,7 +7,7 @@ import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceTableToolbar from "../common/WorkspaceTableToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
 import { extractFilterState } from "../common/WorkspaceFilter";
-import * as actions from "../../actions";
+import * as actions from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -156,6 +156,10 @@ const filterFields = [
     },
 ];
 
+/* [TODO]
+ * 1. Filter logic
+ * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
+ */
 function ViewAccounts(props) {
     const { accounts, fetchAccounts, newAccount } = props;
     const classes = useStyles();

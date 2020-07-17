@@ -21,17 +21,6 @@ function dialogReducer(state = null, action) {
 }
 
 function notificationReducer(state = null, action) {
-<<<<<<< HEAD:src/redux/reducers.js
-	if (action.type === "SHOW_NOTIFICATION") {
-		return {
-			message: action.payload.message,
-			category: action.payload.category,
-		};
-	} else if (action.type === "CLOSE_NOTIFICATION") {
-		return null;
-	}
-	return state;
-=======
     if (action.type === "SHOW_NOTIFICATION") {
         return {
             message: action.payload.message,
@@ -41,7 +30,6 @@ function notificationReducer(state = null, action) {
         return null;
     }
     return state;
->>>>>>> 7771f42... Integrated Prettier format the source files on each commit.:src/reducers.js
 }
 
 function accountsReducer(state = [], action) {
