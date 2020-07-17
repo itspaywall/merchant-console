@@ -50,10 +50,10 @@ function WorkspaceTableToolbar(props) {
     const {
         title,
         selectionCount,
-        onNewAccount,
-        onFilterAccounts,
+        onNew,
         compact,
         toggleCompact,
+        toggleFilter
     } = props;
 
     const normalTitle =
@@ -75,11 +75,11 @@ function WorkspaceTableToolbar(props) {
 
     const normalButtons =
         (<React.Fragment>
-            <Button className={classes.action} variant="text" size="small" color="primary" onClick={onNewAccount}>
+            <Button className={classes.action} variant="text" size="small" color="primary" onClick={onNew}>
                 <AddIcon />
-                New Account
+                New
             </Button>
-            <Button className={classes.action} variant="text" size="small" color="primary" onClick={onFilterAccounts}>
+            <Button className={classes.action} variant="text" size="small" color="primary" onClick={toggleFilter}>
                 <FilterIcon />
                 Filter
             </Button>

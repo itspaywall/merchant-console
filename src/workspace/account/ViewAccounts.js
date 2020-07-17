@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceTableToolbar from "../common/WorkspaceTableToolbar";
+import WorkspaceFilter from "../common/WorkspaceFilter";
 import * as actions from "../../actions";
 
 const useStyles = makeStyles(theme => ({
@@ -25,8 +26,11 @@ function ViewAccounts(props) {
     const { accounts, fetchAccounts, newAccount } = props;
     const classes = useStyles();
     const [ selected, setSelected ] = useState([]);
+    const [ openFilter, setOpenFilter ] = useState(false);
     const [ compact, setCompact ] = useState(false);;
-    const openFilterAccounts = () => {
+    const [ range, setRange ] = useState("all_time");
+    const toggleFilter = () => {
+        setOpenFilter(!openFilter);
     };
     const toggleCompact = () => {
         setCompact(!compact);
@@ -42,12 +46,16 @@ function ViewAccounts(props) {
                 title="Accounts"
                 selectionCount={selected.length}
                 toggleCompact={toggleCompact}
-                onNewAccount={newAccount}
+                toggleFilter={toggleFilter}
+                onNew={newAccount}
                 compact={compact} />
-            <Grid container={ true } className={ classes.container }>
-                <Grid item={ true } lg={ 12 }>
+            <Grid container={true} className={classes.container} spacing={2}>
+                <Grid item={true} lg={openFilter? 10 : 12}>
                     <WorkspaceTable headers={headers} onSelected={setSelected} rows={accounts} selected={selected} compact={compact} />
                 </Grid>
+                {openFilter && (<Grid item={true} lg={2}>
+                    <WorkspaceFilter range={range} />
+                </Grid>)}
             </Grid>
         </div>
     );
