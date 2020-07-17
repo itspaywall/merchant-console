@@ -1,4 +1,4 @@
-import React from "react";  
+import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -9,162 +9,73 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        padding: 16
+        padding: 16,
     },
     title: {
         fontSize: 16,
-        marginBottom: 24
+        marginBottom: 24,
     },
     clear: {
-        display: 'block',
-        marginLeft: 'auto',
-        marginTop: 16
-    }
+        display: "block",
+        marginLeft: "auto",
+        marginTop: 16,
+    },
 }));
 
-const fields = [
-    {
-        id: "time_range",
-        type: "select",
-        title: "Time Range",
-        options: [
-            {
-                value: "all_time",
-                title: "All Time"
-            },
-            {
-                value: "last_3_months",
-                title: "Last 3 Months"
-            },
-            {
-                value: "last_6_months",
-                title: "Last 6 Months"
-            },
-            {
-                value: "last_9_months",
-                title: "Last 9 Months"
-            },
-            {
-                value: "last_12_months",
-                title: "Last 12 Months"
-            },
-            {
-                value: "last_15_months",
-                title: "Last 15 Months"
-            },
-            {
-                value: "last_18_months",
-                title: "Last 18 Months"
-            },
-            {
-                value: "custom",
-                title: "Custom"
-            }
-        ]
-    },
-    {
-        id: "account_status",
-        type: "select",
-        title: "Account Status",
-        options: [
-            {
-                value: "all",
-                title: "All"
-            },
-            {
-                value: "open",
-                title: "Open"
-            },
-            {
-                value: "closed",
-                title: "Closed"
-            }
-        ]
-    },
-    {
-        id: "subscription_status",
-        type: "select",
-        title: "Subscription Status",
-        options: [
-            {
-                value: "all",
-                title: "All"
-            },
-            {
-                value: "active",
-                title: "Active"
-            },
-            {
-                value: "renewing",
-                title: "Renewing"
-            },
-            {
-                value: "non_renewing",
-                title: "Non-renewing"
-            },
-            {
-                value: "future_start_date",
-                title: "Future Start Date"
-            },
-            {
-                value: "in_trial",
-                title: "In Trial"
-            },
-            {
-                value: "paused",
-                title: "Paused"
-            },
-            {
-                value: "past_due",
-                title: "Past Due"
-            },
-            {
-                value: "no_subscription",
-                title: "No Subscription"
-            }
-        ]
-    }
-];
+export function extractFilterState(fields) {
+    const result = {};
+    fields.forEach(field => (result[field.identifier] = field.defaultValue));
+    return result;
+}
 
 export default function WorkspaceFilter(props) {
-    const { range, onValueChange, onClear } = props;
+    const { fields, values, onValueChange, onClear } = props;
     const classes = useStyles();
-    const renderSelect = field => (
+    const makeChangeHandler = field => event => {
+        onValueChange(field, event.target.value);
+    }
+
+    const renderSelect = (field, value) => (
         <FormControl
             variant="outlined"
             className={classes.control}
-            fullWidth={true}>
-            <InputLabel id={field.id}>{field.title}</InputLabel>
+            fullWidth={true}
+        >
+            <InputLabel id={field.identifier}>{field.title}</InputLabel>
             <Select
-                labelId={field.id}
-                value={field.value}
-                onChange={onValueChange}
-                label={field.title}>
-                {field.options.map(option => (
+                labelId={field.identifier}
+                value={value}
+                onChange={makeChangeHandler(field.identifier)}
+                label={field.title}
+            >
+                {field.options.map((option) => (
                     <MenuItem value={option.value}>{option.title}</MenuItem>
                 ))}
             </Select>
-        </FormControl>)
+        </FormControl>
+    );
 
     return (
         <Paper className={classes.root}>
-            <Typography className={classes.title} variant="h6">Filters</Typography>
+            <Typography className={classes.title} variant="h6">
+                Filters
+            </Typography>
             <Grid container={true} spacing={3}>
-                {
-                    fields.map(field => (
-                        <Grid item={true} item={true} lg={12}>
-                            {(field.type == "select") && renderSelect(field)}
-                        </Grid>))
-                }
+                {fields.map((field) => (
+                    <Grid item={true} lg={12}>
+                        {(field.type === "select") && renderSelect(field, values[field.identifier])}
+                    </Grid>
+                ))}
             </Grid>
             <Button
                 size="small"
                 color="secondary"
                 variant="text"
                 className={classes.clear}
-                onClick={onClear}>
+                onClick={onClear}
+            >
                 Clear
             </Button>
         </Paper>
