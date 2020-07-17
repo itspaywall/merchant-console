@@ -1,7 +1,7 @@
 import MainLayout from "./MainLayout";
 
 const layouts = {
-	main: MainLayout,
+    main: MainLayout,
 };
 
 export default layouts;
