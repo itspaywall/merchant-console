@@ -1,24 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { green } from "@material-ui/core/colors";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+import MoreIcon from "@material-ui/icons/MoreVert";
+import EditIcon from "@material-ui/icons/Edit";
+import CancelIcon from "@material-ui/icons/Close";
+import PauseIcon from "@material-ui/icons/Pause";
 import ShowMoreIcon from "@material-ui/icons/ArrowForward";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
-    media: {
-        height: 0,
-        paddingTop: "56.25%", // 16:9
-    },
     expand: {
         transform: "rotate(0deg)",
         marginLeft: "auto",
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: green[500],
     },
     title: {
-        fontWeight: 500,
+        fontWeight: 600,
         fontSize: 14,
     },
     value: {
@@ -45,9 +47,12 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 16,
         paddingRight: 16,
     },
-    showMoreIcon: {
+    icon: {
         display: "inline-block",
         marginRight: 4,
+    },
+    menuItem: {
+        fontSize: 15,
     },
 }));
 
@@ -79,9 +84,25 @@ const fields = [
     },
 ];
 
-export default function SubscriptionCard(props) {
+function SubscriptionCard(props) {
     const classes = useStyles();
-    const { status, plan } = props;
+    const { status, plan, onEdit, onPause, onCancel } = props;
+    const [menuAnchor, setMenuAnchor] = useState(null);
+
+    const handleOpenMenu = (event) => setMenuAnchor(event.target);
+    const handleCloseMenu = () => setMenuAnchor(null);
+    const handleEdit = () => {
+        onEdit("id");
+        setMenuAnchor(null);
+    };
+    const handlePause = () => {
+        onPause("id");
+        setMenuAnchor(null);
+    };
+    const handleCancel = () => {
+        onCancel("id");
+        setMenuAnchor(null);
+    };
 
     return (
         <Card className={classes.root}>
@@ -90,13 +111,36 @@ export default function SubscriptionCard(props) {
                     <Avatar className={classes[status + "Avatar"]}>A</Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
+                    <React.Fragment>
+                        <IconButton onClick={handleOpenMenu}>
+                            <MoreIcon />
+                        </IconButton>
+                    </React.Fragment>
                 }
                 title={plan}
                 subheader="May 03, 1999"
             />
+
+            <Menu
+                anchorEl={menuAnchor}
+                keepMounted
+                open={Boolean(menuAnchor)}
+                onClose={handleCloseMenu}
+            >
+                <MenuItem onClick={handleEdit} className={classes.menuItem}>
+                    <EditIcon className={classes.icon} />
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={handlePause} className={classes.menuItem}>
+                    <PauseIcon className={classes.icon} />
+                    Pause
+                </MenuItem>
+                <MenuItem onClick={handleCancel} className={classes.menuItem}>
+                    <CancelIcon className={classes.icon} />
+                    Cancel
+                </MenuItem>
+            </Menu>
+
             <CardContent>
                 <Grid container={true} spacing={1}>
                     {fields.map((field) => (
@@ -119,10 +163,12 @@ export default function SubscriptionCard(props) {
             </CardContent>
             <CardActions disableSpacing>
                 <Button className={classes.showMore} size="small">
-                    <ShowMoreIcon className={classes.showMoreIcon} />
+                    <ShowMoreIcon className={classes.icon} />
                     Show More
                 </Button>
             </CardActions>
         </Card>
     );
 }
+
+export default SubscriptionCard;
