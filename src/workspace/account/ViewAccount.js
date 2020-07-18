@@ -3,19 +3,26 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import faker from "faker";
 
 import WorkspaceTableToolbar from "../common/WorkspaceTableToolbar";
 import SubscriptionCard from "../subscription/SubscriptionCard";
+import AccountCard from "./AccountCard";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: 16,
     },
+    accountCard: {
+        maxWidth: 600,
+    },
     subscriptionsTitle: {
         fontSize: 20,
-        marginTop: 16,
-        marginLeft: 16,
+        marginTop: 32,
         fontWeight: 500,
+    },
+    subscriptions: {
+        marginTop: 8,
     },
 }));
 
@@ -46,33 +53,57 @@ const subscriptions = [
     },
 ];
 
+const account = {
+    id: faker.random.uuid(),
+    userName: faker.internet.userName(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    companyName: faker.company.companyName(),
+    position: faker.name.jobTitle(),
+    emailAddress: faker.internet.email(),
+    phoneNumber: faker.phone.phoneNumber(),
+    addressLine1: faker.address.streetAddress(),
+    addressLine2: faker.address.secondaryAddress(),
+    city: faker.address.city(),
+    state: faker.address.state(),
+    country: faker.address.country(),
+    zipCode: faker.address.zipCode(),
+};
+
 // TODO: WorkspaceTableToolbar should be renamed to WorkspaceToolbar.
 // Further, it should allow us to specify custom buttons.
 function ViewAccount(props) {
     const classes = useStyles();
     return (
         <div>
-            <WorkspaceTableToolbar title="Customer Name" />
-            <Typography variant="h2" className={classes.subscriptionsTitle}>
-                Subscriptions
-            </Typography>
-            <Grid container={true} className={classes.container} spacing={2}>
-                {subscriptions.map((subscription) => (
-                    <Grid key={subscription.identifier} item={true} lg={4}>
-                        <SubscriptionCard
-                            currentPeriod={subscription.currentPeriod}
-                            plan={subscription.plan}
-                            status={subscription.status}
-                            termBehavior={subscription.termBehavior}
-                            collection={subscription.collection}
-                            renewsOn={subscription.renewsOn}
-                            startedOn={subscription.startedOn}
-                            pricePerUnit={subscription.pricePerUnit}
-                            estimatedTotal={subscription.estimatedTotal}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
+            <WorkspaceTableToolbar title="Account" />
+            <div className={classes.container}>
+                <AccountCard className={classes.accountCard} {...account} />
+                <Typography variant="h2" className={classes.subscriptionsTitle}>
+                    Subscriptions
+                </Typography>
+                <Grid
+                    container={true}
+                    className={classes.subscriptions}
+                    spacing={2}
+                >
+                    {subscriptions.map((subscription) => (
+                        <Grid key={subscription.identifier} item={true} lg={4}>
+                            <SubscriptionCard
+                                currentPeriod={subscription.currentPeriod}
+                                plan={subscription.plan}
+                                status={subscription.status}
+                                termBehavior={subscription.termBehavior}
+                                collection={subscription.collection}
+                                renewsOn={subscription.renewsOn}
+                                startedOn={subscription.startedOn}
+                                pricePerUnit={subscription.pricePerUnit}
+                                estimatedTotal={subscription.estimatedTotal}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </div>
         </div>
     );
 }
