@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { green } from "@material-ui/core/colors";
+import { green, orange } from "@material-ui/core/colors";
 
 import MoreIcon from "@material-ui/icons/MoreVert";
 import EditIcon from "@material-ui/icons/Edit";
@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     },
     activeAvatar: {
         backgroundColor: green[500],
+    },
+    trialAvatar: {
+        backgroundColor: orange[500],
     },
     title: {
         fontWeight: 600,
@@ -82,6 +85,16 @@ const fields = [
         title: "Current Period",
         size: 12,
     },
+    {
+        identifier: "pricePerUnit",
+        title: "Price Per Unit",
+        size: 6,
+    },
+    {
+        identifier: "estimatedTotal",
+        title: "Estimated Total",
+        size: 6,
+    },
 ];
 
 function SubscriptionCard(props) {
@@ -108,7 +121,9 @@ function SubscriptionCard(props) {
         <Card className={classes.root}>
             <CardHeader
                 avatar={
-                    <Avatar className={classes[status + "Avatar"]}>A</Avatar>
+                    <Avatar className={classes[status + "Avatar"]}>
+                        {status.substring(0, 1).toUpperCase()}
+                    </Avatar>
                 }
                 action={
                     <React.Fragment>
@@ -142,7 +157,7 @@ function SubscriptionCard(props) {
             </Menu>
 
             <CardContent>
-                <Grid container={true} spacing={1}>
+                <Grid container={true} spacing={2}>
                     {fields.map((field) => (
                         <React.Fragment>
                             <Grid item={true} lg={field.size}>
