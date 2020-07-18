@@ -16,14 +16,15 @@ const useStyles = makeStyles((theme) => ({
     accountCard: {
         maxWidth: 600,
     },
-    subscriptionsTitle: {
+    section: {
+        marginBottom: 32,
+    },
+    sectionTitle: {
         fontSize: 20,
-        marginTop: 32,
+        marginBottom: 16,
         fontWeight: 500,
     },
-    subscriptions: {
-        marginTop: 8,
-    },
+    subscriptions: {},
 }));
 
 const subscriptions = [
@@ -74,35 +75,53 @@ const account = {
 // Further, it should allow us to specify custom buttons.
 function ViewAccount(props) {
     const classes = useStyles();
+    const handleEditAccount = () => {};
+
     return (
         <div>
             <WorkspaceToolbar title="Account" />
             <div className={classes.container}>
-                <AccountCard className={classes.accountCard} {...account} />
-                <Typography variant="h2" className={classes.subscriptionsTitle}>
-                    Subscriptions
-                </Typography>
-                <Grid
-                    container={true}
-                    className={classes.subscriptions}
-                    spacing={2}
-                >
-                    {subscriptions.map((subscription) => (
-                        <Grid key={subscription.identifier} item={true} lg={4}>
-                            <SubscriptionCard
-                                currentPeriod={subscription.currentPeriod}
-                                plan={subscription.plan}
-                                status={subscription.status}
-                                termBehavior={subscription.termBehavior}
-                                collection={subscription.collection}
-                                renewsOn={subscription.renewsOn}
-                                startedOn={subscription.startedOn}
-                                pricePerUnit={subscription.pricePerUnit}
-                                estimatedTotal={subscription.estimatedTotal}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
+                <div className={classes.section}>
+                    <Typography variant="h2" className={classes.sectionTitle}>
+                        General
+                    </Typography>
+                    <AccountCard
+                        className={classes.accountCard}
+                        onEdit={handleEditAccount}
+                        {...account}
+                    />
+                </div>
+
+                <div className={classes.section}>
+                    <Typography variant="h2" className={classes.sectionTitle}>
+                        Subscriptions
+                    </Typography>
+                    <Grid
+                        container={true}
+                        className={classes.subscriptions}
+                        spacing={2}
+                    >
+                        {subscriptions.map((subscription) => (
+                            <Grid
+                                key={subscription.identifier}
+                                item={true}
+                                lg={4}
+                            >
+                                <SubscriptionCard
+                                    currentPeriod={subscription.currentPeriod}
+                                    plan={subscription.plan}
+                                    status={subscription.status}
+                                    termBehavior={subscription.termBehavior}
+                                    collection={subscription.collection}
+                                    renewsOn={subscription.renewsOn}
+                                    startedOn={subscription.startedOn}
+                                    pricePerUnit={subscription.pricePerUnit}
+                                    estimatedTotal={subscription.estimatedTotal}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </div>
             </div>
         </div>
     );
