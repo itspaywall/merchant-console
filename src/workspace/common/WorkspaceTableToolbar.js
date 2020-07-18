@@ -44,6 +44,9 @@ const useToolbarStyles = makeStyles((theme) => ({
                   color: theme.palette.text.primary,
                   backgroundColor: theme.palette.secondary.dark,
               },
+    actionIcon: {
+        marginRight: 4,
+    },
 }));
 
 function WorkspaceTableToolbar(props) {
@@ -100,7 +103,7 @@ function WorkspaceTableToolbar(props) {
                 color="primary"
                 onClick={onNew}
             >
-                <AddIcon />
+                <AddIcon className={classes.actionIcon} />
                 New
             </Button>
             <Button
@@ -110,7 +113,7 @@ function WorkspaceTableToolbar(props) {
                 color="primary"
                 onClick={toggleFilter}
             >
-                <FilterIcon />
+                <FilterIcon className={classes.actionIcon} />
                 Filter
             </Button>
             <Button
@@ -122,12 +125,12 @@ function WorkspaceTableToolbar(props) {
             >
                 {compact ? (
                     <React.Fragment>
-                        <ListIcon />
+                        <ListIcon className={classes.actionIcon} />
                         Default View
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <CompactIcon />
+                        <CompactIcon className={classes.actionIcon} />
                         Compact
                     </React.Fragment>
                 )}
