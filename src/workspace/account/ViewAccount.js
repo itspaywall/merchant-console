@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import faker from "faker";
 
-import WorkspaceTableToolbar from "../common/WorkspaceTableToolbar";
+import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import SubscriptionCard from "../subscription/SubscriptionCard";
 import AccountCard from "./AccountCard";
 
@@ -70,13 +70,13 @@ const account = {
     zipCode: faker.address.zipCode(),
 };
 
-// TODO: WorkspaceTableToolbar should be renamed to WorkspaceToolbar.
+// TODO: WorkspaceToolbar should be renamed to WorkspaceToolbar.
 // Further, it should allow us to specify custom buttons.
 function ViewAccount(props) {
     const classes = useStyles();
     return (
         <div>
-            <WorkspaceTableToolbar title="Account" />
+            <WorkspaceToolbar title="Account" />
             <div className={classes.container}>
                 <AccountCard className={classes.accountCard} {...account} />
                 <Typography variant="h2" className={classes.subscriptionsTitle}>

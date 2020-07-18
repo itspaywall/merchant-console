@@ -4,10 +4,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
 import WorkspaceTable from "../common/WorkspaceTable";
-import WorkspaceTableToolbar from "../common/WorkspaceTableToolbar";
+import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
 import { extractFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
+
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import ListIcon from "@material-ui/icons/ViewList";
+import FilterIcon from "@material-ui/icons/FilterList";
+import CompactIcon from "@material-ui/icons/ViewCompact";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -156,6 +162,60 @@ const filterFields = [
     },
 ];
 
+const actions1 = [
+    {
+        identifier: "new",
+        title: "New",
+        icon: AddIcon,
+        primary: true,
+    },
+    {
+        identifier: "filter",
+        title: "Filter",
+        icon: FilterIcon,
+        primary: true,
+    },
+    {
+        identifier: "default",
+        title: "Default",
+        icon: ListIcon,
+        primary: true,
+    },
+    {
+        identifier: "delete",
+        title: "Delete",
+        icon: DeleteIcon,
+        primary: false,
+    },
+];
+
+const actions2 = [
+    {
+        identifier: "new",
+        title: "New",
+        icon: AddIcon,
+        primary: true,
+    },
+    {
+        identifier: "filter",
+        title: "Filter",
+        icon: FilterIcon,
+        primary: true,
+    },
+    {
+        identifier: "compact",
+        title: "Compact",
+        icon: CompactIcon,
+        primary: true,
+    },
+    {
+        identifier: "delete",
+        title: "Delete",
+        icon: DeleteIcon,
+        primary: false,
+    },
+];
+
 /* [TODO]
  * 1. Filter logic
  * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
@@ -171,11 +231,14 @@ function ViewAccounts(props) {
     const defaultFilterValues = extractFilterState(filterFields);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
-    const toggleFilter = () => {
-        setOpenFilter(!openFilter);
-    };
-    const toggleCompact = () => {
-        setCompact(!compact);
+    const handleAction = (type) => {
+        if (type === "new") {
+            newAccount();
+        } else if (type === "filter") {
+            setOpenFilter(!openFilter);
+        } else if (type === "compact" || type === "default") {
+            setCompact(!compact);
+        }
     };
 
     // TODO: Create a deep copy without serializing !
@@ -198,13 +261,11 @@ function ViewAccounts(props) {
 
     return (
         <div>
-            <WorkspaceTableToolbar
+            <WorkspaceToolbar
                 title="Accounts"
                 selectionCount={selected.length}
-                toggleCompact={toggleCompact}
-                toggleFilter={toggleFilter}
-                onNew={newAccount}
-                compact={compact}
+                actions={compact ? actions1 : actions2}
+                onAction={handleAction}
             />
             <Grid container={true} className={classes.container} spacing={2}>
                 <Grid item={true} lg={openFilter ? 10 : 12}>
