@@ -46,22 +46,8 @@ const groups = [
         label: "Basic",
         children: [
             {
-                label: "Customer / Organization Name",
-                identifier: "userName",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip:
-                    "The user name of the account that makes a transaction.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Select Subscription",
-                identifier: "selectedSubscription",
+                label: "Subscription",
+                identifier: "subscription",
                 type: "text_field",
                 required: false,
                 readOnly: false,

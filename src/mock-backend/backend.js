@@ -2,6 +2,9 @@ import mock from "./mock";
 import faker from "faker";
 
 const accounts = [];
+const subscriptions = [];
+const transactions = [];
+const plans = [];
 
 function generateFakeData() {
     for (var i = 0; i < 100; i++) {
@@ -39,25 +42,37 @@ mock.onGet("/api/v1/accounts").reply((request) => {
 });
 
 mock.onPost("/api/v1/subscriptions").reply((request) => {
-	const account = JSON.parse(request.data);
-	account.id = faker.random.uuid();
-	accounts.push(account);
+    const subscription = JSON.parse(request.data);
+    subscription.id = faker.random.uuid();
+    subscriptions.push(subscription);
 
-	return [200, account];
+    return [200, subscription];
+});
+
+mock.onGet("/api/v1/subscriptions").reply((request) => {
+    return [200, subscriptions];
 });
 
 mock.onPost("/api/v1/transactions").reply((request) => {
-	const account = JSON.parse(request.data);
-	account.id = faker.random.uuid();
-	accounts.push(account);
+    const transaction = JSON.parse(request.data);
+    transaction.id = faker.random.uuid();
+    transactions.push(transaction);
 
-	return [200, account];
+    return [200, transaction];
+});
+
+mock.onGet("/api/v1/transactions").reply((request) => {
+    return [200, transactions];
 });
 
 mock.onPost("/api/v1/plans").reply((request) => {
-	const account = JSON.parse(request.data);
-	account.id = faker.random.uuid();
-	accounts.push(account);
+    const plan = JSON.parse(request.data);
+    plan.id = faker.random.uuid();
+    plans.push(plan);
 
-	return [200, account];
+    return [200, plan];
+});
+
+mock.onGet("/api/v1/plans").reply((request) => {
+    return [200, plans];
 });
