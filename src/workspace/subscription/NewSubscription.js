@@ -46,7 +46,7 @@ const groups = [
 		label: "Basic",
 		children: [
 			{
-				label: "User Name",
+				label: "Customer / Organization Name",
 				identifier: "userName",
 				type: "text_field",
 				required: false,
@@ -54,199 +54,133 @@ const groups = [
 				quickAdd: true,
 				unique: false,
 				hidden: false,
-				tooltip: "The user name of the account.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "First Name",
-				identifier: "firstName",
-				type: "text_field",
-				required: true,
-				readOnly: false,
-				quickAdd: true,
-				unique: false,
-				hidden: false,
-				tooltip: "The first name of the account.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Last Name",
-				identifier: "lastName",
-				type: "text_field",
-				required: true,
-				readOnly: false,
-				quickAdd: true,
-				unique: false,
-				hidden: false,
-				tooltip: "The last name of the account.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Email Address",
-				identifier: "emailAddress",
-				type: "email_address",
-				required: false,
-				readOnly: false,
-				quickAdd: true,
-				unique: false,
-				hidden: false,
-				tooltip: "The email address of the account.",
-				multipleValues: true,
-				defaultValue: "",
-			},
-			{
-				label: "Phone Number",
-				identifier: "phoneNumber",
-				type: "phone_number",
-				required: false,
-				readOnly: false,
-				quickAdd: true,
-				unique: false,
-				hidden: false,
-				tooltip: "The phone number of the account.",
-				multipleValues: true,
-				defaultValue: "",
-			},
-			{
-				label: "Address Line 1",
-				identifier: "addressLine1",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The first line of address.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Address Line 2",
-				identifier: "addressLine2",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The first line of address.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "City",
-				identifier: "city",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The city.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "State",
-				identifier: "state",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The state where the customer resides.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Country",
-				identifier: "country",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The country where the customer resides.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Zip Code",
-				identifier: "zipCode",
-				type: "text_field",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
 				tooltip:
-					"The zip code of the location where the customer resides.",
+					"The user name of the account that converts a plan to subscription",
 				multipleValues: false,
 				defaultValue: "",
 			},
-		],
-	},
-	{
-		label: "Organization",
-		children: [
 			{
-				label: "Name",
-				identifier: "companyName",
+				label: "Select Plan",
+				identifier: "selectedPlan",
 				type: "text_field",
 				required: false,
 				readOnly: false,
-				quickAdd: false,
+				quickAdd: true,
 				unique: false,
 				hidden: false,
-				tooltip: "The last name of the account.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Position",
-				id: "position",
-				name: "position",
-				type: "text",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The position of the account in the organization.",
-				multipleValues: false,
-				defaultValue: "",
-			},
-			{
-				label: "Email Address",
-				identifier: "companyEmailAddress",
-				type: "email_address",
-				required: false,
-				readOnly: false,
-				quickAdd: false,
-				unique: false,
-				hidden: false,
-				tooltip: "The email address of the account.",
+				tooltip: "The plan associated with a subscription",
 				multipleValues: true,
 				defaultValue: "",
 			},
 			{
-				label: "Phone Number",
-				identifier: "companyPhoneNumber",
-				type: "phone_number",
+				label: "Subscription Period Start",
+				identifier: "subscriptionStart",
+				type: "calendar",
 				required: false,
 				readOnly: false,
-				quickAdd: false,
+				quickAdd: true,
 				unique: false,
 				hidden: false,
-				tooltip: "The phone number of the account.",
-				multipleValues: true,
+				tooltip: "Start Date of the subscription.",
+				multipleValues: false,
+				defaultValue: "",
+			},
+			{
+				label: "Subscription Period End",
+				identifier: "subscriptionEnd",
+				type: "calendar",
+				required: false,
+				readOnly: false,
+				quickAdd: true,
+				unique: false,
+				hidden: false,
+				tooltip: "End Date of the subscription.",
+				multipleValues: false,
 				defaultValue: "",
 			},
 		],
 	},
 ];
+
+function extractValues(groups) {
+	const result = [];
+	groups.forEach((group) => {
+		const values = group.children.map((field) => ({
+			identifier: field.identifier,
+			value: field.defaultValue,
+		}));
+		result.push(values);
+	});
+	return result;
+}
+
+function extractRecord(groups) {
+	const result = {};
+	groups.forEach((group) =>
+		group.forEach((field) => (result[field.identifier] = field.value))
+	);
+	return result;
+}
+
+function NewSubscription(props) {
+	const { closeDialog, createSubscription } = props;
+	const classes = useStyles(props);
+	const [showMore, setShowMore] = React.useState(false);
+	const [values, setValues] = React.useState(extractValues(groups));
+	const handleShowMore = () => {
+		setShowMore(!showMore);
+	};
+	const handleSave = () => {
+		closeDialog();
+		createSubscription(extractRecord(values));
+	};
+	// TODO: Create a deep copy without serializing !
+	const handleValueChange = (group, field, value) => {
+		const newValues = JSON.parse(JSON.stringify(values));
+		newValues[group][field].value = value;
+
+		setValues(newValues);
+	};
+
+	return (
+		<Dialog
+			open={true}
+			onClose={closeDialog}
+			aria-labelledby="form-dialog-title"
+		>
+			<DialogTitle id="form-dialog-title">New Subscription</DialogTitle>
+			<DialogContent>
+				<RecordForm
+					groups={groups}
+					values={values}
+					onValueChange={handleValueChange}
+				/>
+			</DialogContent>
+			<DialogActions>
+				<div className={classes.dialogActions}>
+					<Button
+						onClick={handleSave}
+						color="primary"
+						className={classes.dialogAction}
+					>
+						Save
+					</Button>
+					<Button
+						onClick={closeDialog}
+						color="primary"
+						className={classes.dialogAction}
+					>
+						Cancel
+					</Button>
+				</div>
+			</DialogActions>
+		</Dialog>
+	);
+}
+
+const mapDispatchToProps = {
+	closeDialog: actions.closeDialog,
+	createSubscription: actions.createSubscription,
+};
+
+export default connect(null, mapDispatchToProps)(NewSubscription);

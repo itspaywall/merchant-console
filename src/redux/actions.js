@@ -22,6 +22,13 @@ export function newInvoice() {
     };
 }
 
+export function newTransaction() {
+	return {
+		type: ActionTypes.NEW_TRANSACTION,
+		payload: null,
+	};
+}
+
 export function newPlan() {
     return {
         type: ActionTypes.NEW_PLAN,
@@ -83,6 +90,7 @@ export function fetchAccounts() {
     };
 }
 
+<<<<<<< HEAD
 export function fetchAccount(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
@@ -106,4 +114,37 @@ export function clearAccount() {
         type: ActionTypes.CLEAR_ACCOUNT,
         payload: null,
     };
+=======
+export function createSubscription(subscription) {
+	return (dispatch) => {
+		dispatch(showNotification("Saving subscription...", "LOADING"));
+		return axios
+			.post("/api/v1/subscriptions", subscription)
+			.then((response) => {
+				// const newSubscription = response.data;
+				dispatch(
+					showNotification(
+						"Successfully created an subscription.",
+						"SUCCESS"
+					)
+				);
+			});
+	};
+}
+
+export function createTransaction(transaction) {
+	return (dispatch) => {
+		dispatch(showNotification("Saving transaction...", "LOADING"));
+		return axios
+			.post("/api/v1/transaction", transaction)
+			.then((response) => {
+				dispatch(
+					showNotification(
+						"Successfully created an transaction.",
+						"SUCCESS"
+					)
+				);
+			});
+	};
+>>>>>>> 0231cbf... This commit adds all the quick add dialog forms.
 }

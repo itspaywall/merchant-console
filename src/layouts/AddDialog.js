@@ -11,6 +11,7 @@ import {
     newAccount,
     newSubscription,
     newInvoice,
+    newTransaction,
     newPlan,
 } from "../redux/actions";
 
@@ -78,6 +79,12 @@ const groups = [
                 title: "Invoice",
                 icon: "receipt",
                 action: "newInvoice",
+            },
+            {
+                id: "transaction",
+                title: "Transaction",
+                icon: "monetization_on",
+                action: "newTransaction",
             },
         ],
     },
@@ -160,6 +167,7 @@ const mapDispatchToProps = {
     newAccount,
     newSubscription,
     newInvoice,
+    newTransaction,
     newPlan,
 };
 
