@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WorkspaceTable(props) {
     const classes = useStyles();
-    const { onSelected, rows, headers, selected, compact } = props;
+    const { onSelected, rows, headers, selected, compact, onClick } = props;
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
     const [page, setPage] = React.useState(0);
@@ -77,14 +77,14 @@ export default function WorkspaceTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelection = rows.map((row) => row.id);
+            const newSelection = rows.map((row) => row.identifier);
             onSelected(newSelection);
         } else {
             onSelected([]);
         }
     };
 
-    const handleClick = (event, name) => {
+    const makeHandleSelect = (name) => (event) => {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
 
@@ -102,6 +102,10 @@ export default function WorkspaceTable(props) {
         }
 
         onSelected(newSelected);
+    };
+
+    const makeClickHandler = (record) => () => {
+        onClick(record);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -143,23 +147,25 @@ export default function WorkspaceTable(props) {
                                     page * rowsPerPage + rowsPerPage
                                 )
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
+                                    const isItemSelected = isSelected(
+                                        row.identifier
+                                    );
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover={true}
-                                            onClick={(event) =>
-                                                handleClick(event, row.id)
-                                            }
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={row.id}
+                                            key={row.identifier}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
                                                     checked={isItemSelected}
+                                                    onChange={makeHandleSelect(
+                                                        row.identifier
+                                                    )}
                                                 />
                                             </TableCell>
                                             <TableCell
@@ -167,19 +173,32 @@ export default function WorkspaceTable(props) {
                                                 id={labelId}
                                                 scope="row"
                                                 padding="none"
+                                                onClick={makeClickHandler(row)}
                                             >
                                                 {row.firstName +
                                                     " " +
                                                     row.lastName}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell
+                                                onClick={makeClickHandler(row)}
+                                            >
                                                 {row.emailAddress}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell
+                                                onClick={makeClickHandler(row)}
+                                            >
                                                 {row.companyName}
                                             </TableCell>
-                                            <TableCell>03/05/1999</TableCell>
-                                            <TableCell>TODO</TableCell>
+                                            <TableCell
+                                                onClick={makeClickHandler(row)}
+                                            >
+                                                03/05/1999
+                                            </TableCell>
+                                            <TableCell
+                                                onClick={makeClickHandler(row)}
+                                            >
+                                                TODO
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

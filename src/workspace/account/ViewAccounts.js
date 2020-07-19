@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
@@ -221,7 +222,7 @@ const actions2 = [
  * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
  */
 function ViewAccounts(props) {
-    const { accounts, fetchAccounts, newAccount } = props;
+    const { accounts, fetchAccounts, newAccount, history } = props;
     const classes = useStyles();
     const [selected, setSelected] = useState([]);
     const [openFilter, setOpenFilter] = useState(false);
@@ -239,6 +240,10 @@ function ViewAccounts(props) {
         } else if (type === "compact" || type === "default") {
             setCompact(!compact);
         }
+    };
+
+    const onClick = (account) => {
+        history.push("/accounts/" + account.identifier);
     };
 
     // TODO: Create a deep copy without serializing !
@@ -275,6 +280,7 @@ function ViewAccounts(props) {
                         rows={accounts}
                         selected={selected}
                         compact={compact}
+                        onClick={onClick}
                     />
                 </Grid>
                 {openFilter && (
@@ -303,4 +309,7 @@ const mapDispatchToProps = {
     newAccount: actions.newAccount,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewAccounts);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withRouter(ViewAccounts));

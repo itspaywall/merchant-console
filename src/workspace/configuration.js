@@ -3,7 +3,7 @@ import React from "react";
 const workspaceConfiguration = [
     // Account
     {
-        path: "/accounts/id", // TODO: id should be variable
+        path: "/accounts/:identifier", // TODO: id should be variable
         component: React.lazy(() => import("./account/ViewAccount")),
     },
     {

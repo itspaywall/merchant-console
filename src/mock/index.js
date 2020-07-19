@@ -180,10 +180,12 @@ mock.onGet("/api/v1/accounts").reply((request) => {
     return [200, accounts];
 });
 
-const GET_ACCOUNT_URL = /\/api\/v1\/accounts\/([a-zA-Z0-0-]+)/;
+const GET_ACCOUNT_URL = /\/api\/v1\/accounts\/([a-zA-Z0-9-]+)/;
 mock.onGet(GET_ACCOUNT_URL).reply((request) => {
-    const identifier = GET_ACCOUNT_URL.exec(request.url)[0];
-    let account = accounts.find((account) => account.identifier === identifier);
+    const identifier = GET_ACCOUNT_URL.exec(request.url)[1];
+    let account = accounts.find((account) => {
+        return account.identifier === identifier;
+    });
 
     if (account) {
         // TODO: Solve the recursive problem.
