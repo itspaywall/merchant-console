@@ -5,7 +5,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { useParams, withRouter } from "react-router-dom";
-import faker from "faker";
 
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import SubscriptionCard from "../subscription/SubscriptionCard";
@@ -85,9 +84,8 @@ function ViewAccount(props) {
 
     useEffect(() => {
         fetchAccount(identifier);
-
         return clearAccount;
-    }, [identifier, fetchAccount]);
+    }, [identifier, fetchAccount, clearAccount]);
 
     return (
         <div>

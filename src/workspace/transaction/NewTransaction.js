@@ -4,7 +4,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/styles";
 import RecordForm from "../RecordForm";
 import * as actions from "../../redux/actions";
@@ -163,14 +162,14 @@ function NewTransaction(props) {
                         className={classes.dialogAction}
                     >
                         Save
-					</Button>
+                    </Button>
                     <Button
                         onClick={closeDialog}
                         color="primary"
                         className={classes.dialogAction}
                     >
                         Cancel
-					</Button>
+                    </Button>
                 </div>
             </DialogActions>
         </Dialog>
