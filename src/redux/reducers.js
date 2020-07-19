@@ -6,6 +6,7 @@ function dialogReducer(state = null, action) {
         case ActionTypes.NEW_ACCOUNT:
         case ActionTypes.NEW_SUBSCRIPTION:
         case ActionTypes.NEW_INVOICE:
+        case ActionTypes.NEW_TRANSACTION:
         case ActionTypes.NEW_PLAN: {
             return action.type;
         }

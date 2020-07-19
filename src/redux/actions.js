@@ -22,6 +22,13 @@ export function newInvoice() {
     };
 }
 
+export function newTransaction() {
+    return {
+        type: ActionTypes.NEW_TRANSACTION,
+        payload: null,
+    };
+}
+
 export function newPlan() {
     return {
         type: ActionTypes.NEW_PLAN,

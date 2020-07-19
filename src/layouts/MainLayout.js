@@ -13,6 +13,8 @@ import { connect } from "react-redux";
 
 import routes from "../routes";
 import NewAccount from "../workspace/account/NewAccount";
+import NewSubscription from "../workspace/subscription/NewSubscription";
+import NewTransaction from "../workspace/transaction/NewTransaction";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -127,6 +129,8 @@ function MainLayout(props) {
             </div>
 
             {openDialog === "NEW_ACCOUNT" && <NewAccount />}
+            {openDialog === "NEW_SUBSCRIPTION" && <NewSubscription />}
+            {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
 
             {renderNotification(notification)}
         </React.Fragment>
