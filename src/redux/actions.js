@@ -100,3 +100,10 @@ export function fetchAccountComplete(account) {
         payload: account,
     };
 }
+
+export function clearAccount() {
+    return {
+        type: ActionTypes.CLEAR_ACCOUNT,
+        payload: null,
+    };
+}

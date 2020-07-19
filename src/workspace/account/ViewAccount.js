@@ -80,11 +80,13 @@ const account = {
 function ViewAccount(props) {
     const classes = useStyles();
     const handleEditAccount = () => {};
-    const { fetchAccount, account } = props;
+    const { fetchAccount, clearAccount, account } = props;
     const { identifier } = useParams();
 
     useEffect(() => {
         fetchAccount(identifier);
+
+        return clearAccount;
     }, [identifier, fetchAccount]);
 
     return (
@@ -158,6 +160,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     fetchAccount: actions.fetchAccount,
+    clearAccount: actions.clearAccount,
 };
 
 export default connect(
