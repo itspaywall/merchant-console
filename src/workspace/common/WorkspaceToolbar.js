@@ -7,12 +7,6 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
-import ListIcon from "@material-ui/icons/ViewList";
-import FilterIcon from "@material-ui/icons/FilterList";
-import CompactIcon from "@material-ui/icons/ViewCompact";
-
 const useToolbarStyles = makeStyles((theme) => ({
     appBar: {
         color: theme.palette.primary,
@@ -44,18 +38,16 @@ const useToolbarStyles = makeStyles((theme) => ({
                   color: theme.palette.text.primary,
                   backgroundColor: theme.palette.secondary.dark,
               },
+    actionIcon: {
+        marginRight: 4,
+    },
 }));
 
-function WorkspaceTableToolbar(props) {
+function WorkspaceToolbar(props) {
     const classes = useToolbarStyles();
-    const {
-        title,
-        selectionCount,
-        onNew,
-        compact,
-        toggleCompact,
-        toggleFilter,
-    } = props;
+    const { title, selectionCount, actions, onAction } = props;
+
+    const makeActionHandler = (identifier) => () => onAction(identifier);
 
     const normalTitle = (
         <Typography
@@ -78,62 +70,57 @@ function WorkspaceTableToolbar(props) {
         </Typography>
     );
 
-    const recordButtons = (
-        <Button
-            className={classes.action}
-            variant="text"
-            size="small"
-            color="primary"
-        >
-            <DeleteIcon />
-            Delete
-        </Button>
-    );
     const selected = selectionCount > 0;
 
-    const normalButtons = (
-        <React.Fragment>
-            <Button
-                className={classes.action}
-                variant="text"
-                size="small"
-                color="primary"
-                onClick={onNew}
-            >
-                <AddIcon />
-                New
-            </Button>
-            <Button
-                className={classes.action}
-                variant="text"
-                size="small"
-                color="primary"
-                onClick={toggleFilter}
-            >
-                <FilterIcon />
-                Filter
-            </Button>
-            <Button
-                className={classes.action}
-                variant="text"
-                size="small"
-                color="primary"
-                onClick={toggleCompact}
-            >
-                {compact ? (
-                    <React.Fragment>
-                        <ListIcon />
-                        Default View
-                    </React.Fragment>
-                ) : (
-                    <React.Fragment>
-                        <CompactIcon />
-                        Compact
-                    </React.Fragment>
-                )}
-            </Button>
-        </React.Fragment>
-    );
+    const recordButtons = () => {
+        if (actions) {
+            return actions.map(
+                (action) =>
+                    !action.primary && (
+                        <Button
+                            className={classes.action}
+                            variant="text"
+                            size="small"
+                            color="primary"
+                            onClick={makeActionHandler(action.identifier)}
+                        >
+                            <action.icon className={classes.actionIcon} />
+                            {action.title}
+                        </Button>
+                    )
+            );
+        }
+        return null;
+    };
+
+    const normalButtons = () => {
+        if (actions) {
+            return (
+                <React.Fragment>
+                    {actions.map(
+                        (action) =>
+                            action.primary && (
+                                <Button
+                                    className={classes.action}
+                                    variant="text"
+                                    size="small"
+                                    color="primary"
+                                    onClick={makeActionHandler(
+                                        action.identifier
+                                    )}
+                                >
+                                    <action.icon
+                                        className={classes.actionIcon}
+                                    />
+                                    {action.title}
+                                </Button>
+                            )
+                    )}
+                </React.Fragment>
+            );
+        }
+        return null;
+    };
 
     return (
         <AppBar position="static" elevation={1} className={classes.appBar}>
@@ -145,15 +132,15 @@ function WorkspaceTableToolbar(props) {
                 {selected ? selectedTitle : normalTitle}
 
                 <div className={classes.buttons}>
-                    {selected ? recordButtons : normalButtons}
+                    {selected ? recordButtons() : normalButtons()}
                 </div>
             </Toolbar>
         </AppBar>
     );
 }
 
-WorkspaceTableToolbar.propTypes = {
+WorkspaceToolbar.propTypes = {
     selectionCount: PropTypes.number.isRequired,
 };
 
-export default WorkspaceTableToolbar;
+export default WorkspaceToolbar;
