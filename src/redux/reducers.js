@@ -44,10 +44,20 @@ function accountsReducer(state = [], action) {
     }
 }
 
+function accountReducer(state = null, action) {
+    if (action.type === "FETCH_ACCOUNT_COMPLETE") {
+        return action.payload;
+    } else if (action.type == "CLEAR_ACCOUNT") {
+        return null;
+    }
+    return state;
+}
+
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
     accounts: accountsReducer,
+    account: accountReducer,
 });
 
 export default rootReducer;

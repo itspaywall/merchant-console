@@ -82,3 +82,28 @@ export function fetchAccounts() {
         });
     };
 }
+
+export function fetchAccount(identifier) {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading account...', 'LOADING'));
+        console.log("/api/v1/accounts/" + identifier);
+        return axios.get("/api/v1/accounts/" + identifier).then((response) => {
+            const account = response.data;
+            dispatch(fetchAccountComplete(account));
+        });
+    };
+}
+
+export function fetchAccountComplete(account) {
+    return {
+        type: ActionTypes.FETCH_ACCOUNT_COMPLETE,
+        payload: account,
+    };
+}
+
+export function clearAccount() {
+    return {
+        type: ActionTypes.CLEAR_ACCOUNT,
+        payload: null,
+    };
+}
