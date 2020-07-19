@@ -1,6 +1,9 @@
 import faker from "faker";
 import { format } from "date-fns";
-import mock from "./mock";
+import MockAdapter from "axios-mock-adapter";
+import axios from "axios";
+
+const mock = new MockAdapter(axios, { delayResponse: 1000 });
 
 const DEFAULT_PLANS = 10;
 const DEFAULT_ACCOUNTS = 100;

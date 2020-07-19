@@ -1,2 +1,0 @@
-import "./mock";
-import "./backend";
