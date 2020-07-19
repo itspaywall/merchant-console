@@ -136,6 +136,34 @@ function generateFakeData() {
 
 generateFakeData();
 
+// Plans
+
+mock.onPost("/api/v1/plans").reply((request) => {
+    const plan = JSON.parse(request.data);
+    plan.id = faker.random.uuid();
+    plans.push(plan);
+
+    return [200, plan];
+});
+
+// TODO: Paging
+mock.onGet("/api/v1/plans").reply((request) => {
+    return [200, plans];
+});
+
+const GET_PLAN_URL = /\/api\/v1\/plans\/([a-zA-Z0-0-]+)/;
+mock.onGet(GET_PLAN_URL).reply((request) => {
+    const identifier = GET_PLAN_URL.exec(request.url)[0];
+    const plan = plans.find((plan) => plan.identifier === identifier);
+    if (plan) {
+        return [200, plan];
+    } else {
+        return [404];
+    }
+});
+
+// Accounts
+
 mock.onPost("/api/v1/accounts").reply((request) => {
     const account = JSON.parse(request.data);
     account.id = faker.random.uuid();
@@ -144,6 +172,50 @@ mock.onPost("/api/v1/accounts").reply((request) => {
     return [200, account];
 });
 
+// TODO: Paging
 mock.onGet("/api/v1/accounts").reply((request) => {
     return [200, accounts];
+});
+
+const GET_ACCOUNT_URL = /\/api\/v1\/accounts\/([a-zA-Z0-0-]+)/;
+mock.onGet(GET_ACCOUNT_URL).reply((request) => {
+    const identifier = GET_ACCOUNT_URL.exec(request.url)[0];
+    let account = accounts.find((account) => account.identifier === identifier);
+
+    if (account) {
+        // TODO: Solve the recursive problem.
+        delete account.subscriptions;
+        return [200, account];
+    } else {
+        return [404];
+    }
+});
+
+// Subscriptions
+
+mock.onPost("/api/v1/subscriptions").reply((request) => {
+    const subscription = JSON.parse(request.data);
+    subscription.id = faker.random.uuid();
+    subscription.push(subscription);
+
+    return [200, subscription];
+});
+
+// TODO: Paging
+mock.onGet("/api/v1/subscriptions").reply((request) => {
+    return [200, subscriptions];
+});
+
+const GET_SUBSCRIPTION_URL = /\/api\/v1\/subscriptions\/([a-zA-Z0-0-]+)/;
+mock.onGet(GET_SUBSCRIPTION_URL).reply((request) => {
+    const identifier = GET_SUBSCRIPTION_URL.exec(request.url)[0];
+    const subscription = subscriptions.find(
+        (subscription) => subscription.identifier === identifier
+    );
+    if (subscription) {
+        delete subscription.account;
+        return [200, subscription];
+    } else {
+        return [404];
+    }
 });
