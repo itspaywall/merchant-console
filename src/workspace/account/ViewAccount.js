@@ -63,6 +63,7 @@ const subscriptions = [
     },
 ];
 
+// Some fields aren't being rendered.
 function ViewAccount(props) {
     const classes = useStyles();
     const { fetchAccount, clearAccount, account, editAccount } = props;

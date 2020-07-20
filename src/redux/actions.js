@@ -72,11 +72,26 @@ export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return axios.post("/api/v1/accounts", account).then((response) => {
-            // const AccountFormDialog = response.data;
+            // const account = response.data;
             dispatch(
-                showNotification("Successfully created an account", "SUCCESS")
+                showNotification("Successfully created account", "SUCCESS")
             );
         });
+    };
+}
+
+export function saveAccount(account) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving account...", "LOADING"));
+        return axios
+            .put("/api/v1/accounts/" + account.identifier, account)
+            .then((response) => {
+                const account = response.data;
+                dispatch(fetchAccountComplete(account));
+                dispatch(
+                    showNotification("Successfully saved account", "SUCCESS")
+                );
+            });
     };
 }
 

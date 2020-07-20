@@ -5,13 +5,12 @@ import * as actions from "../../redux/actions";
 import AccountFormDialog from "./AccountFormDialog";
 
 function EditAccount(props) {
-    const { account } = props;
-    const onSave = (account) => {};
+    const { account, saveAccount, clearAccount } = props;
     return (
         <AccountFormDialog
             title="Edit Account"
             showMore={true}
-            onSave={onSave}
+            onSave={saveAccount}
             account={account}
         />
     );
@@ -23,6 +22,8 @@ function mapStateToProps(state) {
     };
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    saveAccount: actions.saveAccount,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditAccount);

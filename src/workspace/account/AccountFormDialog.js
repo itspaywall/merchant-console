@@ -279,7 +279,7 @@ function copyObject(object) {
 }
 
 function AccountFormDialog(props) {
-    const { closeDialog, createAccount, title } = props;
+    const { closeDialog, title, onSave } = props;
     const classes = useStyles(props);
     const [showMore, setShowMore] = React.useState(props.showMore);
     const [values, setValues] = React.useState(
@@ -290,7 +290,7 @@ function AccountFormDialog(props) {
     };
     const handleSave = () => {
         closeDialog();
-        createAccount(values);
+        onSave(values);
     };
     // TODO: Create a deep copy without serializing !
     const handleValueChange = (field, value) => {
@@ -375,7 +375,6 @@ AccountFormDialog.defaultProps = {
 
 const mapDispatchToProps = {
     closeDialog: actions.closeDialog,
-    createAccount: actions.createAccount,
 };
 
 export default connect(null, mapDispatchToProps)(AccountFormDialog);
