@@ -65,9 +65,12 @@ const subscriptions = [
 
 function ViewAccount(props) {
     const classes = useStyles();
-    const handleEditAccount = () => {};
-    const { fetchAccount, clearAccount, account } = props;
+    const { fetchAccount, clearAccount, account, editAccount } = props;
     const { identifier } = useParams();
+
+    const handleEditAccount = () => {
+        editAccount(account);
+    };
 
     useEffect(() => {
         fetchAccount(identifier);
@@ -148,6 +151,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     fetchAccount: actions.fetchAccount,
     clearAccount: actions.clearAccount,
+    editAccount: actions.editAccount,
 };
 
 export default connect(

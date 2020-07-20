@@ -132,6 +132,8 @@ function MainLayout(props) {
             {openDialog === "NEW_SUBSCRIPTION" && <NewSubscription />}
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
 
+            {openDialog === "EDIT_ACCOUNT" && <NewAccount />}
+
             {renderNotification(notification)}
         </React.Fragment>
     );

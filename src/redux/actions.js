@@ -8,6 +8,13 @@ export function newAccount() {
     };
 }
 
+export function editAccount(account) {
+    return {
+        type: ActionTypes.EDIT_ACCOUNT,
+        payload: account,
+    };
+}
+
 export function newSubscription() {
     return {
         type: ActionTypes.NEW_SUBSCRIPTION,
