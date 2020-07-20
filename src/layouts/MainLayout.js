@@ -12,7 +12,8 @@ import MainDrawer from "./MainDrawer";
 import { connect } from "react-redux";
 
 import routes from "../routes";
-import NewAccount from "../workspace/account/NewAccount";
+import AccountFormDialog from "../workspace/account/AccountFormDialog";
+import EditAccount from "../workspace/account/EditAccount";
 import NewSubscription from "../workspace/subscription/NewSubscription";
 import NewTransaction from "../workspace/transaction/NewTransaction";
 import * as actions from "../redux/actions";
@@ -53,7 +54,12 @@ const useStyles = makeStyles((theme) => ({
 // TODO: The layouts should be configurable.
 // TODO: Show drawer instead of toolbar for smaller screens.
 function MainLayout(props) {
-    const { openDialog, notification, closeNotification } = props;
+    const {
+        openDialog,
+        notification,
+        closeNotification,
+        createAccount,
+    } = props;
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const classes = useStyles();
 
@@ -128,9 +134,13 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "NEW_ACCOUNT" && <NewAccount />}
+            {openDialog === "NEW_ACCOUNT" && (
+                <AccountFormDialog title="New Account" onSave={createAccount} />
+            )}
             {openDialog === "NEW_SUBSCRIPTION" && <NewSubscription />}
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
+
+            {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
 
             {renderNotification(notification)}
         </React.Fragment>
@@ -144,6 +154,9 @@ function mapStateToProps(state) {
     };
 }
 
-const mapDispatchToProps = { closeNotification: actions.closeNotification };
+const mapDispatchToProps = {
+    closeNotification: actions.closeNotification,
+    createAccount: actions.createAccount,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

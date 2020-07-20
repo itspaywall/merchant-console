@@ -8,6 +8,13 @@ export function newAccount() {
     };
 }
 
+export function editAccount(account) {
+    return {
+        type: ActionTypes.EDIT_ACCOUNT,
+        payload: account,
+    };
+}
+
 export function newSubscription() {
     return {
         type: ActionTypes.NEW_SUBSCRIPTION,
@@ -65,11 +72,26 @@ export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return axios.post("/api/v1/accounts", account).then((response) => {
-            // const newAccount = response.data;
+            // const account = response.data;
             dispatch(
-                showNotification("Successfully created an account", "SUCCESS")
+                showNotification("Successfully created account", "SUCCESS")
             );
         });
+    };
+}
+
+export function saveAccount(account) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving account...", "LOADING"));
+        return axios
+            .put("/api/v1/accounts/" + account.identifier, account)
+            .then((response) => {
+                const account = response.data;
+                dispatch(fetchAccountComplete(account));
+                dispatch(
+                    showNotification("Successfully saved account", "SUCCESS")
+                );
+            });
     };
 }
 

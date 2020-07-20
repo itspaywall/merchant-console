@@ -7,7 +7,8 @@ function dialogReducer(state = null, action) {
         case ActionTypes.NEW_SUBSCRIPTION:
         case ActionTypes.NEW_INVOICE:
         case ActionTypes.NEW_TRANSACTION:
-        case ActionTypes.NEW_PLAN: {
+        case ActionTypes.NEW_PLAN:
+        case ActionTypes.EDIT_ACCOUNT: {
             return action.type;
         }
 
@@ -46,12 +47,20 @@ function accountsReducer(state = [], action) {
 }
 
 function accountReducer(state = null, action) {
-    if (action.type === "FETCH_ACCOUNT_COMPLETE") {
-        return action.payload;
-    } else if (action.type === "CLEAR_ACCOUNT") {
-        return null;
+    switch (action.type) {
+        case ActionTypes.FETCH_ACCOUNT_COMPLETE:
+        case ActionTypes.EDIT_ACCOUNT: {
+            return action.payload;
+        }
+
+        case ActionTypes.CLEAR_ACCOUNT: {
+            return null;
+        }
+
+        default: {
+            return state;
+        }
     }
-    return state;
 }
 
 const rootReducer = combineReducers({

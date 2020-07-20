@@ -27,6 +27,13 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 500,
     },
     subscriptions: {},
+    progress: {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        marginTop: -24,
+        marginLeft: -24,
+    },
 }));
 
 const subscriptions = [
@@ -56,31 +63,15 @@ const subscriptions = [
     },
 ];
 
-/*
-const account = {
-    id: faker.random.uuid(),
-    userName: faker.internet.userName(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    companyName: faker.company.companyName(),
-    position: faker.name.jobTitle(),
-    emailAddress: faker.internet.email(),
-    phoneNumber: faker.phone.phoneNumber(),
-    addressLine1: faker.address.streetAddress(),
-    addressLine2: faker.address.secondaryAddress(),
-    city: faker.address.city(),
-    state: faker.address.state(),
-    country: faker.address.country(),
-    zipCode: faker.address.zipCode(),
-};*/
-
-// TODO: WorkspaceToolbar should be renamed to WorkspaceToolbar.
-// Further, it should allow us to specify custom buttons.
+// Some fields aren't being rendered.
 function ViewAccount(props) {
     const classes = useStyles();
-    const handleEditAccount = () => {};
-    const { fetchAccount, clearAccount, account } = props;
+    const { fetchAccount, clearAccount, account, editAccount } = props;
     const { identifier } = useParams();
+
+    const handleEditAccount = () => {
+        editAccount(account);
+    };
 
     useEffect(() => {
         fetchAccount(identifier);
@@ -90,7 +81,9 @@ function ViewAccount(props) {
     return (
         <div>
             <WorkspaceToolbar title="Account" />
-            {!account && <CircularProgress />}
+            {!account && (
+                <CircularProgress size="48px" className={classes.progress} />
+            )}
             {account && (
                 <div className={classes.container}>
                     <div className={classes.section}>
@@ -159,6 +152,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     fetchAccount: actions.fetchAccount,
     clearAccount: actions.clearAccount,
+    editAccount: actions.editAccount,
 };
 
 export default connect(

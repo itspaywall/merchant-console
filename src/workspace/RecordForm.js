@@ -30,8 +30,8 @@ export default function RecordForm(props) {
     const classes = useStyles(props);
     const [tabIndex, setTabIndex] = React.useState(0);
 
-    const makeChangeHandler = (group, field) => (event) => {
-        onValueChange(group, field, event.target.value);
+    const makeChangeHandler = (field) => (event) => {
+        onValueChange(field, event.target.value);
     };
 
     return (
@@ -81,14 +81,9 @@ export default function RecordForm(props) {
                                                 variant="outlined"
                                                 fullWidth={true}
                                                 required={field.required}
-                                                value={
-                                                    values[groupIndex][
-                                                        fieldIndex
-                                                    ].value
-                                                }
+                                                value={values[field.identifier]}
                                                 onChange={makeChangeHandler(
-                                                    groupIndex,
-                                                    fieldIndex
+                                                    field
                                                 )}
                                             />
                                         )}

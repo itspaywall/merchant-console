@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/styles";
 import RecordForm from "../RecordForm";
+import PropTypes from "prop-types";
 
 import * as actions from "../../redux/actions";
 import { connect } from "react-redux";
@@ -263,41 +264,38 @@ const groups = [
 ];
 
 function extractValues(groups) {
-    const result = [];
+    const result = {};
     groups.forEach((group) => {
-        const values = group.children.map((field) => ({
-            identifier: field.identifier,
-            value: field.defaultValue,
-        }));
-        result.push(values);
+        group.children.forEach(
+            (field) => (result[field.identifier] = field.defaultValue)
+        );
     });
     return result;
 }
 
-function extractRecord(groups) {
-    const result = {};
-    groups.forEach((group) =>
-        group.forEach((field) => (result[field.identifier] = field.value))
-    );
-    return result;
+// TODO: Use a deep cloning library!
+function copyObject(object) {
+    return JSON.parse(JSON.stringify(object));
 }
 
-function NewAccount(props) {
-    const { closeDialog, createAccount } = props;
+function AccountFormDialog(props) {
+    const { closeDialog, title, onSave } = props;
     const classes = useStyles(props);
-    const [showMore, setShowMore] = React.useState(false);
-    const [values, setValues] = React.useState(extractValues(groups));
+    const [showMore, setShowMore] = React.useState(props.showMore);
+    const [values, setValues] = React.useState(
+        props.account ? copyObject(props.account) : extractValues(groups)
+    );
     const handleShowMore = () => {
         setShowMore(!showMore);
     };
     const handleSave = () => {
         closeDialog();
-        createAccount(extractRecord(values));
+        onSave(values);
     };
     // TODO: Create a deep copy without serializing !
-    const handleValueChange = (group, field, value) => {
+    const handleValueChange = (field, value) => {
         const newValues = JSON.parse(JSON.stringify(values));
-        newValues[group][field].value = value;
+        newValues[field.identifier] = value;
 
         setValues(newValues);
     };
@@ -305,11 +303,9 @@ function NewAccount(props) {
     return (
         <Dialog
             open={true}
-            onClose={closeDialog}
-            aria-labelledby="form-dialog-title"
             className={showMore ? classes.mainMore : classes.mainLess}
         >
-            <DialogTitle id="form-dialog-title">New Account</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <RecordForm
                     showMore={showMore}
@@ -363,9 +359,22 @@ function NewAccount(props) {
     );
 }
 
-const mapDispatchToProps = {
-    closeDialog: actions.closeDialog,
-    createAccount: actions.createAccount,
+AccountFormDialog.propTypes = {
+    title: PropTypes.string.isRequired,
+    showMore: PropTypes.bool,
+    account: PropTypes.object,
+    onSave: PropTypes.func.isRequired,
+    onCancel: PropTypes.func,
 };
 
-export default connect(null, mapDispatchToProps)(NewAccount);
+AccountFormDialog.defaultProps = {
+    showMore: false,
+    account: null,
+    onCancel: null,
+};
+
+const mapDispatchToProps = {
+    closeDialog: actions.closeDialog,
+};
+
+export default connect(null, mapDispatchToProps)(AccountFormDialog);
