@@ -73,6 +73,52 @@ export function createAccount(account) {
     };
 }
 
+export function createSubscription(subscription) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving subscription...", "LOADING"));
+        return axios
+            .post("/api/v1/subscriptions", subscription)
+            .then((response) => {
+                // const newSubscription = response.data;
+                dispatch(
+                    showNotification(
+                        "Successfully created a subscription",
+                        "SUCCESS"
+                    )
+                );
+            });
+    };
+}
+
+export function createTransaction(transaction) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving transaction...", "LOADING"));
+        return axios
+            .post("/api/v1/transactions", transaction)
+            .then((response) => {
+                // const newPlan = response.data;
+                dispatch(
+                    showNotification(
+                        "Successfully created a transaction",
+                        "SUCCESS"
+                    )
+                );
+            });
+    };
+}
+
+export function createPlan(plan) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving plan...", "LOADING"));
+        return axios.post("/api/v1/plans", plan).then((response) => {
+            // const newPlan = response.data;
+            dispatch(
+                showNotification("Successfully created a plan", "SUCCESS")
+            );
+        });
+    };
+}
+
 export function fetchAccountsComplete(accounts) {
     return {
         type: ActionTypes.FETCH_ACCOUNTS_COMPLETE,
