@@ -72,7 +72,7 @@ export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return axios.post("/api/v1/accounts", account).then((response) => {
-            // const newAccount = response.data;
+            // const AccountFormDialog = response.data;
             dispatch(
                 showNotification("Successfully created an account", "SUCCESS")
             );

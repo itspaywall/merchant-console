@@ -12,7 +12,8 @@ import MainDrawer from "./MainDrawer";
 import { connect } from "react-redux";
 
 import routes from "../routes";
-import NewAccount from "../workspace/account/NewAccount";
+import AccountFormDialog from "../workspace/account/AccountFormDialog";
+import EditAccount from "../workspace/account/EditAccount";
 import NewSubscription from "../workspace/subscription/NewSubscription";
 import NewTransaction from "../workspace/transaction/NewTransaction";
 import * as actions from "../redux/actions";
@@ -128,11 +129,13 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "NEW_ACCOUNT" && <NewAccount />}
+            {openDialog === "NEW_ACCOUNT" && (
+                <AccountFormDialog title="New Account" />
+            )}
             {openDialog === "NEW_SUBSCRIPTION" && <NewSubscription />}
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
 
-            {openDialog === "EDIT_ACCOUNT" && <NewAccount />}
+            {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
 
             {renderNotification(notification)}
         </React.Fragment>
