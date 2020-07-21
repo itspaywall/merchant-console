@@ -63,11 +63,24 @@ function accountReducer(state = null, action) {
     }
 }
 
+function subscriptionsReducer(state = [], action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_SUBSCRIPTIONS_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
     accounts: accountsReducer,
     account: accountReducer,
+    subscriptions: subscriptionsReducer,
 });
 
 export default rootReducer;

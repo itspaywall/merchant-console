@@ -63,7 +63,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WorkspaceTable(props) {
     const classes = useStyles();
-    const { onSelected, rows, headers, selected, compact, onClick } = props;
+    const {
+        onSelected,
+        rows,
+        headers,
+        selected,
+        compact,
+        onClick,
+        renderCellValue,
+    } = props;
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
     const [page, setPage] = React.useState(0);
@@ -104,8 +112,8 @@ export default function WorkspaceTable(props) {
         onSelected(newSelected);
     };
 
-    const makeClickHandler = (record) => () => {
-        onClick(record);
+    const makeClickHandler = (row, index) => () => {
+        onClick(row);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -121,6 +129,16 @@ export default function WorkspaceTable(props) {
 
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+    const renderCells = (row, rowIndex) => (
+        <React.Fragment>
+            {headers.map((column, columnIndex) => (
+                <TableCell onClick={makeClickHandler(row, rowIndex)}>
+                    {renderCellValue(row, rowIndex, column, columnIndex)}
+                </TableCell>
+            ))}
+        </React.Fragment>
+    );
 
     return (
         <div className={classes.root}>
@@ -150,7 +168,6 @@ export default function WorkspaceTable(props) {
                                     const isItemSelected = isSelected(
                                         row.identifier
                                     );
-                                    const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
@@ -168,37 +185,8 @@ export default function WorkspaceTable(props) {
                                                     )}
                                                 />
                                             </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
-                                                onClick={makeClickHandler(row)}
-                                            >
-                                                {row.firstName +
-                                                    " " +
-                                                    row.lastName}
-                                            </TableCell>
-                                            <TableCell
-                                                onClick={makeClickHandler(row)}
-                                            >
-                                                {row.emailAddress}
-                                            </TableCell>
-                                            <TableCell
-                                                onClick={makeClickHandler(row)}
-                                            >
-                                                {row.companyName}
-                                            </TableCell>
-                                            <TableCell
-                                                onClick={makeClickHandler(row)}
-                                            >
-                                                03/05/1999
-                                            </TableCell>
-                                            <TableCell
-                                                onClick={makeClickHandler(row)}
-                                            >
-                                                TODO
-                                            </TableCell>
+
+                                            {renderCells(row, index)}
                                         </TableRow>
                                     );
                                 })}
