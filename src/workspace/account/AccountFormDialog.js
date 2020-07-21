@@ -6,9 +6,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/styles";
-import RecordForm from "../RecordForm";
 import PropTypes from "prop-types";
 
+import RecordForm from "../RecordForm";
+import { extractValues } from "../RecordForm";
 import * as actions from "../../redux/actions";
 import { connect } from "react-redux";
 
@@ -204,7 +205,7 @@ const groups = [
         ],
     },
     {
-        label: "Organization",
+        label: "Company",
         children: [
             {
                 label: "Name",
@@ -263,27 +264,12 @@ const groups = [
     },
 ];
 
-function extractValues(groups) {
-    const result = {};
-    groups.forEach((group) => {
-        group.children.forEach(
-            (field) => (result[field.identifier] = field.defaultValue)
-        );
-    });
-    return result;
-}
-
-// TODO: Use a deep cloning library!
-function copyObject(object) {
-    return JSON.parse(JSON.stringify(object));
-}
-
 function AccountFormDialog(props) {
     const { closeDialog, title, onSave } = props;
     const classes = useStyles(props);
     const [showMore, setShowMore] = React.useState(props.showMore);
     const [values, setValues] = React.useState(
-        props.account ? copyObject(props.account) : extractValues(groups)
+        props.account || extractValues(groups)
     );
     const handleShowMore = () => {
         setShowMore(!showMore);
