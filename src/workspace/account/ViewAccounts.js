@@ -260,6 +260,34 @@ function ViewAccounts(props) {
         setFilterValues(defaultValues);
     };
 
+    const renderCellValue = (row, rowIndex, column, columnIndex) => {
+        switch (column.identifier) {
+            case "name": {
+                return row.firstName + " " + row.lastName;
+            }
+
+            case "email": {
+                return row.emailAddress;
+            }
+
+            case "company": {
+                return row.companyName;
+            }
+
+            case "created": {
+                return row.createdOn;
+            }
+
+            case "plans": {
+                return "TODO";
+            }
+
+            default: {
+                return "Unknown Column";
+            }
+        }
+    };
+
     useEffect(() => {
         fetchAccounts();
     }, [fetchAccounts]);
@@ -281,6 +309,7 @@ function ViewAccounts(props) {
                         selected={selected}
                         compact={compact}
                         onClick={onClick}
+                        renderCellValue={renderCellValue}
                     />
                 </Grid>
                 {openFilter && (
