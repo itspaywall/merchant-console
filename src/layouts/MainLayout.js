@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import routes from "../routes";
 import AccountFormDialog from "../workspace/account/AccountFormDialog";
 import EditAccount from "../workspace/account/EditAccount";
-import NewSubscription from "../workspace/subscription/NewSubscription";
+import SubscriptionFormDialog from "../workspace/subscription/SubscriptionFormDialog";
 import NewTransaction from "../workspace/transaction/NewTransaction";
 import * as actions from "../redux/actions";
 
@@ -59,6 +59,7 @@ function MainLayout(props) {
         notification,
         closeNotification,
         createAccount,
+        createSubscription,
     } = props;
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const classes = useStyles();
@@ -137,7 +138,12 @@ function MainLayout(props) {
             {openDialog === "NEW_ACCOUNT" && (
                 <AccountFormDialog title="New Account" onSave={createAccount} />
             )}
-            {openDialog === "NEW_SUBSCRIPTION" && <NewSubscription />}
+            {openDialog === "NEW_SUBSCRIPTION" && (
+                <SubscriptionFormDialog
+                    title="New Subscription"
+                    onSave={createSubscription}
+                />
+            )}
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
 
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
@@ -157,6 +163,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     closeNotification: actions.closeNotification,
     createAccount: actions.createAccount,
+    createSubscription: actions.createSubscription,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

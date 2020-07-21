@@ -5,7 +5,7 @@ import * as actions from "../../redux/actions";
 import AccountFormDialog from "./AccountFormDialog";
 
 function EditAccount(props) {
-    const { account, saveAccount, clearAccount } = props;
+    const { account, saveAccount } = props;
     return (
         <AccountFormDialog
             title="Edit Account"

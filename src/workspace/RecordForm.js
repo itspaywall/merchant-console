@@ -25,6 +25,16 @@ const useStyles = makeStyles((theme) => ({
 // multiple_options (multiselect), single_option (drop down)
 // lookup - organization, user, contact
 
+export function extractValues(groups) {
+    const result = {};
+    groups.forEach((group) => {
+        group.children.forEach(
+            (field) => (result[field.identifier] = field.defaultValue)
+        );
+    });
+    return result;
+}
+
 export default function RecordForm(props) {
     const { values, groups, showMore, onValueChange } = props;
     const classes = useStyles(props);

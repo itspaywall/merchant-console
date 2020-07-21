@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,9 +7,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/styles";
-import RecordForm from "../RecordForm";
-import * as actions from "../../redux/actions";
 import { connect } from "react-redux";
+
+import RecordForm from "../RecordForm";
+import { extractValues } from "../RecordForm";
+import * as actions from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
     extraAction: {
@@ -48,7 +51,7 @@ const groups = [
             {
                 label: "Plan",
                 identifier: "plan",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -61,7 +64,7 @@ const groups = [
             {
                 label: "Billing Period",
                 identifier: "billingPeriod",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -74,7 +77,7 @@ const groups = [
             {
                 label: "Billing Period Unit",
                 identifier: "billingPeriodUnit",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -87,7 +90,7 @@ const groups = [
             {
                 label: "Setup Fee",
                 identifier: "setupFee",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -100,10 +103,10 @@ const groups = [
             {
                 label: "Trial Period",
                 identifier: "trailPeriod",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
-                quickAdd: false,
+                quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "The period of the trail subscription.",
@@ -113,10 +116,10 @@ const groups = [
             {
                 label: "Trial Period Unit",
                 identifier: "trialPeriodUnit",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
-                quickAdd: false,
+                quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "Number of units of trial period.",
@@ -126,10 +129,10 @@ const groups = [
             {
                 label: "Starts",
                 identifier: "starts",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
-                quickAdd: false,
+                quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "Start date of the subscription.",
@@ -139,10 +142,10 @@ const groups = [
             {
                 label: "Term",
                 identifier: "term",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
-                quickAdd: false,
+                quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "Term of the subscription.",
@@ -152,10 +155,10 @@ const groups = [
             {
                 label: "Term Unit",
                 identifier: "termUnit",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
-                quickAdd: false,
+                quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "Unit of the term.",
@@ -165,146 +168,10 @@ const groups = [
             {
                 label: "Renew",
                 identifier: "renew",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip:
-                    "Boolean value stating whether subscription is recurring.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-        ],
-    },
-    {
-        label: "Organization",
-        children: [
-            {
-                label: "Plan",
-                identifier: "plan",
-                type: "text_field",
-                required: true,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "The plan associated with the subscription.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Billing Period",
-                identifier: "billingPeriod",
-                type: "text_field",
-                required: true,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "The billing period of the subscription.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Billing Period Unit",
-                identifier: "billingPeriodUnit",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "The number of billing period units.",
-                multipleValues: true,
-                defaultValue: "",
-            },
-            {
-                label: "Setup Fee",
-                identifier: "setupFee",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "The fee required for setup of the subscription.",
-                multipleValues: true,
-                defaultValue: "",
-            },
-            {
-                label: "Trial Period",
-                identifier: "trailPeriod",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip: "The period of the trail subscription.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Trial Period Unit",
-                identifier: "trialPeriodUnit",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip: "Number of units of trial period.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Starts",
-                identifier: "starts",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip: "Start date of the subscription.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Term",
-                identifier: "term",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip: "Term of the subscription.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Term Unit",
-                identifier: "termUnit",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
-                unique: false,
-                hidden: false,
-                tooltip: "Unit of the term.",
-                multipleValues: false,
-                defaultValue: "",
-            },
-            {
-                label: "Renew",
-                identifier: "renew",
-                type: "text_field",
-                required: false,
-                readOnly: false,
-                quickAdd: false,
                 unique: false,
                 hidden: false,
                 tooltip:
@@ -316,42 +183,24 @@ const groups = [
     },
 ];
 
-function extractValues(groups) {
-    const result = [];
-    groups.forEach((group) => {
-        const values = group.children.map((field) => ({
-            identifier: field.identifier,
-            value: field.defaultValue,
-        }));
-        result.push(values);
-    });
-    return result;
-}
-
-function extractRecord(groups) {
-    const result = {};
-    groups.forEach((group) =>
-        group.forEach((field) => (result[field.identifier] = field.value))
-    );
-    return result;
-}
-
-function NewSubscription(props) {
-    const { closeDialog, createSubscription } = props;
+function SubscriptionFormDialog(props) {
+    const { title, closeDialog, onSave } = props;
     const classes = useStyles(props);
-    const [showMore, setShowMore] = React.useState(false);
-    const [values, setValues] = React.useState(extractValues(groups));
+    const [showMore, setShowMore] = React.useState(props.showMore);
+    const [values, setValues] = React.useState(
+        props.subscription || extractValues(groups)
+    );
     const handleShowMore = () => {
         setShowMore(!showMore);
     };
     const handleSave = () => {
         closeDialog();
-        createSubscription(extractRecord(values));
+        onSave(values);
     };
     // TODO: Create a deep copy without serializing !
-    const handleValueChange = (group, field, value) => {
+    const handleValueChange = (field, value) => {
         const newValues = JSON.parse(JSON.stringify(values));
-        newValues[group][field].value = value;
+        newValues[field.identifier] = value;
 
         setValues(newValues);
     };
@@ -359,11 +208,9 @@ function NewSubscription(props) {
     return (
         <Dialog
             open={true}
-            onClose={closeDialog}
-            aria-labelledby="form-dialog-title"
             className={showMore ? classes.mainMore : classes.mainLess}
         >
-            <DialogTitle id="form-dialog-title">New Subscription</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <RecordForm
                     showMore={showMore}
@@ -403,23 +250,37 @@ function NewSubscription(props) {
                         className={classes.dialogAction}
                     >
                         Save
-                </Button>
+                    </Button>
                     <Button
                         onClick={closeDialog}
                         color="primary"
                         className={classes.dialogAction}
                     >
                         Cancel
-                </Button>
+                    </Button>
                 </div>
             </DialogActions>
         </Dialog>
     );
 }
 
+SubscriptionFormDialog.propTypes = {
+    title: PropTypes.string.isRequired,
+    showMore: PropTypes.bool,
+    subscription: PropTypes.object,
+    onSave: PropTypes.func.isRequired,
+    onCancel: PropTypes.func,
+};
+
+SubscriptionFormDialog.defaultProps = {
+    showMore: false,
+    onCancel: false,
+    subscription: null,
+};
+
 const mapDispatchToProps = {
     closeDialog: actions.closeDialog,
     createSubscription: actions.createSubscription,
 };
 
-export default connect(null, mapDispatchToProps)(NewSubscription);
+export default connect(null, mapDispatchToProps)(SubscriptionFormDialog);

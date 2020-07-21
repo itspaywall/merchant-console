@@ -220,7 +220,7 @@ mock.onPut(PUT_ACCOUNT_URL).reply((request) => {
 mock.onPost("/api/v1/subscriptions").reply((request) => {
     const subscription = JSON.parse(request.data);
     subscription.id = faker.random.uuid();
-    subscription.push(subscription);
+    subscriptions.push(subscription);
 
     return [200, subscription];
 });
