@@ -158,6 +158,23 @@ export function fetchAccounts() {
     };
 }
 
+export function fetchSubscriptionsComplete(subscriptions) {
+    return {
+        type: ActionTypes.FETCH_SUBSCRIPTIONS_COMPLETE,
+        payload: subscriptions,
+    };
+}
+
+export function fetchSubscriptions() {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading subscriptions...', 'LOADING'));
+        return axios.get("/api/v1/subscriptions").then((response) => {
+            const subscriptions = response.data;
+            dispatch(fetchSubscriptionsComplete(subscriptions));
+        });
+    };
+}
+
 export function fetchAccount(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
