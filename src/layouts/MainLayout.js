@@ -16,7 +16,7 @@ import routes from "../routes";
 import AccountFormDrawer from "../workspace/account/AccountFormDrawer";
 import EditAccount from "../workspace/account/EditAccount";
 import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDrawer";
-import NewTransaction from "../workspace/transaction/NewTransaction";
+import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawer";
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
 import * as actions from "../redux/actions";
 
@@ -65,6 +65,7 @@ function MainLayout(props) {
         closeNotification,
         createAccount,
         createSubscription,
+        createTransaction,
         createPlan,
     } = props;
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -141,8 +142,6 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
-
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
 
             <AccountFormDrawer
@@ -154,6 +153,11 @@ function MainLayout(props) {
                 title="New Subscription"
                 onSave={createSubscription}
                 open={openDialog === "NEW_SUBSCRIPTION"}
+            />
+            <TransactionFormDrawer
+                title="New Transaction"
+                onSave={createTransaction}
+                open={openDialog === "NEW_TRANSACTION"}
             />
             <PlanFormDrawer
                 title="New Plan"
@@ -178,6 +182,7 @@ const mapDispatchToProps = {
     createAccount: actions.createAccount,
     createPlan: actions.createPlan,
     createSubscription: actions.createSubscription,
+    createTransaction: actions.createTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
