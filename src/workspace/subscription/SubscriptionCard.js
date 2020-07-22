@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -61,45 +62,83 @@ const useStyles = makeStyles((theme) => ({
 
 const fields = [
     {
-        identifier: "termBehavior",
-        title: "Term Behavior",
+        identifier: "setupFee",
+        title: "Setup Fee",
         size: 6,
+        render: (subscription) => subscription.setupFee + " INR",
+    },
+    {
+        identifier: "trialPeriod",
+        title: "Trial Period",
+        size: 6,
+        render: (subscription) =>
+            subscription.trialPeriod + " " + subscription.trialPeriodUnit,
+    },
+    {
+        identifier: "term",
+        title: "Term",
+        size: 6,
+        render: (subscription) =>
+            subscription.term + " " + subscription.termUnit,
+    },
+    {
+        identifier: "renews",
+        title: "Renews",
+        size: 6,
+        render: (subscription) => subscription.renews,
     },
     {
         identifier: "collection",
         title: "Collection",
         size: 6,
+        render: (subscription) => subscription.collection,
     },
     {
         identifier: "renewsOn",
         title: "Renews On",
         size: 6,
+        render: (subscription) => subscription.renewsOn,
     },
     {
         identifier: "startedOn",
         title: "Started On",
         size: 6,
+        render: (subscription) => subscription.startedOn,
     },
     {
         identifier: "currentPeriod",
         title: "Current Period",
         size: 12,
+        render: (subscription) =>
+            subscription.currentPeriodStart +
+            " - " +
+            subscription.currentPeriodEnd,
     },
     {
         identifier: "pricePerUnit",
         title: "Price Per Unit",
         size: 6,
+        render: (subscription) => subscription.pricePerUnit + " INR",
     },
     {
         identifier: "estimatedTotal",
         title: "Estimated Total",
         size: 6,
+        render: (subscription) => subscription.estimatedTotal + " INR",
     },
 ];
 
 function SubscriptionCard(props) {
     const classes = useStyles();
-    const { status, plan, onEdit, onPause, onCancel } = props;
+    const {
+        className,
+        plan,
+        onEdit,
+        onPause,
+        onCancel,
+        showMore,
+        createdOn,
+    } = props;
     const [menuAnchor, setMenuAnchor] = useState(null);
 
     const handleOpenMenu = (event) => setMenuAnchor(event.target);
@@ -118,11 +157,11 @@ function SubscriptionCard(props) {
     };
 
     return (
-        <Card className={classes.root}>
+        <Card className={clsx(classes.root, className)}>
             <CardHeader
                 avatar={
-                    <Avatar className={classes[status + "Avatar"]}>
-                        {status.substring(0, 1).toUpperCase()}
+                    <Avatar className={classes.activeAvatar}>
+                        {plan.substring(0, 1).toUpperCase()}
                     </Avatar>
                 }
                 action={
@@ -133,7 +172,7 @@ function SubscriptionCard(props) {
                     </React.Fragment>
                 }
                 title={plan}
-                subheader="May 03, 1999"
+                subheader={createdOn}
             />
 
             <Menu
@@ -169,19 +208,21 @@ function SubscriptionCard(props) {
                                     {field.title}
                                 </Typography>
                                 <Typography className={classes.value}>
-                                    {props[field.identifier]}
+                                    {field.render(props)}
                                 </Typography>
                             </Grid>
                         </React.Fragment>
                     ))}
                 </Grid>
             </CardContent>
-            <CardActions disableSpacing>
-                <Button className={classes.showMore} size="small">
-                    <ShowMoreIcon className={classes.icon} />
-                    Show More
-                </Button>
-            </CardActions>
+            {showMore && (
+                <CardActions disableSpacing>
+                    <Button className={classes.showMore} size="small">
+                        <ShowMoreIcon className={classes.icon} />
+                        Show More
+                    </Button>
+                </CardActions>
+            )}
         </Card>
     );
 }

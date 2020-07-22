@@ -15,6 +15,10 @@ const subscriptions = [];
 
 const periodUnits = ["days", "months"];
 
+function futureDate() {
+    return format(faker.date.future(), "yyyy/MM/dd");
+}
+
 function pastDate() {
     return format(faker.date.past(), "yyyy/MM/dd");
 }
@@ -76,6 +80,8 @@ function createAccount() {
     return account;
 }
 
+const collectionMethods = ["automatic", "manual"];
+
 /* Subscriptions can have different values from the plans they are associated with.
  * In other words, a plan is a template from which we create a subscription. However,
  * when we generate a fake subscription here, we do not change the values. In the
@@ -90,10 +96,30 @@ function createSubscription() {
     const accountCopy = { ...account };
     delete accountCopy.subscriptions;
 
+    const totalBillingCycles = faker.random.number({
+        min: 0,
+        max: 60,
+    });
+    const remainingBillingCycles = faker.random.number({
+        min: 0,
+        max: 60,
+    });
     const subscription = {
         identifier: faker.random.uuid(),
         plan: plan,
         account: accountCopy,
+        quantity: faker.random.number({
+            min: 0,
+            max: 100,
+        }),
+        quantityType: "integer",
+        createdAt: pastDate(),
+        updatedAt: pastDate(),
+        totalBillingCycles: totalBillingCycles,
+        remainingBillingCycles: remainingBillingCycles,
+        trialStart: futureDate(),
+        trialEnd: futureDate(),
+        collectionMethod: faker.random.arrayElement(collectionMethods),
         billingPeriod: plan.billingPeriod,
         billingPeriodUnit: plan.billingPeriodUnit,
         setupFee: plan.setupFee,
@@ -154,7 +180,7 @@ mock.onGet("/api/v1/plans").reply((request) => {
     return [200, plans];
 });
 
-const GET_PLAN_URL = /\/api\/v1\/plans\/([a-zA-Z0-0-]+)/;
+const GET_PLAN_URL = /\/api\/v1\/plans\/([a-zA-Z0-9-]+)/;
 mock.onGet(GET_PLAN_URL).reply((request) => {
     const identifier = GET_PLAN_URL.exec(request.url)[1];
     const plan = plans.find((plan) => plan.identifier === identifier);
@@ -230,7 +256,7 @@ mock.onGet("/api/v1/subscriptions").reply((request) => {
     return [200, subscriptions];
 });
 
-const GET_SUBSCRIPTION_URL = /\/api\/v1\/subscriptions\/([a-zA-Z0-0-]+)/;
+const GET_SUBSCRIPTION_URL = /\/api\/v1\/subscriptions\/([a-zA-Z0-9-]+)/;
 mock.onGet(GET_SUBSCRIPTION_URL).reply((request) => {
     const identifier = GET_SUBSCRIPTION_URL.exec(request.url)[1];
     const subscription = subscriptions.find(

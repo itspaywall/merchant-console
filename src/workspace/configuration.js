@@ -3,7 +3,7 @@ import React from "react";
 const workspaceConfiguration = [
     // Account
     {
-        path: "/accounts/:identifier", // TODO: id should be variable
+        path: "/accounts/:identifier",
         component: React.lazy(() => import("./account/ViewAccount")),
     },
     {
@@ -20,8 +20,13 @@ const workspaceConfiguration = [
 
     // Subscription
     {
+        path: "/subscriptions/:identifier",
+        component: React.lazy(() => import("./subscription/ViewSubscription")),
+    },
+    {
         path: "/subscriptions",
         component: React.lazy(() => import("./subscription/ViewSubscriptions")),
+        exact: true,
     },
 
     // Transaction
