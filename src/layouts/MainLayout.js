@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import routes from "../routes";
 import AccountFormDrawer from "../workspace/account/AccountFormDrawer";
 import EditAccount from "../workspace/account/EditAccount";
-import SubscriptionFormDialog from "../workspace/subscription/SubscriptionFormDialog";
+import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDrawer";
 import NewTransaction from "../workspace/transaction/NewTransaction";
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
 import * as actions from "../redux/actions";
@@ -141,13 +141,6 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "NEW_SUBSCRIPTION" && (
-                <SubscriptionFormDialog
-                    title="New Subscription"
-                    onSave={createSubscription}
-                />
-            )}
-
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
 
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
@@ -156,6 +149,11 @@ function MainLayout(props) {
                 title="New Account"
                 onSave={createAccount}
                 open={openDialog === "NEW_ACCOUNT"}
+            />
+            <SubscriptionFormDrawer
+                title="New Subscription"
+                onSave={createSubscription}
+                open={openDialog === "NEW_SUBSCRIPTION"}
             />
             <PlanFormDrawer
                 title="New Plan"
