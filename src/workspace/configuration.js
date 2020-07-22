@@ -34,6 +34,13 @@ const workspaceConfiguration = [
         path: "/transactions",
         component: React.lazy(() => import("./transaction/ViewTransactions")),
     },
+
+    // Plan
+    {
+        path: "/plans",
+        component: React.lazy(() => import("./plan/ViewPlans")),
+        exact: true,
+    },
 ];
 
 export default workspaceConfiguration;
