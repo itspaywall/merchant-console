@@ -1,48 +1,9 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Icon from "@material-ui/core/Icon";
-import { makeStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
 
-import RecordForm from "../RecordForm";
 import { extractValues } from "../RecordForm";
-import * as actions from "../../redux/actions";
-import { connect } from "react-redux";
 
-const useStyles = makeStyles((theme) => ({
-    extraAction: {
-        textTransform: "none",
-    },
-    dialogAction: {
-        textTransform: "none",
-    },
-    mainMore: {
-        marginLeft: "auto",
-        marginRight: "auto",
-        maxWidth: 800,
-    },
-    mainLess: {
-        marginLeft: "auto",
-        marginRight: "auto",
-        maxWidth: 500,
-    },
-    actions: {
-        width: "100%",
-    },
-    extraActions: {
-        width: "50%",
-        display: "flex",
-    },
-    dialogActions: {
-        width: "50%",
-        display: "flex",
-        flexDirection: "row-reverse",
-    },
-}));
+import FormDrawer from "../common/FormDrawer";
 
 // text, large_text, number, date_picker, date_range_picker, switch, phone_number, email_address
 // multiple_options (multiselect), single_option (drop down)
@@ -264,103 +225,33 @@ const groups = [
     },
 ];
 
-function AccountFormDialog(props) {
-    const { closeDialog, title, onSave } = props;
-    const classes = useStyles(props);
-    const [showMore, setShowMore] = React.useState(props.showMore);
-    const [values, setValues] = React.useState(
-        props.account || extractValues(groups)
-    );
-    const handleShowMore = () => {
-        setShowMore(!showMore);
-    };
-    const handleSave = () => {
-        closeDialog();
-        onSave(values);
-    };
-    // TODO: Create a deep copy without serializing !
-    const handleValueChange = (field, value) => {
-        const newValues = JSON.parse(JSON.stringify(values));
-        newValues[field.identifier] = value;
+function AccountFormDrawer(props) {
+    const { title, onSave, showMore, open } = props;
 
-        setValues(newValues);
-    };
-
+    const values = props.account || extractValues(groups);
     return (
-        <Dialog
-            open={true}
-            className={showMore ? classes.mainMore : classes.mainLess}
-        >
-            <DialogTitle>{title}</DialogTitle>
-            <DialogContent>
-                <RecordForm
-                    showMore={showMore}
-                    onShowMore={handleShowMore}
-                    groups={groups}
-                    values={values}
-                    onValueChange={handleValueChange}
-                />
-            </DialogContent>
-            <DialogActions>
-                <div className={classes.extraActions}>
-                    <Button
-                        size="small"
-                        variant="text"
-                        onClick={handleShowMore}
-                        color="secondary"
-                        className={classes.extraAction}
-                    >
-                        <Icon>
-                            {showMore
-                                ? "keyboard_arrow_up"
-                                : "keyboard_arrow_down"}
-                        </Icon>
-                        {showMore ? "Show Less" : "Show More"}
-                    </Button>
-
-                    {/*
-                    <Button size="small" variant="text" onClick={ ... } color="secondary" className={ classes.extraAction }>
-                        <Icon>edit</Icon>
-                        Customize Fields
-                    </Button>*/}
-                </div>
-                <div className={classes.dialogActions}>
-                    <Button
-                        onClick={handleSave}
-                        color="primary"
-                        className={classes.dialogAction}
-                    >
-                        Save
-                    </Button>
-                    <Button
-                        onClick={closeDialog}
-                        color="primary"
-                        className={classes.dialogAction}
-                    >
-                        Cancel
-                    </Button>
-                </div>
-            </DialogActions>
-        </Dialog>
+        <FormDrawer
+            title={title}
+            showMore={showMore}
+            groups={groups}
+            values={values}
+            onSave={onSave}
+            open={open}
+        />
     );
 }
 
-AccountFormDialog.propTypes = {
+AccountFormDrawer.propTypes = {
     title: PropTypes.string.isRequired,
     showMore: PropTypes.bool,
     account: PropTypes.object,
     onSave: PropTypes.func.isRequired,
-    onCancel: PropTypes.func,
 };
 
-AccountFormDialog.defaultProps = {
+AccountFormDrawer.defaultProps = {
     showMore: false,
     account: null,
     onCancel: null,
 };
 
-const mapDispatchToProps = {
-    closeDialog: actions.closeDialog,
-};
-
-export default connect(null, mapDispatchToProps)(AccountFormDialog);
+export default AccountFormDrawer;

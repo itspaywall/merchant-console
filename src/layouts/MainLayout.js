@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
+
 // TODO: Update this import when Material UI moves this to production.
 import MuiAlert from "@material-ui/lab/Alert";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -12,11 +13,11 @@ import MainDrawer from "./MainDrawer";
 import { connect } from "react-redux";
 
 import routes from "../routes";
-import AccountFormDialog from "../workspace/account/AccountFormDialog";
+import AccountFormDrawer from "../workspace/account/AccountFormDrawer";
 import EditAccount from "../workspace/account/EditAccount";
-import SubscriptionFormDialog from "../workspace/subscription/SubscriptionFormDialog";
-import NewTransaction from "../workspace/transaction/NewTransaction";
-import PlanFormDialog from "../workspace/plan/PlanFormDialog";
+import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDrawer";
+import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawer";
+import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -50,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: 24,
         color: "white",
     },
+    drawer: {
+        width: 50,
+    },
 }));
 
 // TODO: The layouts should be configurable.
@@ -61,6 +65,7 @@ function MainLayout(props) {
         closeNotification,
         createAccount,
         createSubscription,
+        createTransaction,
         createPlan,
     } = props;
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -137,24 +142,28 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "NEW_ACCOUNT" && (
-                <AccountFormDialog title="New Account" onSave={createAccount} />
-            )}
-
-            {openDialog === "NEW_SUBSCRIPTION" && (
-                <SubscriptionFormDialog
-                    title="New Subscription"
-                    onSave={createSubscription}
-                />
-            )}
-
-            {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
-
-            {openDialog === "NEW_PLAN" && (
-                <PlanFormDialog title="New Plan" onSave={createPlan} />
-            )}
-
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
+
+            <AccountFormDrawer
+                title="New Account"
+                onSave={createAccount}
+                open={openDialog === "NEW_ACCOUNT"}
+            />
+            <SubscriptionFormDrawer
+                title="New Subscription"
+                onSave={createSubscription}
+                open={openDialog === "NEW_SUBSCRIPTION"}
+            />
+            <TransactionFormDrawer
+                title="New Transaction"
+                onSave={createTransaction}
+                open={openDialog === "NEW_TRANSACTION"}
+            />
+            <PlanFormDrawer
+                title="New Plan"
+                onSave={createPlan}
+                open={openDialog === "NEW_PLAN"}
+            />
 
             {renderNotification(notification)}
         </React.Fragment>
@@ -173,6 +182,7 @@ const mapDispatchToProps = {
     createAccount: actions.createAccount,
     createPlan: actions.createPlan,
     createSubscription: actions.createSubscription,
+    createTransaction: actions.createTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

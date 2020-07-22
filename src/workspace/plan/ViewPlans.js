@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -11,7 +10,6 @@ import * as actions from "../../redux/actions";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import ListIcon from "@material-ui/icons/ViewList";
-import FilterIcon from "@material-ui/icons/FilterList";
 import CompactIcon from "@material-ui/icons/ViewCompact";
 
 const useStyles = makeStyles((theme) => ({
