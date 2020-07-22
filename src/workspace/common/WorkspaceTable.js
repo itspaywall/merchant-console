@@ -75,7 +75,7 @@ export default function WorkspaceTable(props) {
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(15);
+    const [rowsPerPage, setRowsPerPage] = React.useState(props.rowsPerPage);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -203,7 +203,7 @@ export default function WorkspaceTable(props) {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[15, 20, 25]}
+                    rowsPerPageOptions={[10, 20, 30, 40, 50]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
@@ -215,3 +215,7 @@ export default function WorkspaceTable(props) {
         </div>
     );
 }
+
+WorkspaceTable.defaultProps = {
+    rowsPerPage: 15,
+};

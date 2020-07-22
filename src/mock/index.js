@@ -31,7 +31,7 @@ function soonDate() {
 function createPlan() {
     const plan = {
         identifier: faker.random.uuid(),
-        name: faker.company.bsAdjective() + " " + faker.commerce.productName(),
+        name: faker.commerce.productName(),
         code: faker.lorem.word(),
         description: faker.lorem.paragraph(),
         billingPeriod: faker.random.number({
