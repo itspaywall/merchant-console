@@ -199,3 +199,29 @@ export function clearAccount() {
         payload: null,
     };
 }
+
+export function fetchSubscription(identifier) {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading subscription...', 'LOADING'));
+        return axios
+            .get("/api/v1/subscriptions/" + identifier)
+            .then((response) => {
+                const subscription = response.data;
+                dispatch(fetchSubscriptionComplete(subscription));
+            });
+    };
+}
+
+export function fetchSubscriptionComplete(subscription) {
+    return {
+        type: ActionTypes.FETCH_SUBSCRIPTION_COMPLETE,
+        payload: subscription,
+    };
+}
+
+export function clearSubscription() {
+    return {
+        type: ActionTypes.CLEAR_SUBSCRIPTION,
+        payload: null,
+    };
+}
