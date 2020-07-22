@@ -7,6 +7,13 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
+import Switch from "@material-ui/core/Switch";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,7 +75,7 @@ export default function RecordForm(props) {
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
                                     />
-                                )}
+
 
                                 {field.type === "date" && (
                                     <KeyboardDatePicker
@@ -80,10 +87,46 @@ export default function RecordForm(props) {
                                         fullWidth={true}
                                     />
                                 )}
+
+                                {field.type === "select" && (
+                                    <FormControl
+                                        variant="outlined"
+                                        fullWidth={true}
+                                    >
+                                        <InputLabel>
+                                            {field.label}
+                                        </InputLabel>
+                                        <Select
+                                            label={field.label}
+                                            id={field.id}
+                                        >
+                                            <MenuItem value={10}>
+                                                Ten
+                                            </MenuItem>
+                                            <MenuItem value={20}>
+                                                Twenty
+                                            </MenuItem>
+                                            <MenuItem value={30}>
+                                                Thirty
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                )}
+
+                                {field.type === "switch" && (
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={<Switch />}
+                                            label={field.label}
+                                        />
+                                    </FormGroup>
+                                )}
                             </Grid>
-                        ) : null
-                    )
-                )}
+                                ) : null
+                            )
+                        )}
+                    </Grid>
+                </Grid>
             </Grid>
         </MuiPickersUtilsProvider>
     );

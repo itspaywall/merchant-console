@@ -22,7 +22,7 @@ const groups = [
             {
                 label: "User Name",
                 identifier: "userName",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -35,7 +35,7 @@ const groups = [
             {
                 label: "First Name",
                 identifier: "firstName",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -48,7 +48,7 @@ const groups = [
             {
                 label: "Last Name",
                 identifier: "lastName",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -87,7 +87,7 @@ const groups = [
             {
                 label: "Address Line 1",
                 identifier: "addressLine1",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -100,7 +100,7 @@ const groups = [
             {
                 label: "Address Line 2",
                 identifier: "addressLine2",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -113,7 +113,7 @@ const groups = [
             {
                 label: "City",
                 identifier: "city",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -126,7 +126,7 @@ const groups = [
             {
                 label: "State",
                 identifier: "state",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -139,7 +139,7 @@ const groups = [
             {
                 label: "Country",
                 identifier: "country",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -152,7 +152,7 @@ const groups = [
             {
                 label: "Zip Code",
                 identifier: "zipCode",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
@@ -171,7 +171,7 @@ const groups = [
             {
                 label: "Name",
                 identifier: "companyName",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: false,
