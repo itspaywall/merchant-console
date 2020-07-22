@@ -76,54 +76,74 @@ export default function RecordForm(props) {
                                         onChange={makeChangeHandler(field)}
                                     />
 
-
-                                {field.type === "date" && (
-                                    <KeyboardDatePicker
-                                        margin="normal"
-                                        id={field.identifier}
-                                        label={field.label}
-                                        format="MM/dd/yyyy"
-                                        inputVariant="outlined"
-                                        fullWidth={true}
-                                    />
-                                )}
-
-                                {field.type === "select" && (
-                                    <FormControl
-                                        variant="outlined"
-                                        fullWidth={true}
-                                    >
-                                        <InputLabel>
-                                            {field.label}
-                                        </InputLabel>
-                                        <Select
+                                    {field.type === "large_text" && (
+                                        <TextField
+                                            id={field.identifier}
                                             label={field.label}
-                                            id={field.id}
-                                        >
-                                            <MenuItem value={10}>
-                                                Ten
-                                            </MenuItem>
-                                            <MenuItem value={20}>
-                                                Twenty
-                                            </MenuItem>
-                                            <MenuItem value={30}>
-                                                Thirty
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                )}
-
-                                {field.type === "switch" && (
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={<Switch />}
-                                            label={field.label}
+                                            multiline
+                                            rows={4}
+                                            defaultValue="Default Value"
+                                            variant="outlined"
                                         />
-                                    </FormGroup>
-                                )}
+                                    )}
+
+                                    {field.type === "number" && (
+                                        <TextField
+                                            id={field.identifier}
+                                            label={field.label}
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            variant="outlined"
+                                        />
+                                    )}
+
+                                    {field.type === "date" && (
+                                        <KeyboardDatePicker
+                                            margin="normal"
+                                            id={field.identifier}
+                                            label={field.label}
+                                            format="MM/dd/yyyy"
+                                            inputVariant="outlined"
+                                            fullWidth={true}
+                                        />
+                                    )}
+
+                                    {field.type === "select" && (
+                                        <FormControl
+                                            variant="outlined"
+                                            fullWidth={true}
+                                        >
+                                            <InputLabel>
+                                                {field.label}
+                                            </InputLabel>
+                                            <Select
+                                                label={field.label}
+                                                id={field.id}
+                                            >
+                                                <MenuItem value={10}>
+                                                    Ten
+                                                </MenuItem>
+                                                <MenuItem value={20}>
+                                                    Twenty
+                                                </MenuItem>
+                                                <MenuItem value={30}>
+                                                    Thirty
+                                                </MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    )}
+
+                                    {field.type === "switch" && (
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                control={<Switch />}
+                                                label={field.label}
+                                            />
+                                        </FormGroup>
+                                    )}
                             </Grid>
-                                ) : null
-                            )
                         )}
                     </Grid>
                 </Grid>
