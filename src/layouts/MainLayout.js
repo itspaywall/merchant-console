@@ -16,6 +16,7 @@ import AccountFormDialog from "../workspace/account/AccountFormDialog";
 import EditAccount from "../workspace/account/EditAccount";
 import SubscriptionFormDialog from "../workspace/subscription/SubscriptionFormDialog";
 import NewTransaction from "../workspace/transaction/NewTransaction";
+import PlanFormDialog from "../workspace/plan/PlanFormDialog";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -60,6 +61,7 @@ function MainLayout(props) {
         closeNotification,
         createAccount,
         createSubscription,
+        createPlan,
     } = props;
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const classes = useStyles();
@@ -138,13 +140,19 @@ function MainLayout(props) {
             {openDialog === "NEW_ACCOUNT" && (
                 <AccountFormDialog title="New Account" onSave={createAccount} />
             )}
+
             {openDialog === "NEW_SUBSCRIPTION" && (
                 <SubscriptionFormDialog
                     title="New Subscription"
                     onSave={createSubscription}
                 />
             )}
+
             {openDialog === "NEW_TRANSACTION" && <NewTransaction />}
+
+            {openDialog === "NEW_PLAN" && (
+                <PlanFormDialog title="New Plan" onSave={createPlan} />
+            )}
 
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
 
@@ -163,6 +171,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     closeNotification: actions.closeNotification,
     createAccount: actions.createAccount,
+    createPlan: actions.createPlan,
     createSubscription: actions.createSubscription,
 };
 

@@ -1,12 +1,6 @@
 import React from "react";
 
 const configurationConfiguration = [
-    // Plans
-    {
-        path: "/plans",
-        component: React.lazy(() => import("./plan/ViewPlans")),
-    },
-
     // Preferences
     {
         path: "/preferences",

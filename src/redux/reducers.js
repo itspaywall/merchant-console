@@ -75,6 +75,18 @@ function subscriptionsReducer(state = [], action) {
     }
 }
 
+function plansReducer(state = [], action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_PLANS_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 function subscriptionReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_SUBSCRIPTION_COMPLETE: {
@@ -97,6 +109,7 @@ const rootReducer = combineReducers({
     account: accountReducer,
     subscriptions: subscriptionsReducer,
     subscription: subscriptionReducer,
+    plans: plansReducer,
 });
 
 export default rootReducer;

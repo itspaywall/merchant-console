@@ -141,6 +141,23 @@ export function createPlan(plan) {
     };
 }
 
+export function fetchPlansComplete(plans) {
+    return {
+        type: ActionTypes.FETCH_PLANS_COMPLETE,
+        payload: plans,
+    };
+}
+
+export function fetchPlans() {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading plans...', 'LOADING'));
+        return axios.get("/api/v1/plans").then((response) => {
+            const plans = response.data;
+            dispatch(fetchPlansComplete(plans));
+        });
+    };
+}
+
 export function fetchAccountsComplete(accounts) {
     return {
         type: ActionTypes.FETCH_ACCOUNTS_COMPLETE,
