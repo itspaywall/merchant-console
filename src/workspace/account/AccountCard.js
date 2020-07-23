@@ -67,7 +67,7 @@ const fields = [
     },
 ];
 
-function SubscriptionCard(props) {
+function AccountCard(props) {
     const classes = useStyles();
     const { className, firstName, lastName, userName, onEdit, onClose } = props;
 
@@ -140,4 +140,4 @@ function SubscriptionCard(props) {
     );
 }
 
-export default SubscriptionCard;
+export default AccountCard;

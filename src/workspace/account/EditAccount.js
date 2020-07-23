@@ -12,6 +12,7 @@ function EditAccount(props) {
             showMore={true}
             onSave={saveAccount}
             account={account}
+            open={true}
         />
     );
 }

@@ -8,7 +8,8 @@ function dialogReducer(state = null, action) {
         case ActionTypes.NEW_INVOICE:
         case ActionTypes.NEW_TRANSACTION:
         case ActionTypes.NEW_PLAN:
-        case ActionTypes.EDIT_ACCOUNT: {
+        case ActionTypes.EDIT_ACCOUNT:
+        case ActionTypes.EDIT_PLAN: {
             return action.type;
         }
 
@@ -77,7 +78,8 @@ function subscriptionsReducer(state = [], action) {
 
 function planReducer(state = null, action) {
     switch (action.type) {
-        case ActionTypes.FETCH_PLAN_COMPLETE: {
+        case ActionTypes.FETCH_PLAN_COMPLETE:
+        case ActionTypes.EDIT_PLAN: {
             return action.payload;
         }
 

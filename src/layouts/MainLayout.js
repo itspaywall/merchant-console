@@ -18,6 +18,7 @@ import EditAccount from "../workspace/account/EditAccount";
 import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDrawer";
 import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawer";
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
+import EditPlan from "../workspace/plan/EditPlan";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -143,6 +144,8 @@ function MainLayout(props) {
             </div>
 
             {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
+
+            {openDialog === "EDIT_PLAN" && <EditPlan />}
 
             <AccountFormDrawer
                 title="New Account"
