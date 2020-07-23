@@ -191,6 +191,24 @@ mock.onGet(GET_PLAN_URL).reply((request) => {
     }
 });
 
+/* NOTE: The user can easily modify the identifier of a record.
+ * However, the backend does not permit such operations.
+ */
+const PUT_PLAN_URL = /\/api\/v1\/plans\/([a-zA-Z0-9-]+)/;
+mock.onPut(PUT_PLAN_URL).reply((request) => {
+    const newPlan = JSON.parse(request.data);
+    const identifier = PUT_PLAN_URL.exec(request.url)[1];
+    const index = plans.findIndex((plan) => {
+        return plan.identifier === identifier;
+    });
+
+    if (index >= 0) {
+        plans[index] = newPlan;
+        return [200, newPlan];
+    } else {
+        return [404];
+    }
+});
 // Accounts
 
 mock.onPost("/api/v1/accounts").reply((request) => {

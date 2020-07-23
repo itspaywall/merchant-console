@@ -35,8 +35,12 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewPlan(props) {
     const classes = useStyles();
-    const { plan, fetchPlan, clearPlan } = props;
+    const { plan, fetchPlan, clearPlan, editPlan } = props;
     const { identifier } = useParams();
+
+    const handleEdit = () => {
+        editPlan(plan);
+    };
 
     useEffect(() => {
         fetchPlan(identifier);
@@ -58,7 +62,11 @@ function ViewPlan(props) {
                         >
                             General
                         </Typography>
-                        <PlanCard className={classes.planCard} {...plan} />
+                        <PlanCard
+                            className={classes.planCard}
+                            onEdit={handleEdit}
+                            {...plan}
+                        />
                     </div>
                 </div>
             )}
@@ -75,6 +83,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     fetchPlan: actions.fetchPlan,
     clearPlan: actions.clearPlan,
+    editPlan: actions.editPlan,
 };
 
 export default connect(

@@ -174,7 +174,7 @@ const groups = [
 function PlanFormDrawer(props) {
     const { title, onSave, showMore, open } = props;
 
-    const values = props.account || extractValues(groups);
+    const values = props.plan || extractValues(groups);
     return (
         <FormDrawer
             title={title}
@@ -190,13 +190,13 @@ function PlanFormDrawer(props) {
 PlanFormDrawer.propTypes = {
     title: PropTypes.string.isRequired,
     showMore: PropTypes.bool,
-    account: PropTypes.object,
+    plan: PropTypes.object,
     onSave: PropTypes.func.isRequired,
 };
 
 PlanFormDrawer.defaultProps = {
     showMore: false,
-    account: null,
+    plan: null,
     onCancel: null,
 };
 

@@ -15,6 +15,13 @@ export function editAccount(account) {
     };
 }
 
+export function editPlan(plan) {
+    return {
+        type: ActionTypes.EDIT_PLAN,
+        payload: plan,
+    };
+}
+
 export function newSubscription() {
     return {
         type: ActionTypes.NEW_SUBSCRIPTION,
@@ -90,6 +97,21 @@ export function saveAccount(account) {
                 dispatch(fetchAccountComplete(account));
                 dispatch(
                     showNotification("Successfully saved account", "SUCCESS")
+                );
+            });
+    };
+}
+
+export function savePlan(plan) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving plan...", "LOADING"));
+        return axios
+            .put("/api/v1/plans/" + plan.identifier, plan)
+            .then((response) => {
+                const plan = response.data;
+                dispatch(fetchPlanComplete(plan));
+                dispatch(
+                    showNotification("Successfully saved plan", "SUCCESS")
                 );
             });
     };

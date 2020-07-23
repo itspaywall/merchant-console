@@ -94,7 +94,7 @@ const fields = [
     },
 ];
 
-function SubscriptionCard(props) {
+function PlanCard(props) {
     const classes = useStyles();
     const { className, name, code, description, onEdit } = props;
 
@@ -141,4 +141,4 @@ function SubscriptionCard(props) {
     );
 }
 
-export default SubscriptionCard;
+export default PlanCard;

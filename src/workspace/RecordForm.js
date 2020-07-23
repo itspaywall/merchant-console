@@ -45,8 +45,6 @@ export default function RecordForm(props) {
     const { values, groups, showMore, onValueChange, tabIndex } = props;
     const classes = useStyles(props);
 
-    console.log(tabIndex);
-
     const makeChangeHandler = (field) => (event) => {
         onValueChange(field, event.target.value);
     };
