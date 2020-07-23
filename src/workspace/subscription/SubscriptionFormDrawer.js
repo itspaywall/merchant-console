@@ -9,6 +9,53 @@ const groups = [
     {
         label: "Basic",
         children: [
+            /*{
+                identifier: "date_range",
+                type: "date_range",
+                title: "Time Range",
+                startTitle: "Start Date",
+                endTitle: "End Date",
+                options: [
+                    {
+                        value: "all_time",
+                        title: "All Time",
+                    },
+                    {
+                        value: "last_3_months",
+                        title: "Last 3 Months",
+                    },
+                    {
+                        value: "last_6_months",
+                        title: "Last 6 Months",
+                    },
+                    {
+                        value: "last_9_months",
+                        title: "Last 9 Months",
+                    },
+                    {
+                        value: "last_12_months",
+                        title: "Last 12 Months",
+                    },
+                    {
+                        value: "last_15_months",
+                        title: "Last 15 Months",
+                    },
+                    {
+                        value: "last_18_months",
+                        title: "Last 18 Months",
+                    },
+                    {
+                        value: "custom",
+                        title: "Custom",
+                    },
+                ],
+                quickAdd: true,
+                defaultValue: {
+                    option: "all_time",
+                    startDate: null,
+                    endDate: null,
+                },
+            }*/
             {
                 label: "Plan",
                 identifier: "plan",
