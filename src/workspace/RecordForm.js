@@ -7,6 +7,9 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import Switch from "@material-ui/core/Switch";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// text, large_text, number, date_picker, date_range_picker, switch, phone_number, email_address
+// date_range_picker, phone_number, email_address
 // multiple_options (multiselect), single_option (drop down)
 // lookup - organization, user, contact
 
@@ -71,6 +74,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
+                                        size="small"
                                     />
                                 )}
 
@@ -87,6 +91,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
+                                        size="small"
                                     />
                                 )}
 
@@ -101,6 +106,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
+                                        size="small"
                                     />
                                 )}
 
@@ -112,7 +118,22 @@ export default function RecordForm(props) {
                                         format="MM/dd/yyyy"
                                         inputVariant="outlined"
                                         fullWidth={true}
+                                        size="small"
                                     />
+                                )}
+
+                                {field.type === "switch" && (
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            control={<Switch color="primary" />}
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                        />
+                                    </FormGroup>
                                 )}
                             </Grid>
                         ) : null
