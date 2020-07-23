@@ -92,6 +92,20 @@ export default function RecordForm(props) {
                                     />
                                 )}
 
+                                {field.type === "number" && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="number"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                    />
+                                )}
+
                                 {field.type === "date" && (
                                     <KeyboardDatePicker
                                         margin="normal"
