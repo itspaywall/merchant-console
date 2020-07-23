@@ -25,7 +25,7 @@ const groups = [
             {
                 label: "Billing Period",
                 identifier: "billingPeriod",
-                type: "text",
+                type: "number",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -38,7 +38,7 @@ const groups = [
             {
                 label: "Billing Period Unit",
                 identifier: "billingPeriodUnit",
-                type: "text",
+                type: "select",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -51,7 +51,7 @@ const groups = [
             {
                 label: "Setup Fee",
                 identifier: "setupFee",
-                type: "text",
+                type: "number",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -64,7 +64,7 @@ const groups = [
             {
                 label: "Trial Period",
                 identifier: "trailPeriod",
-                type: "text",
+                type: "number",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -77,7 +77,7 @@ const groups = [
             {
                 label: "Trial Period Unit",
                 identifier: "trialPeriodUnit",
-                type: "text",
+                type: "select",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -90,7 +90,7 @@ const groups = [
             {
                 label: "Starts",
                 identifier: "starts",
-                type: "text",
+                type: "date",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -103,7 +103,7 @@ const groups = [
             {
                 label: "Term",
                 identifier: "term",
-                type: "text",
+                type: "number",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -116,7 +116,7 @@ const groups = [
             {
                 label: "Term Unit",
                 identifier: "termUnit",
-                type: "text",
+                type: "select",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -129,7 +129,7 @@ const groups = [
             {
                 label: "Renew",
                 identifier: "renew",
-                type: "text",
+                type: "switch",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
