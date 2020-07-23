@@ -12,7 +12,7 @@ const groups = [
             {
                 label: "Subscription",
                 identifier: "subscription",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -25,7 +25,7 @@ const groups = [
             {
                 label: "Action",
                 identifier: "action",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -38,7 +38,7 @@ const groups = [
             {
                 label: "Payment Method",
                 identifier: "paymentMethod",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -51,7 +51,7 @@ const groups = [
             {
                 label: "Payment Type",
                 identifier: "paymentType",
-                type: "text_field",
+                type: "text",
                 required: false,
                 readOnly: false,
                 quickAdd: true,

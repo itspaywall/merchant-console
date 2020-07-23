@@ -25,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
 // multiple_options (multiselect), single_option (drop down)
 // lookup - organization, user, contact
 
+/* The form configuration is basically an array of groups. Each group consists two attributes - `label`,
+ * which is rendered on the left when you click `Shore More`, and `children` which is an array of objects
+ * that describe fields. Whatever attribute is in the field configuration is accessible as
+ * `field.attributeName` in `RecordForm`.
+ */
+
 export function extractValues(groups) {
     const result = {};
     groups.forEach((group) => {
@@ -53,7 +59,7 @@ export default function RecordForm(props) {
                         (!showMore && field.quickAdd) ||
                         (showMore && groupIndex === tabIndex) ? (
                             <Grid key={field.identifier} item={true} lg={12}>
-                                {field.type !== "date" && (
+                                {field.type === "text" && (
                                     <TextField
                                         className={
                                             fieldIndex > 0 ? "mt-8" : "mt-0"
@@ -64,6 +70,22 @@ export default function RecordForm(props) {
                                         type="text"
                                         variant="outlined"
                                         fullWidth={true}
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                    />
+                                )}
+
+                                {field.type === "large_text" && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="text"
+                                        multiline={true}
+                                        rows={field.rows || 4}
+                                        fullWidth={true}
+                                        variant="outlined"
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}

@@ -12,7 +12,7 @@ const groups = [
             {
                 label: "Name",
                 identifier: "name",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -25,7 +25,7 @@ const groups = [
             {
                 label: "Code",
                 identifier: "code",
-                type: "text_field",
+                type: "text",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -47,6 +47,7 @@ const groups = [
                 tooltip: "The code of the plan.",
                 multipleValues: false,
                 defaultValue: "",
+                rows: 8,
             },
             {
                 label: "Billing Period",
