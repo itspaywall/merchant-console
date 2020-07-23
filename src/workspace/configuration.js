@@ -37,6 +37,10 @@ const workspaceConfiguration = [
 
     // Plan
     {
+        path: "/plans/:identifier",
+        component: React.lazy(() => import("./plan/ViewPlan")),
+    },
+    {
         path: "/plans",
         component: React.lazy(() => import("./plan/ViewPlans")),
         exact: true,

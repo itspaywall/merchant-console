@@ -203,6 +203,23 @@ export function fetchAccount(identifier) {
     };
 }
 
+export function fetchPlan(identifier) {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading plan...', 'LOADING'));
+        return axios.get("/api/v1/plans/" + identifier).then((response) => {
+            const plan = response.data;
+            dispatch(fetchPlanComplete(plan));
+        });
+    };
+}
+
+export function fetchPlanComplete(plan) {
+    return {
+        type: ActionTypes.FETCH_PLAN_COMPLETE,
+        payload: plan,
+    };
+}
+
 export function fetchAccountComplete(account) {
     return {
         type: ActionTypes.FETCH_ACCOUNT_COMPLETE,
@@ -213,6 +230,13 @@ export function fetchAccountComplete(account) {
 export function clearAccount() {
     return {
         type: ActionTypes.CLEAR_ACCOUNT,
+        payload: null,
+    };
+}
+
+export function clearPlan() {
+    return {
+        type: ActionTypes.CLEAR_PLAN,
         payload: null,
     };
 }

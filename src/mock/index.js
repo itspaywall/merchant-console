@@ -52,7 +52,7 @@ function createPlan() {
             max: 6 * 30,
         }),
         termUnit: faker.random.arrayElement(periodUnits),
-        renew: faker.random.boolean(),
+        renews: faker.random.boolean(),
         createdOn: pastDate(),
     };
     return plan;
