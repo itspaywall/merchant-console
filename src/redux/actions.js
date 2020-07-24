@@ -187,6 +187,23 @@ export function fetchAccountsComplete(accounts) {
     };
 }
 
+export function fetchInvoices() {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading invoices...', 'LOADING'));
+        return axios.get("/api/v1/invoices").then((response) => {
+            const invoices = response.data;
+            dispatch(fetchInvoicesComplete(invoices));
+        });
+    };
+}
+
+export function fetchInvoicesComplete(invoices) {
+    return {
+        type: ActionTypes.FETCH_INVOICES_COMPLETE,
+        payload: invoices,
+    };
+}
+
 export function fetchAccounts() {
     return (dispatch) => {
         // dispatch(showNotification('Loading accounts...', 'LOADING'));

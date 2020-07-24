@@ -8,12 +8,41 @@ const mock = new MockAdapter(axios, { delayResponse: 1000 });
 const DEFAULT_PLANS = 10;
 const DEFAULT_ACCOUNTS = 100;
 const DEFAULT_SUBSCRIPTIONS = 100 * 5;
+const DEFAULT_INVOICES = 100;
 
 const plans = [];
 const accounts = [];
 const subscriptions = [];
+const invoices = [];
 
 const periodUnits = ["days", "months"];
+
+const invoiceStatuses = [
+    "pending",
+    "processing",
+    "pastDue",
+    "paid",
+    "failed",
+    "voided",
+    "closed",
+];
+
+const invoiceOrigins = [
+    "all",
+    "purchase",
+    "renewal",
+    "immediateChange",
+    "termination",
+    "refund",
+    "postedCredit",
+    "giftCardRedemption",
+    "writeOff",
+    "carryforwardCredit",
+    "carryforwardGiftCredit",
+    "usageCorrection",
+];
+
+const collectionMethods = ["automatic", "manual"];
 
 function futureDate() {
     return format(faker.date.future(), "yyyy/MM/dd");
@@ -80,7 +109,27 @@ function createAccount() {
     return account;
 }
 
-const collectionMethods = ["automatic", "manual"];
+function createInvoice() {
+    const invoice = {
+        identifier: faker.random.uuid(),
+        invoiceNumber: faker.random.number({
+            min: 1000,
+        }),
+        postedOn: pastDate(),
+        dueOn: futureDate(),
+        account: faker.random.arrayElement(accounts),
+        status: faker.random.arrayElement(invoiceStatuses),
+        total: faker.random.number(),
+        subtotal: faker.random.number(),
+        paid: faker.random.number(),
+        amountDue: faker.random.number(),
+        origin: faker.random.arrayElement(invoiceOrigins),
+        subscription: faker.random.arrayElement(subscriptions),
+        notes: faker.lorem.lines(),
+        termsAndConditions: faker.lorem.paragraph(),
+    };
+    return invoice;
+}
 
 /* Subscriptions can have different values from the plans they are associated with.
  * In other words, a plan is a template from which we create a subscription. However,
@@ -153,6 +202,11 @@ function generateFakeData() {
         subscriptions.push(subscription);
     }
 
+    for (let i = 0; i < DEFAULT_INVOICES; i++) {
+        const invoice = createInvoice();
+        invoices.push(invoice);
+    }
+
     console.log("[plans]");
     console.log(plans);
 
@@ -161,6 +215,9 @@ function generateFakeData() {
 
     console.log("[subscriptions]");
     console.log(subscriptions);
+
+    console.log("[invoices]");
+    console.log(invoices);
 }
 
 generateFakeData();
@@ -209,6 +266,7 @@ mock.onPut(PUT_PLAN_URL).reply((request) => {
         return [404];
     }
 });
+
 // Accounts
 
 mock.onPost("/api/v1/accounts").reply((request) => {
@@ -283,6 +341,53 @@ mock.onGet(GET_SUBSCRIPTION_URL).reply((request) => {
     if (subscription) {
         delete subscription.account;
         return [200, subscription];
+    } else {
+        return [404];
+    }
+});
+
+// Invoice
+
+mock.onPost("/api/v1/invoices").reply((request) => {
+    const invoice = JSON.parse(request.data);
+    invoice.id = faker.random.uuid();
+    invoice.push(invoice);
+
+    return [200, invoice];
+});
+
+// TODO: Paging
+mock.onGet("/api/v1/invoices").reply((request) => {
+    return [200, invoices];
+});
+
+const GET_INVOICE_URL = /\/api\/v1\/invoices\/([a-zA-Z0-9-]+)/;
+mock.onGet(GET_INVOICE_URL).reply((request) => {
+    const identifier = GET_INVOICE_URL.exec(request.url)[1];
+    const invoice = invoices.find(
+        (invoice) => invoice.identifier === identifier
+    );
+    if (invoice) {
+        return [200, invoice];
+    } else {
+        return [404];
+    }
+});
+
+/* NOTE: The user can easily modify the identifier of a record.
+ * However, the backend does not permit such operations.
+ */
+const PUT_INVOICE_URL = /\/api\/v1\/plans\/([a-zA-Z0-9-]+)/;
+mock.onPut(PUT_INVOICE_URL).reply((request) => {
+    const newInvoice = JSON.parse(request.data);
+    const identifier = PUT_INVOICE_URL.exec(request.url)[1];
+    const index = invoices.findIndex((invoice) => {
+        return invoice.identifier === identifier;
+    });
+
+    if (index >= 0) {
+        invoices[index] = newInvoice;
+        return [200, newInvoice];
     } else {
         return [404];
     }

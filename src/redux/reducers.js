@@ -120,6 +120,19 @@ function subscriptionReducer(state = null, action) {
         }
     }
 }
+
+function invoicesReducer(state = [], action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_INVOICES_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
@@ -129,6 +142,7 @@ const rootReducer = combineReducers({
     subscription: subscriptionReducer,
     plans: plansReducer,
     plan: planReducer,
+    invoices: invoicesReducer,
 });
 
 export default rootReducer;
