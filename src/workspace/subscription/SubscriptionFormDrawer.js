@@ -86,6 +86,16 @@ const groups = [
                 label: "Billing Period Unit",
                 identifier: "billingPeriodUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -93,7 +103,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The number of billing period units.",
                 multipleValues: true,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Setup Fee",
@@ -125,6 +135,16 @@ const groups = [
                 label: "Trial Period Unit",
                 identifier: "trialPeriodUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -132,7 +152,7 @@ const groups = [
                 hidden: false,
                 tooltip: "Number of units of trial period.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Starts",
@@ -164,6 +184,16 @@ const groups = [
                 label: "Term Unit",
                 identifier: "termUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: false,
                 readOnly: false,
                 quickAdd: true,
@@ -171,7 +201,7 @@ const groups = [
                 hidden: false,
                 tooltip: "Unit of the term.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Renew",
