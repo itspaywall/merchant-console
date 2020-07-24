@@ -78,6 +78,12 @@ export default function RecordForm(props) {
         onValueChange(field, newValue);
     };
 
+    const validateEmail = (field) => {
+        const value = values[field.identifier].toLowerCase();
+        const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return !value || pattern.test(value);
+    };
+
     const renderSelect = (field) => (
         <FormControl variant="outlined" fullWidth={true} size="medium">
             <InputLabel id={field.identifier}>{field.label}</InputLabel>
@@ -283,6 +289,27 @@ export default function RecordForm(props) {
                                 )}
 
                                 {field.type === "select" && renderSelect(field)}
+
+                                {field.type === "email_address" && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                        error={!validateEmail(field)}
+                                        helperText={
+                                            validateEmail(field)
+                                                ? ""
+                                                : "Please specify a valid email address."
+                                        }
+                                        size="medium"
+                                    />
+                                )}
                             </Grid>
                         ) : null
                     )
