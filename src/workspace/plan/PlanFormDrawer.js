@@ -66,6 +66,16 @@ const groups = [
                 label: "Billing Period Unit",
                 identifier: "billingPeriodUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -73,7 +83,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The billing period unit of the plan.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Price Per Period",
@@ -118,6 +128,16 @@ const groups = [
                 label: "Trial Period Unit",
                 identifier: "trialPeriodUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -125,7 +145,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The trial period unit of the plan.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Term",
@@ -144,6 +164,16 @@ const groups = [
                 label: "Term Unit",
                 identifier: "termUnit",
                 type: "select",
+                options: [
+                    {
+                        value: "days",
+                        title: "Days",
+                    },
+                    {
+                        value: "months",
+                        title: "Months",
+                    },
+                ],
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -151,7 +181,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The term unit of the plan.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: "days",
             },
             {
                 label: "Renew",

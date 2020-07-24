@@ -42,20 +42,17 @@ const useStyles = makeStyles((theme) => ({
 export function extractValues(groups) {
     const result = {};
     groups.forEach((group) => {
-        group.children.forEach(
-            (field) => {
-                if (field.type === "date_range") {
-                    result[field.identifier] = {
-                        option: field.defaultValue.option,
-                        startDate: field.defaultValue.startDate,
-                        endDate: field.defaultValue.endDate,
-                    };
-                }
-                else {
-                    result[field.identifier] = field.defaultValue;
-                }
+        group.children.forEach((field) => {
+            if (field.type === "date_range") {
+                result[field.identifier] = {
+                    option: field.defaultValue.option,
+                    startDate: field.defaultValue.startDate,
+                    endDate: field.defaultValue.endDate,
+                };
+            } else {
+                result[field.identifier] = field.defaultValue;
             }
-        );
+        });
     });
     return result;
 }
@@ -81,9 +78,25 @@ export default function RecordForm(props) {
         onValueChange(field, newValue);
     };
 
+    const renderSelect = (field) => (
+        <FormControl variant="outlined" fullWidth={true} size="medium">
+            <InputLabel id={field.identifier}>{field.label}</InputLabel>
+            <Select
+                labelId={field.identifier}
+                value={values[field.identifier]}
+                onChange={makeChangeHandler(field)}
+                label={field.label}
+            >
+                {field.options.map((option) => (
+                    <MenuItem value={option.value}>{option.title}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    );
+
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container={true} spacing={2} className={classes.root}>
+            <Grid container={true} spacing={3} className={classes.root}>
                 {groups.map((group, groupIndex) =>
                     group.children.map((field, fieldIndex) =>
                         (!showMore && field.quickAdd) ||
@@ -103,7 +116,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        size="small"
+                                        size="medium"
                                     />
                                 )}
 
@@ -120,7 +133,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        size="small"
+                                        size="medium"
                                     />
                                 )}
 
@@ -135,7 +148,7 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        size="small"
+                                        size="medium"
                                     />
                                 )}
 
@@ -160,7 +173,7 @@ export default function RecordForm(props) {
                                             field,
                                             "startDate"
                                         )}
-                                        size="small"
+                                        size="medium"
                                     />
                                 )}
 
@@ -175,14 +188,15 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                         />
-                                    </FormGroup>)}
+                                    </FormGroup>
+                                )}
 
                                 {field.type === "date_range" && (
                                     <div>
                                         <FormControl
                                             variant="outlined"
                                             fullWidth={true}
-                                            size="small"
+                                            size="medium"
                                         >
                                             <InputLabel id={field.identifier}>
                                                 {field.title}
@@ -220,9 +234,11 @@ export default function RecordForm(props) {
                                                     format="MM/dd/yyyy"
                                                     inputVariant="outlined"
                                                     fullWidth={true}
-                                                    size="small"
+                                                    size="medium"
                                                     value={
-                                                        !values[field.identifier].startDate
+                                                        !values[
+                                                            field.identifier
+                                                        ].startDate
                                                             ? new Date()
                                                             : new Date(
                                                                   values[
@@ -244,9 +260,11 @@ export default function RecordForm(props) {
                                                     format="MM/dd/yyyy"
                                                     inputVariant="outlined"
                                                     fullWidth={true}
-                                                    size="small"
+                                                    size="medium"
                                                     value={
-                                                        !values[field.identifier].endDate
+                                                        !values[
+                                                            field.identifier
+                                                        ].endDate
                                                             ? new Date()
                                                             : new Date(
                                                                   values[
@@ -263,6 +281,8 @@ export default function RecordForm(props) {
                                         )}
                                     </div>
                                 )}
+
+                                {field.type === "select" && renderSelect(field)}
                             </Grid>
                         ) : null
                     )
