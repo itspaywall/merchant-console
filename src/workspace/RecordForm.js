@@ -95,6 +95,12 @@ export default function RecordForm(props) {
         return !value || pattern.test(value);
     };
 
+    const validatePhoneNumber = (field) => {
+        // eslint-disable-next-line
+        // const pattern = /^([+]?\d{1,2}[.-\s]?)?(\d{3}[.-]?){2}\d{4}$/;
+        return true;
+    };
+
     const renderSelect = (field) => (
         <FormControl variant="outlined" fullWidth={true} size="medium">
             <InputLabel id={field.identifier}>{field.label}</InputLabel>
@@ -351,6 +357,27 @@ export default function RecordForm(props) {
                                             validateEmail(field)
                                                 ? ""
                                                 : "Please specify a valid email address."
+                                        }
+                                        size="medium"
+                                    />
+                                )}
+
+                                {field.type === "phone_number" && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                        error={!validatePhoneNumber(field)}
+                                        helperText={
+                                            validatePhoneNumber(field)
+                                                ? ""
+                                                : "Please specify a valid phone number."
                                         }
                                         size="medium"
                                     />
