@@ -55,6 +55,13 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: 50,
     },
+    suspense: {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        marginTop: -24,
+        marginLeft: -24,
+    },
 }));
 
 // TODO: The layouts should be configurable.
@@ -134,7 +141,14 @@ function MainLayout(props) {
                         [classes.contentShift]: drawerOpen,
                     })}
                 >
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense
+                        fallback={
+                            <CircularProgress
+                                size="48px"
+                                className={classes.suspense}
+                            />
+                        }
+                    >
                         {renderRoutes(routes)}
                     </Suspense>
                     {props.children}
