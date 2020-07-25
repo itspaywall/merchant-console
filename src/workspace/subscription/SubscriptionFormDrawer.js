@@ -103,7 +103,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The number of billing period units.",
                 multipleValues: true,
-                defaultValue: "days",
+                defaultValue: days,
             },
             {
                 label: "Setup Fee",
