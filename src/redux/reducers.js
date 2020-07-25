@@ -93,6 +93,23 @@ function planReducer(state = null, action) {
     }
 }
 
+function invoiceReducer(state = null, action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_INVOICE_COMPLETE:
+        case ActionTypes.EDIT_INVOICE: {
+            return action.payload;
+        }
+
+        case ActionTypes.CLEAR_INVOICE: {
+            return null;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 function plansReducer(state = [], action) {
     switch (action.type) {
         case ActionTypes.FETCH_PLANS_COMPLETE: {
@@ -143,6 +160,7 @@ const rootReducer = combineReducers({
     plans: plansReducer,
     plan: planReducer,
     invoices: invoicesReducer,
+    invoice: invoiceReducer,
 });
 
 export default rootReducer;

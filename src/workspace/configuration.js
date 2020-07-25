@@ -14,8 +14,13 @@ const workspaceConfiguration = [
 
     // Invoice
     {
+        path: "/invoices/:identifier",
+        component: React.lazy(() => import("./invoice/ViewInvoice")),
+    },
+    {
         path: "/invoices",
         component: React.lazy(() => import("./invoice/ViewInvoices")),
+        exact: true,
     },
 
     // Subscription

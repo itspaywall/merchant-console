@@ -22,6 +22,13 @@ export function editPlan(plan) {
     };
 }
 
+export function editInvoice(invoice) {
+    return {
+        type: ActionTypes.EDIT_INVOICE,
+        payload: invoice,
+    };
+}
+
 export function newSubscription() {
     return {
         type: ActionTypes.NEW_SUBSCRIPTION,
@@ -231,6 +238,24 @@ export function fetchSubscriptions() {
     };
 }
 
+export function fetchInvoice(identifier) {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading invoice...', 'LOADING'));
+        console.log("/api/v1/invoices/" + identifier);
+        return axios.get("/api/v1/invoices/" + identifier).then((response) => {
+            const invoice = response.data;
+            dispatch(fetchInvoiceComplete(invoice));
+        });
+    };
+}
+
+export function fetchInvoiceComplete(invoice) {
+    return {
+        type: ActionTypes.FETCH_INVOICE_COMPLETE,
+        payload: invoice,
+    };
+}
+
 export function fetchAccount(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
@@ -269,6 +294,13 @@ export function fetchAccountComplete(account) {
 export function clearAccount() {
     return {
         type: ActionTypes.CLEAR_ACCOUNT,
+        payload: null,
+    };
+}
+
+export function clearInvoice() {
+    return {
+        type: ActionTypes.CLEAR_INVOICE,
         payload: null,
     };
 }
