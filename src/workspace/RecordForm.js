@@ -15,6 +15,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +27,13 @@ const useStyles = makeStyles((theme) => ({
     tabText: {
         fontWeight: 600,
         fontSize: 13,
+    },
+    chips: {
+        display: "flex",
+        flexWrap: "wrap",
+    },
+    chip: {
+        margin: 2,
     },
 }));
 
@@ -49,6 +57,8 @@ export function extractValues(groups) {
                     startDate: field.defaultValue.startDate,
                     endDate: field.defaultValue.endDate,
                 };
+            } else if (field.type === "multi_select") {
+                result[field.identifier] = [...field.defaultValue];
             } else {
                 result[field.identifier] = field.defaultValue;
             }
@@ -80,6 +90,7 @@ export default function RecordForm(props) {
 
     const validateEmail = (field) => {
         const value = values[field.identifier].toLowerCase();
+        // eslint-disable-next-line
         const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return !value || pattern.test(value);
     };
@@ -92,6 +103,37 @@ export default function RecordForm(props) {
                 value={values[field.identifier]}
                 onChange={makeChangeHandler(field)}
                 label={field.label}
+            >
+                {field.options.map((option) => (
+                    <MenuItem value={option.value}>{option.title}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    );
+
+    const getSelectedTitle = (field, selected) => {
+        return field.options.find((option) => option.value === selected).title;
+    };
+
+    const renderMultiSelect = (field) => (
+        <FormControl variant="outlined" fullWidth={true} size="medium">
+            <InputLabel id={field.identifier}>{field.label}</InputLabel>
+            <Select
+                labelId={field.identifier}
+                value={values[field.identifier]}
+                multiple={true}
+                onChange={makeChangeHandler(field)}
+                label={field.label}
+                renderValue={(selected) => (
+                    <div>
+                        {selected.map((value) => (
+                            <Chip
+                                value={selected}
+                                label={getSelectedTitle(field, value)}
+                            />
+                        ))}
+                    </div>
+                )}
             >
                 {field.options.map((option) => (
                     <MenuItem value={option.value}>{option.title}</MenuItem>
@@ -289,6 +331,9 @@ export default function RecordForm(props) {
                                 )}
 
                                 {field.type === "select" && renderSelect(field)}
+
+                                {field.type === "multi_select" &&
+                                    renderMultiSelect(field)}
 
                                 {field.type === "email_address" && (
                                     <TextField
