@@ -80,7 +80,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The billing period of the subscription.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: 0,
             },
             {
                 label: "Billing Period Unit",
@@ -103,7 +103,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The number of billing period units.",
                 multipleValues: true,
-                defaultValue: days,
+                defaultValue: "days",
             },
             {
                 label: "Setup Fee",
@@ -116,7 +116,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The fee required for setup of the subscription.",
                 multipleValues: true,
-                defaultValue: "",
+                defaultValue: 0,
             },
             {
                 label: "Trial Period",
@@ -129,7 +129,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The period of the trail subscription.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: 0,
             },
             {
                 label: "Trial Period Unit",
@@ -165,7 +165,6 @@ const groups = [
                 hidden: false,
                 tooltip: "Start date of the subscription.",
                 multipleValues: false,
-                defaultValue: "",
             },
             {
                 label: "Term",
@@ -178,7 +177,7 @@ const groups = [
                 hidden: false,
                 tooltip: "Term of the subscription.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: 0,
             },
             {
                 label: "Term Unit",
@@ -215,7 +214,7 @@ const groups = [
                 tooltip:
                     "Boolean value stating whether subscription is recurring.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: false,
             },
         ],
     },
