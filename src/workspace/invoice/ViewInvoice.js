@@ -56,9 +56,10 @@ function ViewInvoice(props) {
     const { fetchInvoice, clearInvoice, invoice, editInvoice } = props;
     const { identifier } = useParams();
 
-    const handleEditInvoice = () => {
-        editInvoice(invoice);
-        clearInvoice();
+    const handleAction = (type) => {
+        if (type === "edit") {
+            editInvoice(invoice);
+        }
     };
 
     useEffect(() => {
@@ -68,7 +69,11 @@ function ViewInvoice(props) {
 
     return (
         <div>
-            <WorkspaceToolbar title="Invoice" actions={primaryActions} />
+            <WorkspaceToolbar
+                title="Invoice"
+                actions={primaryActions}
+                onAction={handleAction}
+            />
             {!invoice && (
                 <CircularProgress size="48px" className={classes.progress} />
             )}
@@ -76,7 +81,6 @@ function ViewInvoice(props) {
                 <div className={classes.container}>
                     <InvoiceCard
                         className={classes.invoiceCard}
-                        onEdit={handleEditInvoice}
                         invoice={invoice}
                     />
                 </div>

@@ -77,6 +77,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FormDrawer(props) {
+    console.log(props);
+
     const { closeDialog, title, groups, open, onSave } = props;
     const classes = useStyles(props);
     const [showMore, setShowMore] = React.useState(props.showMore);
