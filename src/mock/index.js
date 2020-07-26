@@ -226,6 +226,7 @@ function createTransaction() {
         action: faker.random.arrayElement(actions),
         paymentMethod: faker.random.arrayElement(paymentMethods),
         refundable: faker.random.boolean(),
+        createdOn: pastDate(),
     };
 
     return transaction;
@@ -265,6 +266,9 @@ function generateFakeData() {
 
     console.log("[subscriptions]");
     console.log(subscriptions);
+
+    console.log("[transactions]");
+    console.log(transactions);
 
     console.log("[invoices]");
     console.log(invoices);

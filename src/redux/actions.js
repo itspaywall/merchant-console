@@ -209,6 +209,13 @@ export function fetchAccountsComplete(accounts) {
     };
 }
 
+export function fetchTransactionsComplete(transactions) {
+    return {
+        type: ActionTypes.FETCH_TRANSACTIONS_COMPLETE,
+        payload: transactions,
+    };
+}
+
 export function fetchInvoices() {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoices...', 'LOADING'));
@@ -232,6 +239,16 @@ export function fetchAccounts() {
         return axios.get("/api/v1/accounts").then((response) => {
             const accounts = response.data;
             dispatch(fetchAccountsComplete(accounts));
+        });
+    };
+}
+
+export function fetchTransactions() {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading transactions...', 'LOADING'));
+        return axios.get("/api/v1/transactions").then((response) => {
+            const transactions = response.data;
+            dispatch(fetchTransactionsComplete(transactions));
         });
     };
 }
