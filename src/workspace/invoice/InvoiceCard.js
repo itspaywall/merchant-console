@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
     payment: {
         marginTop: 24,
-        width: "25%",
+        width: "20%",
         marginLeft: "auto",
     },
     header: {
@@ -65,7 +65,14 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "right",
         fontSize: 14,
     },
-    note: {
+    notes: {
+        marginTop: 16,
+    },
+    notesTitle: {
+        fontWeight: 600,
+        fontSize: 14,
+    },
+    notesText: {
         fontSize: 14,
     },
     terms: {
@@ -261,19 +268,17 @@ function InvoiceCard(props) {
                         </Typography>
                     </Grid>
                 </Grid>
-                <div>
+                <div className={classes.notes}>
                     <Typography
                         variant="subtitle1"
                         color="textSecondary"
-                        className={classes.invoice}
+                        className={classes.notesTitle}
                     >
                         Notes
                     </Typography>
-                    {invoice.notes.map((note) => (
-                        <Typography key={note} className={classes.note}>
-                            {note}
-                        </Typography>
-                    ))}
+                    <Typography className={classes.notesText}>
+                        {invoice.notes}
+                    </Typography>
                 </div>
                 <div className={classes.terms}>
                     <Typography

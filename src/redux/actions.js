@@ -109,6 +109,21 @@ export function saveAccount(account) {
     };
 }
 
+export function saveInvoice(invoice) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving invoice...", "LOADING"));
+        return axios
+            .put("/api/v1/invoices/" + invoice.identifier, invoice)
+            .then((response) => {
+                const invoice = response.data;
+                dispatch(fetchInvoiceComplete(invoice));
+                dispatch(
+                    showNotification("Successfully saved invoice", "SUCCESS")
+                );
+            });
+    };
+}
+
 export function savePlan(plan) {
     return (dispatch) => {
         dispatch(showNotification("Saving plan...", "LOADING"));

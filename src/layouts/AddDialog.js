@@ -75,12 +75,6 @@ const groups = [
                 action: "newSubscription",
             },
             {
-                id: "invoice",
-                title: "Invoice",
-                icon: "receipt",
-                action: "newInvoice",
-            },
-            {
                 id: "transaction",
                 title: "Transaction",
                 icon: "monetization_on",

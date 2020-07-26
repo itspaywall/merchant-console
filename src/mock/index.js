@@ -152,7 +152,7 @@ function createInvoice() {
         amountDue: faker.random.number(),
         origin: faker.random.arrayElement(invoiceOrigins),
         subscription: faker.random.arrayElement(subscriptions),
-        notes: faker.lorem.lines().split("\n"),
+        notes: faker.lorem.lines(),
         termsAndConditions: faker.lorem.paragraph(),
         items: createInvoiceItems(),
     };
@@ -455,7 +455,7 @@ mock.onGet(GET_INVOICE_URL).reply((request) => {
 /* NOTE: The user can easily modify the identifier of a record.
  * However, the backend does not permit such operations.
  */
-const PUT_INVOICE_URL = /\/api\/v1\/plans\/([a-zA-Z0-9-]+)/;
+const PUT_INVOICE_URL = /\/api\/v1\/invoices\/([a-zA-Z0-9-]+)/;
 mock.onPut(PUT_INVOICE_URL).reply((request) => {
     const newInvoice = JSON.parse(request.data);
     const identifier = PUT_INVOICE_URL.exec(request.url)[1];

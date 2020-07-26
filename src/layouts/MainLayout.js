@@ -19,6 +19,7 @@ import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDr
 import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawer";
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
 import EditPlan from "../workspace/plan/EditPlan";
+import EditInvoice from "../workspace/invoice/EditInvoice";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -181,6 +182,8 @@ function MainLayout(props) {
                 onSave={createPlan}
                 open={openDialog === "NEW_PLAN"}
             />
+
+            {openDialog === "EDIT_INVOICE" && <EditInvoice />}
 
             {renderNotification(notification)}
         </React.Fragment>
