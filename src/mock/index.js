@@ -8,12 +8,18 @@ const mock = new MockAdapter(axios, { delayResponse: 1000 });
 const DEFAULT_PLANS = 10;
 const DEFAULT_ACCOUNTS = 100;
 const DEFAULT_SUBSCRIPTIONS = 100 * 5;
+const DEFAULT_TRANSACTIONS = 100;
 const DEFAULT_INVOICES = 100;
 
 const plans = [];
 const accounts = [];
 const subscriptions = [];
+const transactions = [];
 const invoices = [];
+
+const paymentMethods = ["cash", "credit_card", "debit_card", "online"];
+
+const actions = ["purchase", "verify", "refund"];
 
 const periodUnits = ["days", "months"];
 
@@ -186,6 +192,23 @@ function createSubscription() {
     return subscription;
 }
 
+function createTransaction() {
+    const subscription = faker.random.arrayElement(subscriptions);
+
+    const transaction = {
+        identifier: faker.random.uuid(),
+        subscription: subscription,
+        comments: faker.lorem.paragraph(),
+        amount: faker.random.number(),
+        tax: faker.random.number(),
+        action: faker.random.arrayElement(actions),
+        paymentMethod: faker.random.arrayElement(paymentMethods),
+        refundable: faker.random.boolean(),
+    };
+
+    return transaction;
+}
+
 function generateFakeData() {
     for (let i = 0; i < DEFAULT_PLANS; i++) {
         const plan = createPlan();
@@ -200,6 +223,11 @@ function generateFakeData() {
     for (let i = 0; i < DEFAULT_SUBSCRIPTIONS; i++) {
         const subscription = createSubscription();
         subscriptions.push(subscription);
+    }
+
+    for (let i = 0; i < DEFAULT_TRANSACTIONS; i++) {
+        const transaction = createTransaction();
+        transactions.push(transaction);
     }
 
     for (let i = 0; i < DEFAULT_INVOICES; i++) {
@@ -341,6 +369,34 @@ mock.onGet(GET_SUBSCRIPTION_URL).reply((request) => {
     if (subscription) {
         delete subscription.account;
         return [200, subscription];
+    } else {
+        return [404];
+    }
+});
+
+// Transactions
+
+mock.onPost("/api/v1/transactions").reply((request) => {
+    const transaction = JSON.parse(request.data);
+    transaction.id = faker.random.uuid();
+    transactions.push(transaction);
+
+    return [200, transaction];
+});
+
+// TODO: Paging
+mock.onGet("/api/v1/transactions").reply((request) => {
+    return [200, transactions];
+});
+
+const GET_TRANSACTION_URL = /\/api\/v1\/transactions\/([a-zA-Z0-9-]+)/;
+mock.onGet(GET_TRANSACTION_URL).reply((request) => {
+    const identifier = GET_TRANSACTION_URL.exec(request.url)[1];
+    const transaction = transactions.find(
+        (transaction) => transaction.identifier === identifier
+    );
+    if (transaction) {
+        return [200, transaction];
     } else {
         return [404];
     }
