@@ -10,7 +10,7 @@ import InvoiceCardTable from "./InvoiceCardTable";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: 1000,
+        maxWidth: 1200,
         padding: 32,
     },
     invoice: {
@@ -48,8 +48,31 @@ const useStyles = makeStyles((theme) => ({
     },
     payment: {
         marginTop: 24,
-        width: 250,
+        width: "25%",
         marginLeft: "auto",
+    },
+    header: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    leftHeader: {
+        width: "40%",
+    },
+    rightHeader: {
+        width: "25%",
+    },
+    paymentValue: {
+        textAlign: "right",
+        fontSize: 14,
+    },
+    note: {
+        fontSize: 14,
+    },
+    terms: {
+        marginTop: 16,
+    },
+    termsText: {
+        fontSize: 14,
     },
 }));
 
@@ -76,22 +99,22 @@ const fields = [
 
 const paymentFields = [
     {
-        identifier: "invoiceNumber",
-        title: "Invoice Number",
+        identifier: "subtotal",
+        title: "Subtotal",
         size: 12,
-        render: (props) => props.invoice.invoiceNumber,
+        render: (props) => props.invoice.subtotal + " INR",
     },
     {
-        identifier: "invoiceDate",
-        title: "Invoice Date",
+        identifier: "total",
+        title: "Total",
         size: 12,
-        render: (props) => props.invoice.postedOn,
+        render: (props) => props.invoice.total + " INR",
     },
     {
-        identifier: "dueDate",
-        title: "Due Date",
+        identifier: "paid",
+        title: "Paid",
         size: 12,
-        render: (props) => props.invoice.dueOn,
+        render: (props) => props.invoice.paid + " INR",
     },
 ];
 
@@ -102,8 +125,8 @@ function InvoiceCard(props) {
     return (
         <Card className={clsx(classes.root, className)}>
             <CardContent>
-                <Grid container={true} spacing={2}>
-                    <Grid item={true} lg={6}>
+                <div className={classes.header}>
+                    <div className={classes.leftHeader}>
                         <div>
                             <Typography
                                 variant="subtitle1"
@@ -155,8 +178,8 @@ function InvoiceCard(props) {
                             {props.country}
                             */}
                         </div>
-                    </Grid>
-                    <Grid item={true} lg={6}>
+                    </div>
+                    <div className={classes.rightHeader}>
                         <Typography
                             variant="subtitle1"
                             color="textSecondary"
@@ -167,7 +190,7 @@ function InvoiceCard(props) {
                         <Grid container={true} spacing={0}>
                             {fields.map((field) => (
                                 <React.Fragment>
-                                    <Grid item={true} lg={4}>
+                                    <Grid item={true} lg={6}>
                                         <Typography
                                             variant="subtitle1"
                                             color="textSecondary"
@@ -176,7 +199,7 @@ function InvoiceCard(props) {
                                             {field.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid item={true} lg={8}>
+                                    <Grid item={true} lg={6}>
                                         <Typography
                                             variant="subtitle1"
                                             color="textPrimary"
@@ -188,14 +211,14 @@ function InvoiceCard(props) {
                                 </React.Fragment>
                             ))}
                         </Grid>
-                    </Grid>
-                </Grid>
+                    </div>
+                </div>
                 <div className={classes.table}>
                     <InvoiceCardTable rows={invoice.items} />
                 </div>
                 <Grid container={true} spacing={1} className={classes.payment}>
                     {paymentFields.map((field) => (
-                        <React.Fragment>
+                        <React.Fragment key={field.identifier}>
                             <Grid item={true} lg={6}>
                                 <Typography
                                     variant="subtitle1"
@@ -209,7 +232,7 @@ function InvoiceCard(props) {
                                 <Typography
                                     variant="subtitle1"
                                     color="textPrimary"
-                                    className={classes.value}
+                                    className={classes.paymentValue}
                                 >
                                     {field.render(props)}
                                 </Typography>
@@ -232,12 +255,38 @@ function InvoiceCard(props) {
                         <Typography
                             variant="subtitle1"
                             color="textPrimary"
-                            className={classes.value}
+                            className={classes.paymentValue}
                         >
                             {props.invoice.amountDue} INR
                         </Typography>
                     </Grid>
                 </Grid>
+                <div>
+                    <Typography
+                        variant="subtitle1"
+                        color="textSecondary"
+                        className={classes.invoice}
+                    >
+                        Notes
+                    </Typography>
+                    {invoice.notes.map((note) => (
+                        <Typography key={note} className={classes.note}>
+                            {note}
+                        </Typography>
+                    ))}
+                </div>
+                <div className={classes.terms}>
+                    <Typography
+                        variant="subtitle1"
+                        color="textSecondary"
+                        className={classes.invoice}
+                    >
+                        Terms and Conditions
+                    </Typography>
+                    <Typography className={classes.termsText}>
+                        {invoice.termsAndConditions}
+                    </Typography>
+                </div>
             </CardContent>
         </Card>
     );

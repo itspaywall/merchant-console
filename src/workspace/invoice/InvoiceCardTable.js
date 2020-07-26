@@ -50,8 +50,10 @@ export default function InvoiceCardTable(props) {
                             </TableCell>
                             <TableCell>{row.description}</TableCell>
                             <TableCell align="right">{row.quantity}</TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="right">{row.subtotal}</TableCell>
+                            <TableCell align="right">{row.price} INR</TableCell>
+                            <TableCell align="right">
+                                {row.subtotal} INR
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

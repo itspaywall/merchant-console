@@ -152,7 +152,7 @@ function createInvoice() {
         amountDue: faker.random.number(),
         origin: faker.random.arrayElement(invoiceOrigins),
         subscription: faker.random.arrayElement(subscriptions),
-        notes: faker.lorem.lines(),
+        notes: faker.lorem.lines().split("\n"),
         termsAndConditions: faker.lorem.paragraph(),
         items: createInvoiceItems(),
     };
