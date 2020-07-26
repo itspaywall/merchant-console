@@ -115,6 +115,27 @@ function createAccount() {
     return account;
 }
 
+function createInvoiceItems() {
+    const limit = faker.random.number({
+        min: 1,
+        max: 10,
+    });
+    const result = [];
+    for (let i = 0; i < limit; i++) {
+        const item = {
+            startDate: pastDate(),
+            endDate: pastDate(),
+            description: faker.lorem.sentence(),
+            quantity: faker.random.number(),
+            price: faker.random.number(),
+            subtotal: faker.random.number(),
+            amountDue: faker.random.number(),
+        };
+        result.push(item);
+    }
+    return result;
+}
+
 function createInvoice() {
     const invoice = {
         identifier: faker.random.uuid(),
@@ -131,8 +152,9 @@ function createInvoice() {
         amountDue: faker.random.number(),
         origin: faker.random.arrayElement(invoiceOrigins),
         subscription: faker.random.arrayElement(subscriptions),
-        notes: faker.lorem.lines(),
+        notes: faker.lorem.lines().split("\n"),
         termsAndConditions: faker.lorem.paragraph(),
+        items: createInvoiceItems(),
     };
     return invoice;
 }
