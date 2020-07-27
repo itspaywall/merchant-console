@@ -13,7 +13,6 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,7 +58,7 @@ export default function WorkspaceFilter(props) {
     const makeDateChangeHandler = (field, which) => (date) => {
         const newValue = Object.assign({}, values[field.identifier]);
         // ISO format
-        newValue[which] = format(date, "yyyy/MM/dd");
+        newValue[which] = date; // format(date, "yyyy/MM/dd");
         onValueChange(field.identifier, newValue);
     };
 

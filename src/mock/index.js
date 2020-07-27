@@ -51,15 +51,15 @@ const invoiceOrigins = [
 const collectionMethods = ["automatic", "manual"];
 
 function futureDate() {
-    return format(faker.date.future(), "yyyy/MM/dd");
+    return faker.date.future().toISOString();
 }
 
 function pastDate() {
-    return format(faker.date.past(), "yyyy/MM/dd");
+    return faker.date.past().toISOString();
 }
 
 function soonDate() {
-    return format(faker.date.future(), "yyyy/MM/dd");
+    return faker.date.future().toISOString();
 }
 
 // TODO: We could improve periods generated to be more realistic for months.

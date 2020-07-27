@@ -9,6 +9,7 @@ import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
 import { extractFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
+import { toDateString } from "../../utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
@@ -52,11 +53,13 @@ const headers = [
 
 const filterFields = [
     {
-        identifier: "time_range",
+        identifier: "date_range",
         type: "time_range",
         title: "Time Range",
         startTitle: "Start Date",
+        startIdentifier: "start_date",
         endTitle: "End Date",
+        endIdentifier: "end_date",
         options: [
             {
                 value: "all_time",
@@ -93,8 +96,8 @@ const filterFields = [
         ],
         defaultValue: {
             option: "all_time",
-            startDate: null,
-            endDate: null,
+            startDate: new Date(),
+            endDate: new Date(),
         },
     },
     {
@@ -217,6 +220,60 @@ const actions2 = [
     },
 ];
 
+export function toURLParams(fields, values) {
+    console.log(values);
+
+    const result = {};
+    fields.forEach((field) => {
+        if (field.type === "time_range") {
+            result[field.identifier] = values[field.identifier].option;
+            if (values[field.identifier].option == "custom") {
+                result[field.startIdentifier] = values[
+                    field.identifier
+                ].startDate.getTime();
+                result[field.endIdentifier] = values[
+                    field.identifier
+                ].endDate.getTime();
+            }
+        } else {
+            result[field.identifier] = values[field.identifier];
+        }
+    });
+    console.log(result);
+    return result;
+}
+
+export function toFilterState(fields, params) {
+    const result = {};
+    fields.forEach((field) => {
+        if (field.type === "time_range") {
+            result[field.identifier] = {};
+            result[field.identifier].option = params[field.identifier];
+
+            if (field.startIdentifier in params) {
+                result[field.identifier].startDate =
+                    params[field.startIdentifier];
+            } else {
+                result[field.identifier].startDate =
+                    field.defaultValue.startDate;
+            }
+
+            if (field.endIdentifier in params) {
+                result[field.identifier].endDate = params[field.endIdentifier];
+            } else {
+                result[field.identifier].endDate = field.defaultValue.endDate;
+            }
+        } else {
+            if (field.identifier in params) {
+                result[field.identifier] = params[field.identifier];
+            } else {
+                result[field.identifier] = field.defaultValue;
+            }
+        }
+    });
+    return result;
+}
+
 /* [TODO]
  * 1. Filter logic
  * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
@@ -229,7 +286,7 @@ function ViewAccounts(props) {
     const [compact, setCompact] = useState(false);
 
     // TODO: Should we cache this?
-    const defaultFilterValues = extractFilterState(filterFields);
+    const defaultFilterValues = toFilterState(filterFields, {});
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
@@ -246,18 +303,31 @@ function ViewAccounts(props) {
         history.push("/accounts/" + account.identifier);
     };
 
+    const generateURL = (values) => {
+        if (values) {
+            const flatValues = toURLParams(filterFields, values);
+            const params = new URLSearchParams(flatValues);
+
+            history.push("/accounts?" + params.toString());
+        } else {
+            history.push("/accounts");
+        }
+    };
+
     // TODO: Create a deep copy without serializing !
     const onFilterValueChange = (field, value) => {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
 
-        console.log(newValues);
+        generateURL(newValues);
     };
 
     const onFilterClear = () => {
-        const defaultValues = extractFilterState(filterFields);
+        const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
+
+        generateURL(null);
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
@@ -275,7 +345,7 @@ function ViewAccounts(props) {
             }
 
             case "created": {
-                return row.createdOn;
+                return toDateString(row.createdOn);
             }
 
             case "plans": {
