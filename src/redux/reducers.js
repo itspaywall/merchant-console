@@ -77,10 +77,14 @@ function subscriptionsReducer(state = [], action) {
     }
 }
 
-function transactionsReducer(state = [], action) {
+function subscriptionReducer(state = null, action) {
     switch (action.type) {
-        case ActionTypes.FETCH_TRANSACTIONS_COMPLETE: {
+        case ActionTypes.FETCH_SUBSCRIPTION_COMPLETE: {
             return action.payload;
+        }
+
+        case ActionTypes.CLEAR_SUBSCRIPTION: {
+            return null;
         }
 
         default: {
@@ -89,15 +93,10 @@ function transactionsReducer(state = [], action) {
     }
 }
 
-function planReducer(state = null, action) {
+function invoicesReducer(state = [], action) {
     switch (action.type) {
-        case ActionTypes.FETCH_PLAN_COMPLETE:
-        case ActionTypes.EDIT_PLAN: {
+        case ActionTypes.FETCH_INVOICES_COMPLETE: {
             return action.payload;
-        }
-
-        case ActionTypes.CLEAR_ACCOUNT: {
-            return null;
         }
 
         default: {
@@ -123,6 +122,18 @@ function invoiceReducer(state = null, action) {
     }
 }
 
+function transactionsReducer(state = [], action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_TRANSACTIONS_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 function plansReducer(state = [], action) {
     switch (action.type) {
         case ActionTypes.FETCH_PLANS_COMPLETE: {
@@ -135,26 +146,15 @@ function plansReducer(state = [], action) {
     }
 }
 
-function subscriptionReducer(state = null, action) {
+function planReducer(state = null, action) {
     switch (action.type) {
-        case ActionTypes.FETCH_SUBSCRIPTION_COMPLETE: {
+        case ActionTypes.FETCH_PLAN_COMPLETE:
+        case ActionTypes.EDIT_PLAN: {
             return action.payload;
         }
 
-        case ActionTypes.CLEAR_SUBSCRIPTION: {
+        case ActionTypes.CLEAR_ACCOUNT: {
             return null;
-        }
-
-        default: {
-            return state;
-        }
-    }
-}
-
-function invoicesReducer(state = [], action) {
-    switch (action.type) {
-        case ActionTypes.FETCH_INVOICES_COMPLETE: {
-            return action.payload;
         }
 
         default: {
