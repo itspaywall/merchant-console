@@ -262,13 +262,13 @@ export function clearInvoice() {
 /** TRANSACTION
  *  1. newTransaction()
  *  2. createTransaction()
- *  3. saveTransaction() -> TODO
+ *  3. saveTransaction()
  *  4. fetchTransactionComplete()
  *  5. fetchTransaction()
- *  6. fetchTransactionsComplete() -> TODO
- *  7. fetchTransactions() -> TODO
- *  8. editTransaction() -> TODO
- *  9. clearTransaction() -> TODO
+ *  6. fetchTransactionsComplete()
+ *  7. fetchTransactions()
+ *  8. editTransaction()
+ *  9. clearTransaction()
  *  */
 
 export function newTransaction() {
@@ -295,6 +295,25 @@ export function createTransaction(transaction) {
     };
 }
 
+export function fetchTransactionComplete(transaction) {
+    return {
+        type: ActionTypes.FETCH_TRANSACTION_COMPLETE,
+        payload: transaction,
+    };
+}
+
+export function fetchTransaction(identifier) {
+    return (dispatch) => {
+        // dispatch(showNotification('Loading transaction...', 'LOADING'));
+        return axios
+            .get("/api/v1/transactions/" + identifier)
+            .then((response) => {
+                const transaction = response.data;
+                dispatch(fetchTransactionComplete(transaction));
+            });
+    };
+}
+
 export function fetchTransactionsComplete(transactions) {
     return {
         type: ActionTypes.FETCH_TRANSACTIONS_COMPLETE,
@@ -309,6 +328,13 @@ export function fetchTransactions() {
             const transactions = response.data;
             dispatch(fetchTransactionsComplete(transactions));
         });
+    };
+}
+
+export function clearTransaction() {
+    return {
+        type: ActionTypes.CLEAR_TRANSACTION,
+        payload: null,
     };
 }
 

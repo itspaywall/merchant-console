@@ -36,8 +36,13 @@ const workspaceConfiguration = [
 
     // Transaction
     {
+        path: "/transactions/:identifier",
+        component: React.lazy(() => import("./transaction/ViewTransaction")),
+    },
+    {
         path: "/transactions",
         component: React.lazy(() => import("./transaction/ViewTransactions")),
+        exact: true,
     },
 
     // Plan
