@@ -119,6 +119,10 @@ const filterFields = [
                 value: "refund",
                 title: "Refund",
             },
+            {
+                value: "all",
+                title: "All",
+            },
         ],
         defaultValue: "all",
     },
@@ -142,6 +146,10 @@ const filterFields = [
             {
                 value: "online",
                 title: "Online / Netbanking",
+            },
+            {
+                value: "all",
+                title: "All",
             },
         ],
         defaultValue: "all",
