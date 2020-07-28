@@ -183,7 +183,7 @@ const groups = [
             },
             {
                 label: "Position",
-                id: "position",
+                identifier: "position",
                 name: "position",
                 type: "text",
                 required: false,

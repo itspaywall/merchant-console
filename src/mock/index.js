@@ -99,6 +99,8 @@ function createAccount() {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         companyName: faker.company.companyName(),
+        companyPhoneNumber: faker.phone.phoneNumber(),
+        companyEmailAddress: faker.internet.email(),
         position: faker.name.jobTitle(),
         emailAddress: faker.internet.email(),
         phoneNumber: faker.phone.phoneNumber(),
