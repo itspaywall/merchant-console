@@ -1,5 +1,4 @@
 import faker from "faker";
-import { format } from "date-fns";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 

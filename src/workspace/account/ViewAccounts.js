@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
-import { extractFilterState } from "../common/WorkspaceFilter";
+import { toURLParams, toFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
 import { toDateString } from "../../utils";
 
@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import ListIcon from "@material-ui/icons/ViewList";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CompactIcon from "@material-ui/icons/ViewCompact";
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -220,73 +221,31 @@ const actions2 = [
     },
 ];
 
-export function toURLParams(fields, values) {
-    console.log(values);
-
-    const result = {};
-    fields.forEach((field) => {
-        if (field.type === "time_range") {
-            result[field.identifier] = values[field.identifier].option;
-            if (values[field.identifier].option == "custom") {
-                result[field.startIdentifier] = values[
-                    field.identifier
-                ].startDate.getTime();
-                result[field.endIdentifier] = values[
-                    field.identifier
-                ].endDate.getTime();
-            }
-        } else {
-            result[field.identifier] = values[field.identifier];
-        }
-    });
-    console.log(result);
-    return result;
-}
-
-export function toFilterState(fields, params) {
-    const result = {};
-    fields.forEach((field) => {
-        if (field.type === "time_range") {
-            result[field.identifier] = {};
-            result[field.identifier].option = params[field.identifier];
-
-            if (field.startIdentifier in params) {
-                result[field.identifier].startDate =
-                    params[field.startIdentifier];
-            } else {
-                result[field.identifier].startDate =
-                    field.defaultValue.startDate;
-            }
-
-            if (field.endIdentifier in params) {
-                result[field.identifier].endDate = params[field.endIdentifier];
-            } else {
-                result[field.identifier].endDate = field.defaultValue.endDate;
-            }
-        } else {
-            if (field.identifier in params) {
-                result[field.identifier] = params[field.identifier];
-            } else {
-                result[field.identifier] = field.defaultValue;
-            }
-        }
-    });
-    return result;
-}
-
 /* [TODO]
  * 1. Filter logic
  * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
  */
 function ViewAccounts(props) {
-    const { accounts, fetchAccounts, newAccount, history } = props;
+    const { accounts, fetchAccounts, newAccount, history, location } = props;
+    const params = queryString.parse(location.search);
+
+    if ("start_date" in params) {
+        params["start_date"] = new Date(Number(params["start_date"]));
+    }
+    if ("end_date" in params) {
+        params["end_date"] = new Date(Number(params["end_date"]));
+    }
+
     const classes = useStyles();
     const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(false);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
     const [compact, setCompact] = useState(false);
 
     // TODO: Should we cache this?
-    const defaultFilterValues = toFilterState(filterFields, {});
+
+    const defaultFilterValues = toFilterState(filterFields, params);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
