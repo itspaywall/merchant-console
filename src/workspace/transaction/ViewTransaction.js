@@ -34,11 +34,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// Some fields aren't being rendered.
 function ViewTransaction(props) {
     const classes = useStyles();
-    const { fetchTransaction, clearTransaction, transaction } = props;
+    const {
+        fetchTransaction,
+        clearTransaction,
+        transaction,
+        editTransaction,
+    } = props;
     const { identifier } = useParams();
+
+    const handleEditTransaction = () => {
+        editTransaction(transaction);
+    };
 
     useEffect(() => {
         fetchTransaction(identifier);
@@ -68,6 +76,7 @@ function ViewTransaction(props) {
                             paymentMethod={transaction.paymentMethod}
                             createdOn={transaction.createdOn}
                             refundable={transaction.refundable}
+                            onEdit={handleEditTransaction}
                         />
                     </div>
                 </div>
@@ -85,6 +94,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
     fetchTransaction: actions.fetchTransaction,
     clearTransaction: actions.clearTransaction,
+    editTransaction: actions.editTransaction,
 };
 
 export default connect(

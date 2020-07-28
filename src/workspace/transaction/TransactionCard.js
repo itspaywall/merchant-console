@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: 4,
     },
     button: {
+        color: theme.palette.primary.main,
         marginLeft: "auto",
     },
 }));

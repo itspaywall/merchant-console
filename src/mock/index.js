@@ -429,6 +429,22 @@ mock.onGet(GET_TRANSACTION_URL).reply((request) => {
     }
 });
 
+const PUT_TRANSACTION_URL = /\/api\/v1\/transactions\/([a-zA-Z0-9-]+)/;
+mock.onPut(PUT_TRANSACTION_URL).reply((request) => {
+    const newTransaction = JSON.parse(request.data);
+    const identifier = PUT_TRANSACTION_URL.exec(request.url)[1];
+    const index = transactions.findIndex((transaction) => {
+        return transaction.identifier === identifier;
+    });
+
+    if (index >= 0) {
+        transactions[index] = newTransaction;
+        return [200, newTransaction];
+    } else {
+        return [404];
+    }
+});
+
 // Invoice
 
 mock.onPost("/api/v1/invoices").reply((request) => {
