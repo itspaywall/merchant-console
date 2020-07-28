@@ -13,7 +13,6 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +44,65 @@ export function extractFilterState(fields) {
     return result;
 }
 
+export function toURLParams(fields, values) {
+    console.log(values);
+
+    const result = {};
+    fields.forEach((field) => {
+        if (field.type === "time_range") {
+            result[field.identifier] = values[field.identifier].option;
+            if (values[field.identifier].option === "custom") {
+                result[field.startIdentifier] = values[
+                    field.identifier
+                ].startDate.getTime();
+                result[field.endIdentifier] = values[
+                    field.identifier
+                ].endDate.getTime();
+            }
+        } else {
+            result[field.identifier] = values[field.identifier];
+        }
+    });
+    console.log(result);
+    return result;
+}
+
+export function toFilterState(fields, params) {
+    const result = {};
+    fields.forEach((field) => {
+        if (field.type === "time_range") {
+            result[field.identifier] = {};
+
+            if (field.identifier in params) {
+                result[field.identifier].option = params[field.identifier];
+            } else {
+                result[field.identifier].option = field.defaultValue.option;
+            }
+
+            if (field.startIdentifier in params) {
+                result[field.identifier].startDate =
+                    params[field.startIdentifier];
+            } else {
+                result[field.identifier].startDate =
+                    field.defaultValue.startDate;
+            }
+
+            if (field.endIdentifier in params) {
+                result[field.identifier].endDate = params[field.endIdentifier];
+            } else {
+                result[field.identifier].endDate = field.defaultValue.endDate;
+            }
+        } else {
+            if (field.identifier in params) {
+                result[field.identifier] = params[field.identifier];
+            } else {
+                result[field.identifier] = field.defaultValue;
+            }
+        }
+    });
+    return result;
+}
+
 export default function WorkspaceFilter(props) {
     const { fields, values, onValueChange, onClear } = props;
     const classes = useStyles();
@@ -59,7 +117,7 @@ export default function WorkspaceFilter(props) {
     const makeDateChangeHandler = (field, which) => (date) => {
         const newValue = Object.assign({}, values[field.identifier]);
         // ISO format
-        newValue[which] = format(date, "yyyy/MM/dd");
+        newValue[which] = date; // format(date, "yyyy/MM/dd");
         onValueChange(field.identifier, newValue);
     };
 

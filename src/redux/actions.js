@@ -73,11 +73,15 @@ export function fetchAccountsComplete(accounts) {
     };
 }
 
-export function fetchAccounts() {
+export function fetchAccounts(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading accounts...', 'LOADING'));
-        return axios.get("/api/v1/accounts").then((response) => {
+        return axios.get("/api/v1/accounts", { params }).then((response) => {
             const accounts = response.data;
+            for (let i = 0; i < accounts.length; i++) {
+                const account = accounts[i];
+                account.createdOn = new Date(account.createdOn);
+            }
             dispatch(fetchAccountsComplete(accounts));
         });
     };

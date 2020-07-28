@@ -1,5 +1,4 @@
 import faker from "faker";
-import { format } from "date-fns";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
@@ -51,15 +50,15 @@ const invoiceOrigins = [
 const collectionMethods = ["automatic", "manual"];
 
 function futureDate() {
-    return format(faker.date.future(), "yyyy/MM/dd");
+    return faker.date.future().toISOString();
 }
 
 function pastDate() {
-    return format(faker.date.past(), "yyyy/MM/dd");
+    return faker.date.past().toISOString();
 }
 
 function soonDate() {
-    return format(faker.date.future(), "yyyy/MM/dd");
+    return faker.date.future().toISOString();
 }
 
 // TODO: We could improve periods generated to be more realistic for months.
@@ -100,6 +99,8 @@ function createAccount() {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         companyName: faker.company.companyName(),
+        companyPhoneNumber: faker.phone.phoneNumber(),
+        companyEmailAddress: faker.internet.email(),
         position: faker.name.jobTitle(),
         emailAddress: faker.internet.email(),
         phoneNumber: faker.phone.phoneNumber(),
