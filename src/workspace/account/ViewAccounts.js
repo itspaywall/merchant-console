@@ -318,8 +318,9 @@ function ViewAccounts(props) {
     };
 
     useEffect(() => {
-        fetchAccounts();
-    }, [fetchAccounts]);
+        const flatValues = toURLParams(filterFields, filterValues);
+        fetchAccounts(flatValues);
+    }, [fetchAccounts, filterValues]);
 
     return (
         <div>
