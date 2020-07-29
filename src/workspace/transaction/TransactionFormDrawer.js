@@ -9,7 +9,7 @@ const groups = [
     {
         label: "Basic",
         children: [
-            {
+            /*{
                 label: "Subscription",
                 identifier: "subscription",
                 type: "text",
@@ -21,7 +21,7 @@ const groups = [
                 tooltip: "The plan associated with a subscription.",
                 multipleValues: true,
                 defaultValue: "",
-            },
+            },*/
             {
                 label: "Comments",
                 identifier: "comments",
@@ -140,7 +140,7 @@ const groups = [
 function TransactionFormDrawer(props) {
     const { title, onSave, showMore, open } = props;
 
-    const values = props.account || extractValues(groups);
+    const values = props.transaction || extractValues(groups);
     return (
         <FormDrawer
             title={title}
@@ -156,13 +156,13 @@ function TransactionFormDrawer(props) {
 TransactionFormDrawer.propTypes = {
     title: PropTypes.string.isRequired,
     showMore: PropTypes.bool,
-    account: PropTypes.object,
+    transaction: PropTypes.object,
     onSave: PropTypes.func.isRequired,
 };
 
 TransactionFormDrawer.defaultProps = {
     showMore: false,
-    account: null,
+    transaction: null,
     onCancel: null,
 };
 

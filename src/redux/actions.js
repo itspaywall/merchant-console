@@ -299,6 +299,24 @@ export function createTransaction(transaction) {
     };
 }
 
+export function saveTransaction(transaction) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving transaction...", "LOADING"));
+        return axios
+            .put("/api/v1/transactions/" + transaction.identifier, transaction)
+            .then((response) => {
+                const transaction = response.data;
+                dispatch(fetchTransactionComplete(transaction));
+                dispatch(
+                    showNotification(
+                        "Successfully saved transaction",
+                        "SUCCESS"
+                    )
+                );
+            });
+    };
+}
+
 export function fetchTransactionComplete(transaction) {
     return {
         type: ActionTypes.FETCH_TRANSACTION_COMPLETE,
@@ -332,6 +350,13 @@ export function fetchTransactions() {
             const transactions = response.data;
             dispatch(fetchTransactionsComplete(transactions));
         });
+    };
+}
+
+export function editTransaction(transaction) {
+    return {
+        type: ActionTypes.EDIT_TRANSACTION,
+        payload: transaction,
     };
 }
 

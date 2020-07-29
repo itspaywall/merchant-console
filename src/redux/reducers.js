@@ -9,6 +9,7 @@ function dialogReducer(state = null, action) {
         case ActionTypes.NEW_TRANSACTION:
         case ActionTypes.NEW_PLAN:
         case ActionTypes.EDIT_ACCOUNT:
+        case ActionTypes.EDIT_TRANSACTION:
         case ActionTypes.EDIT_PLAN:
         case ActionTypes.EDIT_INVOICE: {
             return action.type;
@@ -136,7 +137,8 @@ function transactionsReducer(state = [], action) {
 
 function transactionReducer(state = null, action) {
     switch (action.type) {
-        case ActionTypes.FETCH_TRANSACTION_COMPLETE: {
+        case ActionTypes.FETCH_TRANSACTION_COMPLETE:
+        case ActionTypes.EDIT_TRANSACTION: {
             return action.payload;
         }
 

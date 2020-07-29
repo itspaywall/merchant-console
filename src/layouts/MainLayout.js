@@ -20,6 +20,7 @@ import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawe
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
 import EditPlan from "../workspace/plan/EditPlan";
 import EditInvoice from "../workspace/invoice/EditInvoice";
+import EditTransaction from "../workspace/transaction/EditTransaction";
 import * as actions from "../redux/actions";
 
 const miniDrawerWidth = 60;
@@ -158,10 +159,6 @@ function MainLayout(props) {
                 {/* <MainFooter /> */}
             </div>
 
-            {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
-
-            {openDialog === "EDIT_PLAN" && <EditPlan />}
-
             <AccountFormDrawer
                 title="New Account"
                 onSave={createAccount}
@@ -184,6 +181,9 @@ function MainLayout(props) {
             />
 
             {openDialog === "EDIT_INVOICE" && <EditInvoice />}
+            {openDialog === "EDIT_TRANSACTION" && <EditTransaction />}
+            {openDialog === "EDIT_ACCOUNT" && <EditAccount />}
+            {openDialog === "EDIT_PLAN" && <EditPlan />}
 
             {renderNotification(notification)}
         </React.Fragment>
