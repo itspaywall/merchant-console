@@ -163,13 +163,19 @@ export function fetchSubscriptionsComplete(subscriptions) {
     };
 }
 
-export function fetchSubscriptions() {
+export function fetchSubscriptions(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading subscriptions...', 'LOADING'));
-        return axios.get("/api/v1/subscriptions").then((response) => {
-            const subscriptions = response.data;
-            dispatch(fetchSubscriptionsComplete(subscriptions));
-        });
+        return axios
+            .get("/api/v1/subscriptions", { params })
+            .then((response) => {
+                const subscriptions = response.data;
+                for (let i = 0; i < subscriptions.length; i++) {
+                    const subscription = subscriptions[i];
+                    subscription.createdOn = new Date(subscription.createdOn);
+                }
+                dispatch(fetchSubscriptionsComplete(subscriptions));
+            });
     };
 }
 
