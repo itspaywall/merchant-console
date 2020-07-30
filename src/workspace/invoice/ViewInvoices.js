@@ -7,12 +7,13 @@ import { withRouter } from "react-router-dom";
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
-import { extractFilterState } from "../common/WorkspaceFilter";
+import { toURLParams, toFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
 
 import ListIcon from "@material-ui/icons/ViewList";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CompactIcon from "@material-ui/icons/ViewCompact";
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -65,7 +66,9 @@ const filterFields = [
         type: "time_range",
         title: "Time Range",
         startTitle: "Start Date",
+        startIdentifier: "startDate",
         endTitle: "End Date",
+        endIdentifier: "endDate",
         options: [
             {
                 value: "all_time",
@@ -102,8 +105,8 @@ const filterFields = [
         ],
         defaultValue: {
             option: "all_time",
-            startDate: null,
-            endDate: null,
+            startDate: new Date(),
+            endDate: new Date(),
         },
     },
     {
@@ -268,14 +271,25 @@ const statusNames = {
  * 1. Filter logic
  */
 function ViewInvoices(props) {
-    const { invoices, fetchInvoices, history } = props;
+    const { invoices, fetchInvoices, history, location } = props;
+    const params = queryString.parse(location.search);
+
+    if ("start_date" in params) {
+        params["start_date"] = new Date(Number(params["start_date"]));
+    }
+    if ("end_date" in params) {
+        params["end_date"] = new Date(Number(params["end_date"]));
+    }
+
     const classes = useStyles();
     const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(false);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
     const [compact, setCompact] = useState(false);
 
     // TODO: Should we cache this?
-    const defaultFilterValues = extractFilterState(filterFields);
+    const defaultFilterValues = toFilterState(filterFields, params);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
@@ -283,6 +297,17 @@ function ViewInvoices(props) {
             setOpenFilter(!openFilter);
         } else if (type === "compact" || type === "default") {
             setCompact(!compact);
+        }
+    };
+
+    const generateURL = (values) => {
+        if (values) {
+            const flatValues = toURLParams(filterFields, values);
+            const params = new URLSearchParams(flatValues);
+
+            history.push("/invoices?" + params.toString());
+        } else {
+            history.push("/invoices");
         }
     };
 
@@ -295,13 +320,13 @@ function ViewInvoices(props) {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
-
-        console.log(newValues);
+        generateURL(newValues);
     };
 
     const onFilterClear = () => {
-        const defaultValues = extractFilterState(filterFields);
+        const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
+        generateURL(null);
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
@@ -337,8 +362,9 @@ function ViewInvoices(props) {
     };
 
     useEffect(() => {
-        fetchInvoices();
-    }, [fetchInvoices]);
+        const flatValues = toURLParams(filterFields, filterValues);
+        fetchInvoices(flatValues);
+    }, [fetchInvoices, filterValues]);
 
     return (
         <div>

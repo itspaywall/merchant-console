@@ -245,11 +245,15 @@ export function fetchInvoicesComplete(invoices) {
     };
 }
 
-export function fetchInvoices() {
+export function fetchInvoices(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoices...', 'LOADING'));
-        return axios.get("/api/v1/invoices").then((response) => {
+        return axios.get("/api/v1/invoices", { params }).then((response) => {
             const invoices = response.data;
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                invoice.createdOn = new Date(invoice.createdOn);
+            }
             dispatch(fetchInvoicesComplete(invoices));
         });
     };
