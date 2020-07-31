@@ -7,14 +7,16 @@ import { withRouter } from "react-router-dom";
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
-import { extractFilterState } from "../common/WorkspaceFilter";
+import { toURLParams, toFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
+import { toDateString } from "../../utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import ListIcon from "@material-ui/icons/ViewList";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CompactIcon from "@material-ui/icons/ViewCompact";
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -57,11 +59,13 @@ const headers = [
 
 const filterFields = [
     {
-        identifier: "time_range",
+        identifier: "date_range",
         type: "time_range",
         title: "Time Range",
         startTitle: "Start Date",
+        startIdentifier: "start_date",
         endTitle: "End Date",
+        endIdentifier: "end_date",
         options: [
             {
                 value: "all_time",
@@ -98,12 +102,12 @@ const filterFields = [
         ],
         defaultValue: {
             option: "all_time",
-            startDate: null,
-            endDate: null,
+            startDate: new Date(),
+            endDate: new Date(),
         },
     },
     {
-        identifier: "actionType",
+        identifier: "action_type",
         type: "select",
         title: "Action",
         options: [
@@ -211,14 +215,30 @@ const actions2 = [
 ];
 
 function ViewTransactions(props) {
-    const { transactions, fetchTransactions, newTransaction, history } = props;
+    const {
+        transactions,
+        fetchTransactions,
+        newTransaction,
+        history,
+        location,
+    } = props;
+    const params = queryString.parse(location.search);
+
+    if ("start_date" in params) {
+        params["start_date"] = new Date(Number(params["start_date"]));
+    }
+    if ("end_date" in params) {
+        params["end_date"] = new Date(Number(params["end_date"]));
+    }
     const classes = useStyles();
     const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(false);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
     const [compact, setCompact] = useState(false);
 
     // TODO: Should we cache this?
-    const defaultFilterValues = extractFilterState(filterFields);
+    const defaultFilterValues = toFilterState(filterFields, params);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
@@ -231,6 +251,17 @@ function ViewTransactions(props) {
         }
     };
 
+    const generateURL = (values) => {
+        if (values) {
+            const flatValues = toURLParams(filterFields, values);
+            const params = new URLSearchParams(flatValues);
+
+            history.push("/transactions?" + params.toString());
+        } else {
+            history.push("/transactions");
+        }
+    };
+
     const onClick = (transaction) => {
         history.push("/transactions/" + transaction.identifier);
     };
@@ -240,13 +271,13 @@ function ViewTransactions(props) {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
-
-        console.log(newValues);
+        generateURL(newValues);
     };
 
     const onFilterClear = () => {
-        const defaultValues = extractFilterState(filterFields);
+        const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
+        generateURL(null);
     };
 
     const actionNames = {
@@ -273,7 +304,7 @@ function ViewTransactions(props) {
             }
 
             case "date": {
-                return row.createdOn;
+                return toDateString(row.createdOn);
             }
 
             case "amount": {
@@ -291,8 +322,9 @@ function ViewTransactions(props) {
     };
 
     useEffect(() => {
-        fetchTransactions();
-    }, [fetchTransactions]);
+        const flatValues = toURLParams(filterFields, filterValues);
+        fetchTransactions(flatValues);
+    }, [fetchTransactions, filterValues]);
 
     return (
         <div>

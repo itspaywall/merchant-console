@@ -343,13 +343,19 @@ export function fetchTransactionsComplete(transactions) {
     };
 }
 
-export function fetchTransactions() {
+export function fetchTransactions(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading transactions...', 'LOADING'));
-        return axios.get("/api/v1/transactions").then((response) => {
-            const transactions = response.data;
-            dispatch(fetchTransactionsComplete(transactions));
-        });
+        return axios
+            .get("/api/v1/transactions", { params })
+            .then((response) => {
+                const transactions = response.data;
+                for (let i = 0; i < transactions.length; i++) {
+                    const transaction = transactions[i];
+                    transaction.createdOn = new Date(transaction.createdOn);
+                }
+                dispatch(fetchTransactionsComplete(transactions));
+            });
     };
 }
 
