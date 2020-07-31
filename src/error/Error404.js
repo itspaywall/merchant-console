@@ -54,8 +54,8 @@ function Error404(props) {
                     to another location.
                 </Typography>
 
-                <Link className={classes.link} to="/index">
-                    Go back to home page
+                <Link className={classes.link} to="/analytics">
+                    Go back to analytics
                 </Link>
             </Grid>
         </Grid>
