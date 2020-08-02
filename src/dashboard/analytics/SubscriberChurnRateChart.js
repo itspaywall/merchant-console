@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     toolTip: {
-        backgroundColor: theme.palette.primary.main,
-        border: "1px solid" + theme.palette.primary.main,
+        backgroundColor: theme.palette.error.main,
+        border: "1px solid" + theme.palette.error.main,
         borderRadius: 4,
         padding: theme.spacing(2),
         fontSize: 12,
@@ -31,31 +31,29 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
     content: {
-        minHeight: 450,
-        minWidth: 600,
-        width: "100%",
+        minHeight: 400,
     },
     style: {
-        width: 800,
+        width: "auto",
         height: 400,
     },
 }));
 
-function NetSubscriberChange(props) {
+function SubscriberChurnRateChart(props) {
     const classes = useStyles();
     const toolTipElement = (props) => {
         return (
             <div className={classes.toolTip}>
                 {props.point.data.y}
-                {props.point.data.y === 1 ? " subscriber" : " subscribers"}
+                {"%"}
             </div>
         );
     };
     return (
-        <Card>
+        <Card variant="outlined">
             <CardHeader
                 titleTypographyProps={{ variant: "h6" }}
-                title="Net Subscriber Change"
+                title="Subscriber Churn Rate"
             />
             <CardContent className={classes.content}>
                 <div className={classes.style}>
@@ -71,12 +69,12 @@ function NetSubscriberChange(props) {
                         curve="monotoneX"
                         data={[props.data]}
                         enableArea={true}
-                        areaOpacity={0.07}
+                        areaOpacity={0.1}
                         useMesh={true}
                         crosshairType="cross"
                         enablePointLabel={true}
                         pointSize={14}
-                        pointBorderWidth={1}
+                        pointBorderWidth={10}
                         xScale={{
                             type: "point",
                             min: 0,
@@ -106,7 +104,7 @@ function NetSubscriberChange(props) {
                             legendPosition: "middle",
                         }}
                         tooltip={toolTipElement}
-                        colors={{ scheme: "paired" }}
+                        colors={{ scheme: "set1" }}
                     />
                 </div>
             </CardContent>
@@ -114,4 +112,4 @@ function NetSubscriberChange(props) {
     );
 }
 
-export default NetSubscriberChange;
+export default SubscriberChurnRateChart;
