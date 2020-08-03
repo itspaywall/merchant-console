@@ -2,7 +2,7 @@ import faker from "faker";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
-const mock = new MockAdapter(axios, { delayResponse: 1000 });
+export const mock = new MockAdapter(axios, { delayResponse: 0 });
 
 const DEFAULT_PLANS = 10;
 const DEFAULT_ACCOUNTS = 100;
@@ -10,11 +10,11 @@ const DEFAULT_SUBSCRIPTIONS = 100 * 5;
 const DEFAULT_TRANSACTIONS = 100;
 const DEFAULT_INVOICES = 100;
 
-const plans = [];
-const accounts = [];
-const subscriptions = [];
-const transactions = [];
-const invoices = [];
+export const plans = [];
+export const accounts = [];
+export const subscriptions = [];
+export const transactions = [];
+export const invoices = [];
 
 const paymentMethods = ["cash", "credit_card", "debit_card", "online"];
 
@@ -258,21 +258,6 @@ function generateFakeData() {
         const invoice = createInvoice();
         invoices.push(invoice);
     }
-
-    console.log("[plans]");
-    console.log(plans);
-
-    console.log("[accounts]");
-    console.log(accounts);
-
-    console.log("[subscriptions]");
-    console.log(subscriptions);
-
-    console.log("[transactions]");
-    console.log(transactions);
-
-    console.log("[invoices]");
-    console.log(invoices);
 }
 
 generateFakeData();
@@ -396,6 +381,25 @@ mock.onGet(GET_SUBSCRIPTION_URL).reply((request) => {
     if (subscription) {
         delete subscription.account;
         return [200, subscription];
+    } else {
+        return [404];
+    }
+});
+
+/* NOTE: The user can easily modify the identifier of a record.
+ * However, the backend does not permit such operations.
+ */
+const PUT_SUBSCRIPTION_URL = /\/api\/v1\/subscriptions\/([a-zA-Z0-9-]+)/;
+mock.onPut(PUT_SUBSCRIPTION_URL).reply((request) => {
+    const newSubscription = JSON.parse(request.data);
+    const identifier = PUT_SUBSCRIPTION_URL.exec(request.url)[1];
+    const index = subscriptions.findIndex((subscription) => {
+        return subscription.identifier === identifier;
+    });
+
+    if (index >= 0) {
+        subscriptions[index] = newSubscription;
+        return [200, newSubscription];
     } else {
         return [404];
     }

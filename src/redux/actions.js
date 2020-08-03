@@ -58,7 +58,6 @@ export function fetchAccountComplete(account) {
 export function fetchAccount(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
-        console.log("/api/v1/accounts/" + identifier);
         return axios.get("/api/v1/accounts/" + identifier).then((response) => {
             const account = response.data;
             dispatch(fetchAccountComplete(account));
@@ -129,7 +128,28 @@ export function createSubscription(subscription) {
                 // const newSubscription = response.data;
                 dispatch(
                     showNotification(
-                        "Successfully created a subscription",
+                        "Successfully created subscription",
+                        "SUCCESS"
+                    )
+                );
+            });
+    };
+}
+
+export function saveSubscription(subscription) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving subscription...", "LOADING"));
+        return axios
+            .put(
+                "/api/v1/subscriptions/" + subscription.identifier,
+                subscription
+            )
+            .then((response) => {
+                const subscription = response.data;
+                dispatch(fetchSubscriptionComplete(subscription));
+                dispatch(
+                    showNotification(
+                        "Successfully saved subscription",
                         "SUCCESS"
                     )
                 );
@@ -176,6 +196,13 @@ export function fetchSubscriptions(params) {
                 }
                 dispatch(fetchSubscriptionsComplete(subscriptions));
             });
+    };
+}
+
+export function editSubscription(subscription) {
+    return {
+        type: ActionTypes.EDIT_SUBSCRIPTION,
+        payload: subscription,
     };
 }
 
@@ -230,7 +257,6 @@ export function fetchInvoiceComplete(invoice) {
 export function fetchInvoice(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoice...', 'LOADING'));
-        console.log("/api/v1/invoices/" + identifier);
         return axios.get("/api/v1/invoices/" + identifier).then((response) => {
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
@@ -301,7 +327,7 @@ export function createTransaction(transaction) {
                 // const newPlan = response.data;
                 dispatch(
                     showNotification(
-                        "Successfully created a transaction",
+                        "Successfully created transaction",
                         "SUCCESS"
                     )
                 );
@@ -407,9 +433,7 @@ export function createPlan(plan) {
         dispatch(showNotification("Saving plan...", "LOADING"));
         return axios.post("/api/v1/plans", plan).then((response) => {
             // const newPlan = response.data;
-            dispatch(
-                showNotification("Successfully created a plan", "SUCCESS")
-            );
+            dispatch(showNotification("Successfully created plan", "SUCCESS"));
         });
     };
 }
