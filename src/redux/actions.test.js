@@ -834,3 +834,38 @@ describe("plan actions", () => {
         expect(actualAction).toEqual(expectedAction);
     });
 });
+
+describe("miscellaneous actions", () => {
+    it("should create an action to close dialog", () => {
+        const expectedAction = {
+            type: actionTypes.CLOSE_DIALOG,
+            payload: null,
+        };
+        const actualAction = actions.closeDialog();
+        expect(actualAction).toEqual(expectedAction);
+    });
+
+    it("should create an action to show notification", () => {
+        const expectedAction = {
+            type: actionTypes.SHOW_NOTIFICATION,
+            payload: {
+                message: "Hello, world!",
+                category: "LOADING",
+            },
+        };
+        const actualAction = actions.showNotification(
+            "Hello, world!",
+            "LOADING"
+        );
+        expect(actualAction).toEqual(expectedAction);
+    });
+
+    it("should create an action to close notification", () => {
+        const expectedAction = {
+            type: actionTypes.CLOSE_NOTIFICATION,
+            payload: null,
+        };
+        const actualAction = actions.closeNotification();
+        expect(actualAction).toEqual(expectedAction);
+    });
+});

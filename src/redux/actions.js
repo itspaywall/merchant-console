@@ -1,7 +1,7 @@
 import * as ActionTypes from "./actionTypes";
 import axios from "axios";
 
-/** ACCOUNT
+/* ACCOUNT
  *  1. newAccount()
  *  2. createAccount()
  *  3. saveAccount()
@@ -11,7 +11,7 @@ import axios from "axios";
  *  7. fetchAccounts()
  *  8. editAccount()
  *  9. clearAccount()
- *  */
+ */
 
 export function newAccount() {
     return {
@@ -100,7 +100,7 @@ export function clearAccount() {
     };
 }
 
-/** SUBSCRIPTION
+/* SUBSCRIPTION
  *  1. newSubscription()
  *  2. createSubscription()
  *  3. saveSubscription() -> TODO
@@ -110,7 +110,7 @@ export function clearAccount() {
  *  7. fetchSubscriptions()
  *  8. editSubscription() -> TODO
  *  9. clearSubscription()
- *  */
+ */
 
 export function newSubscription() {
     return {
@@ -213,7 +213,7 @@ export function clearSubscription() {
     };
 }
 
-/** INVOICE
+/* INVOICE
  *  1. newInvoice()
  *  2. createInvoice() -> TODO
  *  3. saveInvoice()
@@ -223,7 +223,7 @@ export function clearSubscription() {
  *  7. fetchInvoices()
  *  8. editInvoice()
  *  9. clearInvoice()
- *  */
+ */
 
 export function newInvoice() {
     return {
@@ -299,7 +299,7 @@ export function clearInvoice() {
     };
 }
 
-/** TRANSACTION
+/* TRANSACTION
  *  1. newTransaction()
  *  2. createTransaction()
  *  3. saveTransaction()
@@ -309,7 +309,7 @@ export function clearInvoice() {
  *  7. fetchTransactions()
  *  8. editTransaction()
  *  9. clearTransaction()
- *  */
+ */
 
 export function newTransaction() {
     return {
@@ -409,7 +409,7 @@ export function clearTransaction() {
     };
 }
 
-/** PLAN
+/* PLAN
  *  1. newPlan()
  *  2. createPlan()
  *  3. savePlan()
@@ -419,7 +419,7 @@ export function clearTransaction() {
  *  7. fetchPlans()
  *  8. editPlan()
  *  9. clearPlan()
- *  */
+ */
 
 export function newPlan() {
     return {
@@ -500,6 +500,12 @@ export function clearPlan() {
         payload: null,
     };
 }
+
+/* MISC
+ * 1. closeDialog
+ * 2. showNotification
+ * 3. closeNotification
+ */
 
 export function closeDialog() {
     return {
