@@ -1,7 +1,7 @@
 import * as ActionTypes from "./actionTypes";
 import axios from "axios";
 
-/** ACCOUNT
+/* ACCOUNT
  *  1. newAccount()
  *  2. createAccount()
  *  3. saveAccount()
@@ -11,7 +11,7 @@ import axios from "axios";
  *  7. fetchAccounts()
  *  8. editAccount()
  *  9. clearAccount()
- *  */
+ */
 
 export function newAccount() {
     return {
@@ -58,7 +58,6 @@ export function fetchAccountComplete(account) {
 export function fetchAccount(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
-        console.log("/api/v1/accounts/" + identifier);
         return axios.get("/api/v1/accounts/" + identifier).then((response) => {
             const account = response.data;
             dispatch(fetchAccountComplete(account));
@@ -101,7 +100,7 @@ export function clearAccount() {
     };
 }
 
-/** SUBSCRIPTION
+/* SUBSCRIPTION
  *  1. newSubscription()
  *  2. createSubscription()
  *  3. saveSubscription() -> TODO
@@ -111,7 +110,7 @@ export function clearAccount() {
  *  7. fetchSubscriptions()
  *  8. editSubscription() -> TODO
  *  9. clearSubscription()
- *  */
+ */
 
 export function newSubscription() {
     return {
@@ -129,7 +128,28 @@ export function createSubscription(subscription) {
                 // const newSubscription = response.data;
                 dispatch(
                     showNotification(
-                        "Successfully created a subscription",
+                        "Successfully created subscription",
+                        "SUCCESS"
+                    )
+                );
+            });
+    };
+}
+
+export function saveSubscription(subscription) {
+    return (dispatch) => {
+        dispatch(showNotification("Saving subscription...", "LOADING"));
+        return axios
+            .put(
+                "/api/v1/subscriptions/" + subscription.identifier,
+                subscription
+            )
+            .then((response) => {
+                const subscription = response.data;
+                dispatch(fetchSubscriptionComplete(subscription));
+                dispatch(
+                    showNotification(
+                        "Successfully saved subscription",
                         "SUCCESS"
                     )
                 );
@@ -179,6 +199,13 @@ export function fetchSubscriptions(params) {
     };
 }
 
+export function editSubscription(subscription) {
+    return {
+        type: ActionTypes.EDIT_SUBSCRIPTION,
+        payload: subscription,
+    };
+}
+
 export function clearSubscription() {
     return {
         type: ActionTypes.CLEAR_SUBSCRIPTION,
@@ -186,7 +213,7 @@ export function clearSubscription() {
     };
 }
 
-/** INVOICE
+/* INVOICE
  *  1. newInvoice()
  *  2. createInvoice() -> TODO
  *  3. saveInvoice()
@@ -196,7 +223,7 @@ export function clearSubscription() {
  *  7. fetchInvoices()
  *  8. editInvoice()
  *  9. clearInvoice()
- *  */
+ */
 
 export function newInvoice() {
     return {
@@ -230,7 +257,6 @@ export function fetchInvoiceComplete(invoice) {
 export function fetchInvoice(identifier) {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoice...', 'LOADING'));
-        console.log("/api/v1/invoices/" + identifier);
         return axios.get("/api/v1/invoices/" + identifier).then((response) => {
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
@@ -273,7 +299,7 @@ export function clearInvoice() {
     };
 }
 
-/** TRANSACTION
+/* TRANSACTION
  *  1. newTransaction()
  *  2. createTransaction()
  *  3. saveTransaction()
@@ -283,7 +309,7 @@ export function clearInvoice() {
  *  7. fetchTransactions()
  *  8. editTransaction()
  *  9. clearTransaction()
- *  */
+ */
 
 export function newTransaction() {
     return {
@@ -301,7 +327,7 @@ export function createTransaction(transaction) {
                 // const newPlan = response.data;
                 dispatch(
                     showNotification(
-                        "Successfully created a transaction",
+                        "Successfully created transaction",
                         "SUCCESS"
                     )
                 );
@@ -383,7 +409,7 @@ export function clearTransaction() {
     };
 }
 
-/** PLAN
+/* PLAN
  *  1. newPlan()
  *  2. createPlan()
  *  3. savePlan()
@@ -393,7 +419,7 @@ export function clearTransaction() {
  *  7. fetchPlans()
  *  8. editPlan()
  *  9. clearPlan()
- *  */
+ */
 
 export function newPlan() {
     return {
@@ -407,9 +433,7 @@ export function createPlan(plan) {
         dispatch(showNotification("Saving plan...", "LOADING"));
         return axios.post("/api/v1/plans", plan).then((response) => {
             // const newPlan = response.data;
-            dispatch(
-                showNotification("Successfully created a plan", "SUCCESS")
-            );
+            dispatch(showNotification("Successfully created plan", "SUCCESS"));
         });
     };
 }
@@ -476,6 +500,12 @@ export function clearPlan() {
         payload: null,
     };
 }
+
+/* MISC
+ * 1. closeDialog
+ * 2. showNotification
+ * 3. closeNotification
+ */
 
 export function closeDialog() {
     return {
