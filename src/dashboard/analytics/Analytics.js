@@ -185,17 +185,37 @@ function Analytics() {
         <div className={classes.box}>
             <WorkspaceToolbar title="Analytics" />
             <Grid container={true} className={classes.container}>
-                <Grid item={true} className={classes.item} xs={12} md={3}>
-                    <TotalSubscriptionsCard data="1123" />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={3}>
-                    <TotalTransactionsCard data="2432" />
+                <Grid item={true} className={classes.item} xs={12} sm={3}>
+                    <SubscriberLifetimeValueCard
+                        data="$34,244"
+                        change="$234"
+                        delta="positive"
+                        period="Last 30 days"
+                    />
                 </Grid>
                 <Grid item={true} className={classes.item} xs={12} sm={3}>
-                    <SubscriberChurnRateCard data="12.34%" />
+                    <SubscriberChurnRateCard
+                        data="12.34%"
+                        change="2.31%"
+                        delta="negative"
+                        period="Last 30 days"
+                    />
                 </Grid>
-                <Grid item={true} className={classes.item} xs={12} sm={3}>
-                    <SubscriberLifetimeValueCard data="$34,244" />
+                <Grid item={true} className={classes.item} xs={12} md={3}>
+                    <TotalSubscriptionsCard
+                        data="1123"
+                        change="48"
+                        delta="positive"
+                        period="Last 30 days"
+                    />
+                </Grid>
+                <Grid item={true} className={classes.item} xs={12} md={3}>
+                    <TotalTransactionsCard
+                        data="2432"
+                        change="112"
+                        delta="negative"
+                        period="Last 30 days"
+                    />
                 </Grid>
                 <Grid item={true} className={classes.item} xs={12} md={6}>
                     <NetSubscriberChangeChart data={data} />
