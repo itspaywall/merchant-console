@@ -19,11 +19,6 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
     },
-    content: {
-        paddingTop: 24,
-        paddingBottom: 24,
-        flex: "1 0 auto",
-    },
     button: {
         padding: 15,
         marginLeft: "auto",
