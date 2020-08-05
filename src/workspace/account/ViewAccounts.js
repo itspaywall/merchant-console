@@ -330,7 +330,7 @@ function ViewAccounts(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            <Grid container={true} className={classes.container} spacing={2}>
+            <Grid container={true} className={classes.container}>
                 <Grid item={true} lg={openFilter ? 10 : 12}>
                     <WorkspaceTable
                         headers={headers}
@@ -343,7 +343,7 @@ function ViewAccounts(props) {
                     />
                 </Grid>
                 {openFilter && (
-                    <Grid item={true} lg={2}>
+                    <Grid item={true} lg={2} className={classes.filter}>
                         <WorkspaceFilter
                             fields={filterFields}
                             values={filterValues}

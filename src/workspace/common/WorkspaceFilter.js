@@ -17,6 +17,7 @@ import {
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: 16,
+        marginLeft: 16,
     },
     title: {
         fontSize: 16,
