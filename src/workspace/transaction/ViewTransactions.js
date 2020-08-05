@@ -334,7 +334,7 @@ function ViewTransactions(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            <Grid container={true} className={classes.container} spacing={2}>
+            <Grid container={true} className={classes.container}>
                 <Grid item={true} lg={openFilter ? 10 : 12}>
                     <WorkspaceTable
                         headers={headers}
