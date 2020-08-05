@@ -1,25 +1,24 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-
-import NetSubscriberChangeChart from "./NetSubscriberChangeChart";
+import SubscriberCharts from "./SubscriberCharts";
 import PlansChart from "./PlansChart";
 import RevenueChart from "./RevenueChart";
-import SubscriberChurnRateChart from "./SubscriberChurnRateChart";
-
-import TotalSubscriptionsCard from "./TotalSubscriptionsCard";
-import TotalTransactionsCard from "./TotalTransactionsCard";
-import SubscriberChurnRateCard from "./SubscriberChurnRateCard";
-import SubscriberLifetimeValueCard from "./SubscriberLifetimeValueCard";
-
+import Typography from "@material-ui/core/Typography";
+import SubscriptionsSummary from "./SubscriptionsSummary";
 import WorkspaceToolbar from "../../workspace/common/WorkspaceToolbar";
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        padding: 10,
+        margin: 10,
+        marginTop: 8,
     },
     item: {
         padding: 10,
+    },
+    title: {
+        margin: 24,
+        marginBottom: 0,
     },
 }));
 
@@ -184,52 +183,40 @@ function Analytics() {
     return (
         <div className={classes.box}>
             <WorkspaceToolbar title="Analytics" />
-            <Grid container={true} className={classes.container}>
-                <Grid item={true} className={classes.item} xs={12} sm={3}>
-                    <SubscriberLifetimeValueCard
-                        data="$34,244"
-                        change="$234"
-                        delta="positive"
-                        period="Last 30 days"
-                    />
+            <div>
+                <Typography
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.title}
+                >
+                    Subscribers
+                </Typography>
+                <Grid container={true} className={classes.container}>
+                    <Grid item={true} className={classes.item} xs={12} sm={3}>
+                        <SubscriptionsSummary
+                            subscribers="1123"
+                            subscribersChange="48"
+                            subscribersDelta="positive"
+                            period="Last 30 days"
+                            ltv="$13,666"
+                            ltvChange="$121"
+                            ltvDelta="negative"
+                            churnRate="34.21%"
+                            churnChange="2.32%"
+                            churnDelta="positive"
+                        />
+                    </Grid>
+                    <Grid item={true} className={classes.item} xs={12} md={9}>
+                        <SubscriberCharts data={data} />
+                    </Grid>
+                    <Grid item={true} className={classes.item} xs={12} md={6}>
+                        <PlansChart data={pieData} />
+                    </Grid>
+                    <Grid item={true} className={classes.item} xs={12} md={6}>
+                        <RevenueChart data={revenueData} />
+                    </Grid>
                 </Grid>
-                <Grid item={true} className={classes.item} xs={12} sm={3}>
-                    <SubscriberChurnRateCard
-                        data="12.34%"
-                        change="2.31%"
-                        delta="negative"
-                        period="Last 30 days"
-                    />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={3}>
-                    <TotalSubscriptionsCard
-                        data="1123"
-                        change="48"
-                        delta="positive"
-                        period="Last 30 days"
-                    />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={3}>
-                    <TotalTransactionsCard
-                        data="2432"
-                        change="112"
-                        delta="negative"
-                        period="Last 30 days"
-                    />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={6}>
-                    <NetSubscriberChangeChart data={data} />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={6}>
-                    <PlansChart data={pieData} />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={6}>
-                    <SubscriberChurnRateChart data={data} />
-                </Grid>
-                <Grid item={true} className={classes.item} xs={12} md={6}>
-                    <RevenueChart data={revenueData} />
-                </Grid>
-            </Grid>
+            </div>
         </div>
     );
 }
