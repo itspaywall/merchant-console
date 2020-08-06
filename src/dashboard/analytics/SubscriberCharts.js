@@ -45,7 +45,7 @@ function SubscriberCharts(props) {
                     color={"#2196f3"}
                     graphColor={"paired"}
                     axisLeft={"Subscriptions"}
-                    axisRight={"Months"}
+                    axisBottom={"Months"}
                     renderTitle={renderTitle1}
                 />
                 <div className={classes.space}></div>
@@ -55,7 +55,7 @@ function SubscriberCharts(props) {
                     color={"#ff1744"}
                     graphColor={"set1"}
                     axisLeft={"Subscriptions"}
-                    axisRight={"Months"}
+                    axisBottom={"Months"}
                     renderTitle={renderTitle2}
                 />
             </CardContent>
