@@ -14,14 +14,13 @@ const useStyles = makeStyles((theme) => ({
     },
     toolTip: {
         backgroundcolor: "",
-        border: "1px solid",
+        border: 0,
         borderRadius: 4,
-        padding: theme.spacing(2),
+        padding: 16,
         fontSize: 12,
         color: "white",
         fontWeight: "bold",
         boxShadow: "0px 5px 15px rgba(0,0,0,0.1)",
-        marginBottom: theme.spacing(2),
     },
     content: {
         minHeight: 600,
@@ -102,7 +101,7 @@ function LineGraph(props, theme) {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: props.axisRight,
+                    legend: props.axisBottom,
                     legendOffset: 32,
                     legendPosition: "middle",
                 }}

@@ -1,12 +1,14 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import SubscriberCharts from "./SubscriberCharts";
-import PlansChart from "./PlansChart";
-import RevenueChart from "./RevenueChart";
+import WorkspaceToolbar from "../../workspace/common/WorkspaceToolbar";
 import Typography from "@material-ui/core/Typography";
 import SubscriptionsSummary from "./SubscriptionsSummary";
-import WorkspaceToolbar from "../../workspace/common/WorkspaceToolbar";
+import SubscriberCharts from "./SubscriberCharts";
+import RevenueSummary from "./RevenueSummary";
+import RevenueCharts from "./RevenueCharts";
+import PlanSummary from "./PlanSummary";
+import PlanCharts from "./PlanCharts";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -37,144 +39,141 @@ const data = {
     ],
 };
 
-const pieData = [
-    {
-        id: "python",
-        label: "python",
-        value: 527,
-        color: "hsl(121, 70%, 50%)",
-    },
-    {
-        id: "scala",
-        label: "scala",
-        value: 423,
-        color: "hsl(138, 70%, 50%)",
-    },
-    {
-        id: "sass",
-        label: "sass",
-        value: 414,
-        color: "hsl(144, 70%, 50%)",
-    },
-    {
-        id: "java",
-        label: "java",
-        value: 465,
-        color: "hsl(157, 70%, 50%)",
-    },
-    {
-        id: "hack",
-        label: "hack",
-        value: 90,
-        color: "hsl(78, 70%, 50%)",
-    },
-];
-
 const revenueData = [
     {
         month: "Jan",
-        "hot dog": 71,
-        "hot dogColor": "hsl(282, 70%, 50%)",
-        burger: 0,
-        burgerColor: "hsl(180, 70%, 50%)",
-        sandwich: 73,
-        sandwichColor: "hsl(277, 70%, 50%)",
-        kebab: 177,
-        kebabColor: "hsl(149, 70%, 50%)",
-        fries: 77,
-        friesColor: "hsl(260, 70%, 50%)",
-        donut: 133,
-        donutColor: "hsl(26, 70%, 50%)",
+        "Billed Revenue": 10237,
+        "Revenue Past Due": 2572,
     },
     {
         month: "Feb",
-        "hot dog": 177,
-        "hot dogColor": "hsl(79, 70%, 50%)",
-        burger: 51,
-        burgerColor: "hsl(109, 70%, 50%)",
-        sandwich: 182,
-        sandwichColor: "hsl(232, 70%, 50%)",
-        kebab: 17,
-        kebabColor: "hsl(239, 70%, 50%)",
-        fries: 28,
-        friesColor: "hsl(191, 70%, 50%)",
-        donut: 57,
-        donutColor: "hsl(352, 70%, 50%)",
+        "Billed Revenue": 11287,
+        "Revenue Past Due": 3357,
     },
     {
         month: "Mar",
-        "hot dog": 25,
-        "hot dogColor": "hsl(156, 70%, 50%)",
-        burger: 45,
-        burgerColor: "hsl(128, 70%, 50%)",
-        sandwich: 172,
-        sandwichColor: "hsl(222, 70%, 50%)",
-        kebab: 70,
-        kebabColor: "hsl(277, 70%, 50%)",
-        fries: 31,
-        friesColor: "hsl(242, 70%, 50%)",
-        donut: 186,
-        donutColor: "hsl(158, 70%, 50%)",
+        "Billed Revenue": 15087,
+        "Revenue Past Due": 5057,
     },
     {
         month: "Apr",
-        "hot dog": 92,
-        "hot dogColor": "hsl(298, 70%, 50%)",
-        burger: 52,
-        burgerColor: "hsl(10, 70%, 50%)",
-        sandwich: 21,
-        sandwichColor: "hsl(106, 70%, 50%)",
-        kebab: 92,
-        kebabColor: "hsl(41, 70%, 50%)",
-        fries: 180,
-        friesColor: "hsl(24, 70%, 50%)",
-        donut: 41,
-        donutColor: "hsl(168, 70%, 50%)",
-    },
-    {
-        month: "May",
-        "hot dog": 28,
-        "hot dogColor": "hsl(105, 70%, 50%)",
-        burger: 5,
-        burgerColor: "hsl(207, 70%, 50%)",
-        sandwich: 88,
-        sandwichColor: "hsl(267, 70%, 50%)",
-        kebab: 146,
-        kebabColor: "hsl(73, 70%, 50%)",
-        fries: 121,
-        friesColor: "hsl(333, 70%, 50%)",
-        donut: 53,
-        donutColor: "hsl(305, 70%, 50%)",
+        "Billed Revenue": 12087,
+        "Revenue Past Due": 3057,
     },
     {
         month: "Jun",
-        "hot dog": 128,
-        "hot dogColor": "hsl(218, 70%, 50%)",
-        burger: 28,
-        burgerColor: "hsl(303, 70%, 50%)",
-        sandwich: 145,
-        sandwichColor: "hsl(268, 70%, 50%)",
-        kebab: 120,
-        kebabColor: "hsl(112, 70%, 50%)",
-        fries: 155,
-        friesColor: "hsl(110, 70%, 50%)",
-        donut: 145,
-        donutColor: "hsl(323, 70%, 50%)",
+        "Billed Revenue": 14287,
+        "Revenue Past Due": 3257,
     },
     {
         month: "Jul",
-        "hot dog": 10,
-        "hot dogColor": "hsl(117, 70%, 50%)",
-        burger: 72,
-        burgerColor: "hsl(306, 70%, 50%)",
-        sandwich: 187,
-        sandwichColor: "hsl(118, 70%, 50%)",
-        kebab: 65,
-        kebabColor: "hsl(236, 70%, 50%)",
-        fries: 184,
-        friesColor: "hsl(277, 70%, 50%)",
-        donut: 117,
-        donutColor: "hsl(177, 70%, 50%)",
+        "Billed Revenue": 10237,
+        "Revenue Past Due": 2572,
+    },
+    {
+        month: "Aug",
+        "Billed Revenue": 19087,
+        "Revenue Past Due": 4057,
+    },
+    {
+        month: "Sep",
+        "Billed Revenue": 10237,
+        "Revenue Past Due": 2572,
+    },
+    {
+        month: "Oct",
+        "Billed Revenue": 11287,
+        "Revenue Past Due": 3357,
+    },
+    {
+        month: "Nov",
+        "Billed Revenue": 15087,
+        "Revenue Past Due": 5057,
+    },
+    {
+        month: "Dec",
+        "Billed Revenue": 12087,
+        "Revenue Past Due": 3057,
+    },
+];
+
+const plansData = [
+    {
+        month: "Jan",
+        "Gold Plan": 23,
+        "Silver Plan": 26,
+        "Bronze Plan": 22,
+        "Platinum Plan": 27,
+    },
+    {
+        month: "Feb",
+        "Gold Plan": 32,
+        "Silver Plan": 31,
+        "Bronze Plan": 38,
+        "Platinum Plan": 35,
+    },
+    {
+        month: "Mar",
+        "Gold Plan": 34,
+        "Silver Plan": 37,
+        "Bronze Plan": 39,
+        "Platinum Plan": 31,
+    },
+    {
+        month: "Apr",
+        "Gold Plan": 23,
+        "Silver Plan": 29,
+        "Bronze Plan": 26,
+        "Platinum Plan": 24,
+    },
+    {
+        month: "Jun",
+        "Gold Plan": 12,
+        "Silver Plan": 39,
+        "Bronze Plan": 25,
+        "Platinum Plan": 29,
+    },
+    {
+        month: "Jul",
+        "Gold Plan": 23,
+        "Silver Plan": 26,
+        "Bronze Plan": 22,
+        "Platinum Plan": 27,
+    },
+    {
+        month: "Aug",
+        "Gold Plan": 19,
+        "Silver Plan": 22,
+        "Bronze Plan": 47,
+        "Platinum Plan": 34,
+    },
+    {
+        month: "Sep",
+        "Gold Plan": 23,
+        "Silver Plan": 26,
+        "Bronze Plan": 22,
+        "Platinum Plan": 27,
+    },
+    {
+        month: "Oct",
+        "Gold Plan": 32,
+        "Silver Plan": 31,
+        "Bronze Plan": 38,
+        "Platinum Plan": 35,
+    },
+    {
+        month: "Nov",
+        "Gold Plan": 34,
+        "Silver Plan": 37,
+        "Bronze Plan": 39,
+        "Platinum Plan": 31,
+    },
+    {
+        month: "Dec",
+        "Gold Plan": 23,
+        "Silver Plan": 29,
+        "Bronze Plan": 26,
+        "Platinum Plan": 24,
     },
 ];
 
@@ -192,13 +191,13 @@ function Analytics() {
                     Subscribers
                 </Typography>
                 <Grid container={true} className={classes.container}>
-                    <Grid item={true} className={classes.item} xs={12} sm={3}>
+                    <Grid item={true} className={classes.item} xs={12} md={3}>
                         <SubscriptionsSummary
                             subscribers="1123"
                             subscribersChange="48"
                             subscribersDelta="positive"
                             period="Last 30 days"
-                            ltv="$13,666"
+                            ltv="₹13,666"
                             ltvChange="$121"
                             ltvDelta="negative"
                             churnRate="34.21%"
@@ -209,11 +208,61 @@ function Analytics() {
                     <Grid item={true} className={classes.item} xs={12} md={9}>
                         <SubscriberCharts data={data} />
                     </Grid>
-                    <Grid item={true} className={classes.item} xs={12} md={6}>
-                        <PlansChart data={pieData} />
+                </Grid>
+            </div>
+            <div>
+                <Typography
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.title}
+                >
+                    Revenue
+                </Typography>
+                <Grid container={true} className={classes.container}>
+                    <Grid item={true} className={classes.item} xs={12} md={3}>
+                        <RevenueSummary
+                            totalRevenue="₹2,02,764"
+                            totalRevenueChange="₹10,048"
+                            totalRevenueDelta="positive"
+                            period="Last 30 days"
+                            recoveredRevenue="₹1,86,634"
+                            recoveredRevenueChange="₹10,121"
+                            recoveredRevenueDelta="negative"
+                            dueRevenue="₹16,130"
+                            dueRevenueChange="₹6,123"
+                            dueRevenueDelta="positive"
+                        />
                     </Grid>
-                    <Grid item={true} className={classes.item} xs={12} md={6}>
-                        <RevenueChart data={revenueData} />
+                    <Grid item={true} className={classes.item} xs={12} md={9}>
+                        <RevenueCharts data={revenueData} />
+                    </Grid>
+                </Grid>
+            </div>
+            <div>
+                <Typography
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.title}
+                >
+                    Plans
+                </Typography>
+                <Grid container={true} className={classes.container}>
+                    <Grid item={true} className={classes.item} xs={12} md={3}>
+                        <PlanSummary
+                            conversions="323"
+                            conversionsChange="48"
+                            conversionsDelta="positive"
+                            period="Last 30 days"
+                            conversionRate="23.21%"
+                            conversionRateChange="2.32%"
+                            conversionRateDelta="negative"
+                            cancellationRate="4.21%"
+                            cancellationRateChange="0.12%"
+                            cancellationRateDelta="positive"
+                        />
+                    </Grid>
+                    <Grid item={true} className={classes.item} xs={12} md={9}>
+                        <PlanCharts data={plansData} />
                     </Grid>
                 </Grid>
             </div>
