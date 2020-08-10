@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import * as actions from "../../redux/actions";
 import WorkspaceToolbar from "../../workspace/common/WorkspaceToolbar";
 import Typography from "@material-ui/core/Typography";
 import SubscriptionsSummary from "./SubscriptionsSummary";
@@ -24,161 +26,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const data = {
-    id: "Subscriptions",
-    data: [
-        { x: 0, y: 7 },
-        { x: 1, y: 5 },
-        { x: 2, y: 11 },
-        { x: 3, y: 9 },
-        { x: 4, y: 13 },
-        { x: 5, y: 16 },
-        { x: 6, y: 12 },
-        { x: 7, y: 9 },
-        { x: 8, y: 13 },
-    ],
-};
-
-const revenueData = [
-    {
-        month: "Jan",
-        "Billed Revenue": 10237,
-        "Revenue Past Due": 2572,
-    },
-    {
-        month: "Feb",
-        "Billed Revenue": 11287,
-        "Revenue Past Due": 3357,
-    },
-    {
-        month: "Mar",
-        "Billed Revenue": 15087,
-        "Revenue Past Due": 5057,
-    },
-    {
-        month: "Apr",
-        "Billed Revenue": 12087,
-        "Revenue Past Due": 3057,
-    },
-    {
-        month: "Jun",
-        "Billed Revenue": 14287,
-        "Revenue Past Due": 3257,
-    },
-    {
-        month: "Jul",
-        "Billed Revenue": 10237,
-        "Revenue Past Due": 2572,
-    },
-    {
-        month: "Aug",
-        "Billed Revenue": 19087,
-        "Revenue Past Due": 4057,
-    },
-    {
-        month: "Sep",
-        "Billed Revenue": 10237,
-        "Revenue Past Due": 2572,
-    },
-    {
-        month: "Oct",
-        "Billed Revenue": 11287,
-        "Revenue Past Due": 3357,
-    },
-    {
-        month: "Nov",
-        "Billed Revenue": 15087,
-        "Revenue Past Due": 5057,
-    },
-    {
-        month: "Dec",
-        "Billed Revenue": 12087,
-        "Revenue Past Due": 3057,
-    },
-];
-
-const plansData = [
-    {
-        month: "Jan",
-        "Gold Plan": 23,
-        "Silver Plan": 26,
-        "Bronze Plan": 22,
-        "Platinum Plan": 27,
-    },
-    {
-        month: "Feb",
-        "Gold Plan": 32,
-        "Silver Plan": 31,
-        "Bronze Plan": 38,
-        "Platinum Plan": 35,
-    },
-    {
-        month: "Mar",
-        "Gold Plan": 34,
-        "Silver Plan": 37,
-        "Bronze Plan": 39,
-        "Platinum Plan": 31,
-    },
-    {
-        month: "Apr",
-        "Gold Plan": 23,
-        "Silver Plan": 29,
-        "Bronze Plan": 26,
-        "Platinum Plan": 24,
-    },
-    {
-        month: "Jun",
-        "Gold Plan": 12,
-        "Silver Plan": 39,
-        "Bronze Plan": 25,
-        "Platinum Plan": 29,
-    },
-    {
-        month: "Jul",
-        "Gold Plan": 23,
-        "Silver Plan": 26,
-        "Bronze Plan": 22,
-        "Platinum Plan": 27,
-    },
-    {
-        month: "Aug",
-        "Gold Plan": 19,
-        "Silver Plan": 22,
-        "Bronze Plan": 47,
-        "Platinum Plan": 34,
-    },
-    {
-        month: "Sep",
-        "Gold Plan": 23,
-        "Silver Plan": 26,
-        "Bronze Plan": 22,
-        "Platinum Plan": 27,
-    },
-    {
-        month: "Oct",
-        "Gold Plan": 32,
-        "Silver Plan": 31,
-        "Bronze Plan": 38,
-        "Platinum Plan": 35,
-    },
-    {
-        month: "Nov",
-        "Gold Plan": 34,
-        "Silver Plan": 37,
-        "Bronze Plan": 39,
-        "Platinum Plan": 31,
-    },
-    {
-        month: "Dec",
-        "Gold Plan": 23,
-        "Silver Plan": 29,
-        "Bronze Plan": 26,
-        "Platinum Plan": 24,
-    },
-];
-
-function Analytics() {
+function Analytics(props) {
     const classes = useStyles();
+    const { analytics, fetchAnalytics } = props;
+    const revenueData = analytics.revenueData;
+    const subscriberData = analytics.subscriberData;
+    const planData = analytics.planData;
+    useEffect(() => {
+        fetchAnalytics();
+    }, [fetchAnalytics]);
+
     return (
         <div className={classes.box}>
             <WorkspaceToolbar title="Analytics" />
@@ -206,7 +63,7 @@ function Analytics() {
                         />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
-                        <SubscriberCharts data={data} />
+                        <SubscriberCharts data={subscriberData} />
                     </Grid>
                 </Grid>
             </div>
@@ -262,7 +119,7 @@ function Analytics() {
                         />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
-                        <PlanCharts data={plansData} />
+                        <PlanCharts data={planData} />
                     </Grid>
                 </Grid>
             </div>
@@ -270,4 +127,14 @@ function Analytics() {
     );
 }
 
-export default Analytics;
+function mapStateToProps(props) {
+    return {
+        analytics: props.analytics,
+    };
+}
+
+const mapDispatchToProps = {
+    fetchAnalytics: actions.fetchAnalytics,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Analytics);

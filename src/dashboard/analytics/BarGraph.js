@@ -1,147 +1,96 @@
 import React from "react";
-import { ResponsiveBar } from "@nivo/bar";
 import { makeStyles } from "@material-ui/core/styles";
+import {
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    Cell,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from "recharts";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
-    },
-    tooltip: {
-        border: 0,
-        borderRadius: 4,
-        padding: 16,
-        fontSize: 12,
-        color: "white",
-        fontWeight: "bold",
-        boxShadow: "0px 5px 15px rgba(0,0,0,0.1)",
-    },
-    content: {
-        minHeight: 600,
-        maxHeight: 600,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-    },
     style: {
-        margin: 20,
+        margin: 8,
         width: "auto",
         height: 240,
     },
-    space: {
-        margin: 4,
-    },
 }));
-
-const customTheme = {
-    tooltip: {
-        container: {
-            borderRadius: 100,
-            padding: 0,
-        },
-    },
-    axis: {
-        tickValues: 5,
-        domain: {
-            line: {
-                stroke: "#111111",
-                strokeWidth: 0.05,
-            },
-        },
-        legend: {
-            text: {
-                fontSize: 12,
-            },
-        },
-    },
-    grid: {
-        line: {
-            stroke: "#111111",
-            strokeWidth: 0.05,
-        },
-    },
-    legends: {
-        text: {
-            fill: "#333333",
-            fontSize: 12,
-        },
-    },
-};
 
 function BarGraph(props, theme) {
     const classes = useStyles();
+    const data = [
+        {
+            name: "Page A",
+            uv: 4000,
+            pv: 2400,
+            amt: 2400,
+        },
+        {
+            name: "Page B",
+            uv: 3000,
+            pv: 1398,
+            amt: 2210,
+        },
+        {
+            name: "Page C",
+            uv: 2000,
+            pv: 9800,
+            amt: 2290,
+        },
+        {
+            name: "Page D",
+            uv: 2780,
+            pv: 3908,
+            amt: 2000,
+        },
+        {
+            name: "Page E",
+            uv: 1890,
+            pv: 4800,
+            amt: 2181,
+        },
+        {
+            name: "Page F",
+            uv: 2390,
+            pv: 3800,
+            amt: 2500,
+        },
+        {
+            name: "Page G",
+            uv: 3490,
+            pv: 4300,
+            amt: 2100,
+        },
+    ];
     return (
         <div className={classes.style}>
             <Typography variant="subtitle1" color="textPrimary">
                 {props.title}
             </Typography>
-            <ResponsiveBar
-                data={props.data}
-                keys={props.keys}
-                indexBy={props.index}
-                margin={{ top: 20, right: 40, bottom: 80, left: 80 }}
-                padding={0.5}
-                colors={{ scheme: props.graphColor }}
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legend: props.axisBottom,
-                    legendPosition: "middle",
-                    legendOffset: 32,
-                }}
-                axisLeft={{
-                    tickSize: 5,
-                    tickPadding: 10,
-                    tickRotation: 0,
-                    tickValues: 4,
-                    legend: props.axisLeft,
-                    legendPosition: "middle",
-                    legendOffset: -60,
-                }}
-                legends={[
-                    {
-                        dataFrom: "keys",
-                        anchor: "bottom",
-                        direction: "row",
-                        justify: false,
-                        translateX: 0,
-                        translateY: 60,
-                        itemsSpacing: 10,
-                        itemWidth: 110,
-                        itemHeight: 10,
-                        itemDirection: "left-to-right",
-                        itemOpacity: 0.7,
-                        symbolSize: 10,
-                        effects: [
-                            {
-                                on: "hover",
-                                style: {
-                                    itemOpacity: 1,
-                                },
-                            },
-                        ],
-                    },
-                ]}
-                enableLabel={false}
-                animate={true}
-                theme={customTheme}
-                tooltip={({ id, value, color }) => (
-                    <strong
-                        className={classes.tooltip}
-                        style={{
-                            color: "white",
-                            background: color,
-                        }}
-                    >
-                        {id}: {value}
-                    </strong>
-                )}
-            />
+            <ResponsiveContainer>
+                <BarChart
+                    data={props.data}
+                    margin={{
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="Gold Plan" stackId="a" fill="#8884d8" />
+                    <Bar dataKey="Silver Plan" stackId="a" fill="#82ca9d" />
+                </BarChart>
+            </ResponsiveContainer>
         </div>
     );
 }

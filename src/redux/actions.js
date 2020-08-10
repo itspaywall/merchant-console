@@ -501,6 +501,25 @@ export function clearPlan() {
     };
 }
 
+/* Analytics
+ */
+
+export function fetchAnalyticsComplete(analytics) {
+    return {
+        type: ActionTypes.FETCH_ANALYTICS_COMPLETE,
+        payload: analytics,
+    };
+}
+
+export function fetchAnalytics(params) {
+    return (dispatch) => {
+        return axios.get("/api/v1/analytics", { params }).then((response) => {
+            const analytics = response.data;
+            dispatch(fetchAnalyticsComplete(analytics));
+        });
+    };
+}
+
 /* MISC
  * 1. closeDialog
  * 2. showNotification

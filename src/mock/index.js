@@ -15,6 +15,22 @@ export const accounts = [];
 export const subscriptions = [];
 export const transactions = [];
 export const invoices = [];
+export const analytics = {};
+
+const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
 
 const paymentMethods = ["cash", "credit_card", "debit_card", "online"];
 
@@ -490,4 +506,54 @@ mock.onPut(PUT_INVOICE_URL).reply((request) => {
     } else {
         return [404];
     }
+});
+
+// Analytics Data
+
+function createSubscriberData() {
+    const subscriberData = [];
+    for (let i = 0; i < months.length; i++) {
+        subscriberData.push(faker.random.number({ max: 100 }));
+    }
+    return subscriberData;
+}
+
+function createRevenueData() {
+    const revenueData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            "Billed Revenue": faker.random.number(),
+            "Revenue Past Due": faker.random.number(),
+        };
+        revenueData.push(item);
+    }
+    return revenueData;
+}
+
+function createPlanData() {
+    const planData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            "Gold Plan": faker.random.number(),
+            "Silver Plan": faker.random.number(),
+            "Bronze Plan": faker.random.number(),
+            "Platinum Plan": faker.random.number(),
+        };
+        planData.push(item);
+    }
+    return planData;
+}
+
+function generateAnalyticsFakeData() {
+    analytics.subscriberData = createSubscriberData();
+    analytics.revenueData = createRevenueData();
+    analytics.planData = createPlanData();
+}
+
+generateAnalyticsFakeData();
+
+mock.onGet("/api/v1/analytics").reply((request) => {
+    return [200, analytics];
 });
