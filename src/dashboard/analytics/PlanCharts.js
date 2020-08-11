@@ -29,32 +29,21 @@ function PlanCharts(props) {
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 <BarGraph
-                    data={props.data}
+                    data={props.planData}
                     title="Plans Breakdown"
-                    graphColor="paired"
                     keys={[
                         "Gold Plan",
                         "Silver Plan",
                         "Bronze Plan",
                         "Platinum Plan",
                     ]}
-                    index="month"
-                    axisLeft="Total Conversions"
-                    axisBottom="Months"
+                    info="The split-up of net subscribers for each plan."
                 />
                 <BarGraph
-                    data={props.data}
+                    data={props.conversionData}
                     title="Conversions Breakdown"
-                    graphColor="nivo"
-                    keys={[
-                        "Gold Plan",
-                        "Silver Plan",
-                        "Bronze Plan",
-                        "Platinum Plan",
-                    ]}
-                    index="month"
-                    axisLeft="Total Conversions"
-                    axisBottom="Months"
+                    keys={["New", "Reactivated", "Churned"]}
+                    info="The split-up of all monthly changes in your customer base."
                 />
             </CardContent>
         </Card>

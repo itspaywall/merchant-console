@@ -39,9 +39,12 @@ function notificationReducer(state = null, action) {
 
 function analyticsReducer(
     state = {
-        subscriberData: {},
+        subscriberData: [],
+        churnRateData: [],
         revenueData: [],
+        transactionData: [],
         planData: [],
+        conversionData: [],
     },
     action
 ) {

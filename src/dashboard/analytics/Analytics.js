@@ -29,9 +29,13 @@ const useStyles = makeStyles((theme) => ({
 function Analytics(props) {
     const classes = useStyles();
     const { analytics, fetchAnalytics } = props;
-    const revenueData = analytics.revenueData;
     const subscriberData = analytics.subscriberData;
+    const churnRateData = analytics.churnRateData;
+    const revenueData = analytics.revenueData;
+    const transactionData = analytics.transactionData;
     const planData = analytics.planData;
+    const conversionData = analytics.conversionData;
+
     useEffect(() => {
         fetchAnalytics();
     }, [fetchAnalytics]);
@@ -63,7 +67,10 @@ function Analytics(props) {
                         />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
-                        <SubscriberCharts data={subscriberData} />
+                        <SubscriberCharts
+                            subscriberData={subscriberData}
+                            churnRateData={churnRateData}
+                        />
                     </Grid>
                 </Grid>
             </div>
@@ -91,7 +98,10 @@ function Analytics(props) {
                         />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
-                        <RevenueCharts data={revenueData} />
+                        <RevenueCharts
+                            revenueData={revenueData}
+                            transactionData={transactionData}
+                        />
                     </Grid>
                 </Grid>
             </div>
@@ -119,7 +129,10 @@ function Analytics(props) {
                         />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
-                        <PlanCharts data={planData} />
+                        <PlanCharts
+                            planData={planData}
+                            conversionData={conversionData}
+                        />
                     </Grid>
                 </Grid>
             </div>

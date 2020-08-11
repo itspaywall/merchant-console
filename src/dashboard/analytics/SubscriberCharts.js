@@ -32,31 +32,23 @@ const useStyles = makeStyles((theme) => ({
 
 function SubscriberCharts(props) {
     const classes = useStyles();
-    const renderTitle1 = (count) =>
-        count === 1 ? `${count} subscriber` : `${count} subscribers`;
-    const renderTitle2 = (count) => `${count}% `;
-
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 <LineGraph
-                    data={props.data}
+                    data={props.subscriberData}
                     title={"Net Subscriber Change"}
-                    color={"#2196f3"}
-                    graphColor={"paired"}
-                    axisLeft={"Subscriptions"}
-                    axisBottom={"Months"}
-                    renderTitle={renderTitle1}
+                    what={"Subscribers"}
+                    color={"#4285F4"}
+                    info="The net change in the absolute number of subscribers."
                 />
                 <div className={classes.space}></div>
                 <LineGraph
-                    data={props.data}
+                    data={props.churnRateData}
                     title={"Subscriber Churn Rate"}
-                    color={"#ff1744"}
-                    graphColor={"set1"}
-                    axisLeft={"Subscriptions"}
-                    axisBottom={"Months"}
-                    renderTitle={renderTitle2}
+                    what={"Churn Rate"}
+                    color={"#EA4335"}
+                    info="The rate at which customers stop subscribing."
                 />
             </CardContent>
         </Card>

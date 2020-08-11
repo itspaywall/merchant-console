@@ -513,9 +513,23 @@ mock.onPut(PUT_INVOICE_URL).reply((request) => {
 function createSubscriberData() {
     const subscriberData = [];
     for (let i = 0; i < months.length; i++) {
-        subscriberData.push(faker.random.number({ max: 100 }));
+        const item = {};
+        item.month = months[i];
+        item.Subscribers = faker.random.number({ min: 10, max: 99 });
+        subscriberData.push(item);
     }
     return subscriberData;
+}
+
+function createChurnRateData() {
+    const churnRateData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {};
+        item.month = months[i];
+        item["Churn Rate"] = faker.random.number({ min: 1, max: 10 });
+        churnRateData.push(item);
+    }
+    return churnRateData;
 }
 
 function createRevenueData() {
@@ -523,12 +537,28 @@ function createRevenueData() {
     for (let i = 0; i < months.length; i++) {
         const item = {
             month: months[i],
-            "Billed Revenue": faker.random.number(),
-            "Revenue Past Due": faker.random.number(),
+            "Billed Revenue": faker.random.number({ min: 10, max: 99 }),
+            "Revenue Past Due": faker.random.number({ min: 10, max: 99 }),
         };
         revenueData.push(item);
     }
     return revenueData;
+}
+
+function createTransactionData() {
+    const transactionData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            Pending: faker.random.number({ min: 10, max: 99 }),
+            "Payment Failed": faker.random.number({ min: 10, max: 99 }),
+            "No Billing Info": faker.random.number({ min: 10, max: 99 }),
+            Cancelled: faker.random.number({ min: 10, max: 99 }),
+            Converted: faker.random.number({ min: 10, max: 99 }),
+        };
+        transactionData.push(item);
+    }
+    return transactionData;
 }
 
 function createPlanData() {
@@ -536,20 +566,37 @@ function createPlanData() {
     for (let i = 0; i < months.length; i++) {
         const item = {
             month: months[i],
-            "Gold Plan": faker.random.number(),
-            "Silver Plan": faker.random.number(),
-            "Bronze Plan": faker.random.number(),
-            "Platinum Plan": faker.random.number(),
+            "Gold Plan": faker.random.number({ min: 10, max: 99 }),
+            "Silver Plan": faker.random.number({ min: 10, max: 99 }),
+            "Bronze Plan": faker.random.number({ min: 10, max: 99 }),
+            "Platinum Plan": faker.random.number({ min: 10, max: 99 }),
         };
         planData.push(item);
     }
     return planData;
 }
 
+function createConversionData() {
+    const conversionData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            New: faker.random.number({ min: 10, max: 99 }),
+            Reactivated: faker.random.number({ min: 10, max: 99 }),
+            Churned: faker.random.number({ min: 10, max: 99 }),
+        };
+        conversionData.push(item);
+    }
+    return conversionData;
+}
+
 function generateAnalyticsFakeData() {
     analytics.subscriberData = createSubscriberData();
+    analytics.churnRateData = createChurnRateData();
     analytics.revenueData = createRevenueData();
+    analytics.transactionData = createTransactionData();
     analytics.planData = createPlanData();
+    analytics.conversionData = createConversionData();
 }
 
 generateAnalyticsFakeData();

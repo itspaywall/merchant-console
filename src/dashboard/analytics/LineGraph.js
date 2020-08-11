@@ -10,67 +10,65 @@ import {
 } from "recharts";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-    },
-    content: {
-        minHeight: 600,
-        maxHeight: 600,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-    },
     style: {
         margin: 8,
         width: "auto",
         height: 240,
     },
-    space: {
-        margin: 4,
+    tooltip: {
+        border: "1px solid #D3D3D3",
+        borderRadius: 0,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        variant: "outlined",
+        padding: 8,
+        maxWidth: 160,
+    },
+    item: {
+        margin: 2,
     },
 }));
 
+const months = {
+    Jan: "January",
+    Feb: "February",
+    Mar: "March",
+    Apr: "April",
+    May: "May",
+    Jun: "June",
+    Jul: "July",
+    Aug: "August",
+    Sep: "September",
+    Oct: "October",
+    Nov: "November",
+    Dec: "December",
+};
+
 function LineGraph(props, theme) {
     const classes = useStyles();
-
-    const data = [
-        {
-            name: "Page A",
-            uv: 4000,
-        },
-        {
-            name: "Page B",
-            uv: 3000,
-        },
-        {
-            name: "Page C",
-            uv: 2000,
-        },
-        {
-            name: "Page D",
-            uv: 2780,
-        },
-        {
-            name: "Page E",
-            uv: 1890,
-        },
-        {
-            name: "Page F",
-            uv: 2390,
-        },
-        {
-            name: "Page G",
-            uv: 3490,
-        },
-    ];
-
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active) {
+            return (
+                <Paper className={classes.tooltip} elevation={0}>
+                    <div
+                        className={classes.item}
+                    >{`Month : ${months[label]}`}</div>
+                    <div
+                        className={classes.item}
+                        style={{ color: props.color }}
+                    >{`${props.what} : ${payload[0].value}`}</div>
+                    <div className={classes.item} style={{ color: "#777777" }}>
+                        {props.info}
+                    </div>
+                </Paper>
+            );
+        }
+        return null;
+    };
     return (
         <div className={classes.style}>
             <Typography variant="subtitle1" color="textPrimary">
@@ -78,7 +76,7 @@ function LineGraph(props, theme) {
             </Typography>
             <ResponsiveContainer>
                 <AreaChart
-                    data={data}
+                    data={props.data}
                     margin={{
                         top: 24,
                         right: 24,
@@ -86,35 +84,15 @@ function LineGraph(props, theme) {
                         bottom: 24,
                     }}
                 >
-                    <defs>
-                        <linearGradient
-                            id="colorUv"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
-                            <stop
-                                offset="0%"
-                                stopColor="#1875d0"
-                                stopOpacity={1}
-                            />
-                            <stop
-                                offset="100%"
-                                stopColor="#1875d0"
-                                stopOpacity={0}
-                            />
-                        </linearGradient>
-                    </defs>
                     <CartesianGrid strokeDasharray="2 2" />
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="month" />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     <Area
                         type="monotone"
-                        dataKey="uv"
-                        stroke="#1875d0"
-                        fill="url(#colorUv)"
+                        dataKey={props.what}
+                        stroke={props.color}
+                        fill={props.color}
                         activeDot={{ r: 8 }}
                     />
                 </AreaChart>

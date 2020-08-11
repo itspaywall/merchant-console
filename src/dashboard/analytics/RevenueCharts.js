@@ -29,22 +29,22 @@ function RevenueCharts(props) {
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 <BarGraph
-                    data={props.data}
+                    data={props.revenueData}
                     title="Revenue Status"
-                    graphColor="paired"
                     keys={["Billed Revenue", "Revenue Past Due"]}
-                    index="month"
-                    axisLeft="Revenue"
-                    axisBottom="Months"
+                    info="The split-up of recovered and due revenue."
                 />
                 <BarGraph
-                    data={props.data}
+                    data={props.transactionData}
                     title="Transactions Breakdown"
-                    graphColor="nivo"
-                    keys={["Billed Revenue", "Revenue Past Due"]}
-                    index="month"
-                    axisLeft="Revenue"
-                    axisBottom="Months"
+                    keys={[
+                        "Pending",
+                        "Payment Failed",
+                        "No Billing Info",
+                        "Cancelled",
+                        "Converted",
+                    ]}
+                    info="The split-up of all transactions."
                 />
             </CardContent>
         </Card>
