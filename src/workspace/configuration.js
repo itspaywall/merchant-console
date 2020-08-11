@@ -62,6 +62,13 @@ const workspaceConfiguration = [
         component: React.lazy(() => import("./analytics/Analytics")),
         exact: true,
     },
+    
+    // Preferences
+    {
+        path: "/preferences",
+        component: React.lazy(() => import("./preferences/Preferences")),
+        exact: true,
+    },
 ];
 
 export default workspaceConfiguration;
