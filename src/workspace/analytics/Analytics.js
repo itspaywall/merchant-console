@@ -13,12 +13,8 @@ import PlanSummary from "./PlanSummary";
 import PlanCharts from "./PlanCharts";
 
 const useStyles = makeStyles((theme) => ({
-    container: {
-        margin: 10,
-        marginTop: 8,
-    },
     item: {
-        padding: 10,
+        padding: 8,
     },
     title: {
         margin: 24,
@@ -29,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
 function Analytics(props) {
     const classes = useStyles();
     const { analytics, fetchAnalytics } = props;
+
+    const subscriptionSummary = analytics.subscriptionSummary;
+    const revenueSummary = analytics.revenueSummary;
+    const planSummary = analytics.planSummary;
     const subscriberData = analytics.subscriberData;
     const churnRateData = analytics.churnRateData;
     const revenueData = analytics.revenueData;
@@ -51,20 +51,9 @@ function Analytics(props) {
                 >
                     Subscribers
                 </Typography>
-                <Grid container={true} className={classes.container}>
+                <Grid container={true}>
                     <Grid item={true} className={classes.item} xs={12} md={3}>
-                        <SubscriptionsSummary
-                            subscribers="1123"
-                            subscribersChange="48"
-                            subscribersDelta="positive"
-                            period="Last 30 days"
-                            ltv="₹13,666"
-                            ltvChange="$121"
-                            ltvDelta="negative"
-                            churnRate="34.21%"
-                            churnChange="2.32%"
-                            churnDelta="positive"
-                        />
+                        <SubscriptionsSummary data={subscriptionSummary} />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
                         <SubscriberCharts
@@ -84,18 +73,7 @@ function Analytics(props) {
                 </Typography>
                 <Grid container={true} className={classes.container}>
                     <Grid item={true} className={classes.item} xs={12} md={3}>
-                        <RevenueSummary
-                            totalRevenue="₹2,02,764"
-                            totalRevenueChange="₹10,048"
-                            totalRevenueDelta="positive"
-                            period="Last 30 days"
-                            recoveredRevenue="₹1,86,634"
-                            recoveredRevenueChange="₹10,121"
-                            recoveredRevenueDelta="negative"
-                            dueRevenue="₹16,130"
-                            dueRevenueChange="₹6,123"
-                            dueRevenueDelta="positive"
-                        />
+                        <RevenueSummary data={revenueSummary} />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
                         <RevenueCharts
@@ -115,18 +93,7 @@ function Analytics(props) {
                 </Typography>
                 <Grid container={true} className={classes.container}>
                     <Grid item={true} className={classes.item} xs={12} md={3}>
-                        <PlanSummary
-                            conversions="323"
-                            conversionsChange="48"
-                            conversionsDelta="positive"
-                            period="Last 30 days"
-                            conversionRate="23.21%"
-                            conversionRateChange="2.32%"
-                            conversionRateDelta="negative"
-                            cancellationRate="4.21%"
-                            cancellationRateChange="0.12%"
-                            cancellationRateDelta="positive"
-                        />
+                        <PlanSummary data={planSummary} />
                     </Grid>
                     <Grid item={true} className={classes.item} xs={12} md={9}>
                         <PlanCharts

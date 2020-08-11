@@ -15,21 +15,19 @@ import Paper from "@material-ui/core/Paper";
 const useStyles = makeStyles((theme) => ({
     style: {
         margin: 8,
+        marginBottom: 48,
         width: "auto",
-        height: 240,
+        height: 220,
     },
     tooltip: {
-        border: "1px solid #D3D3D3",
-        borderRadius: 0,
-        display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
-        variant: "outlined",
         padding: 8,
-        maxWidth: 160,
     },
     item: {
         margin: 2,
+    },
+    subtitle: {
+        color: "#777777",
     },
 }));
 
@@ -50,19 +48,19 @@ const months = {
 
 function LineGraph(props, theme) {
     const classes = useStyles();
+
+    const { title, name, color, dataKey, info, data } = props;
+
     const CustomTooltip = ({ active, payload, label }) => {
         if (active) {
             return (
-                <Paper className={classes.tooltip} elevation={0}>
+                <Paper className={classes.tooltip} elevation={4}>
                     <div
                         className={classes.item}
-                    >{`Month : ${months[label]}`}</div>
-                    <div
-                        className={classes.item}
-                        style={{ color: props.color }}
-                    >{`${props.what} : ${payload[0].value}`}</div>
-                    <div className={classes.item} style={{ color: "#777777" }}>
-                        {props.info}
+                    >{`Month: ${months[label]}`}</div>
+                    <hr />
+                    <div className={classes.item}>
+                        {`${name}: ${payload[0].value}`}
                     </div>
                 </Paper>
             );
@@ -72,11 +70,12 @@ function LineGraph(props, theme) {
     return (
         <div className={classes.style}>
             <Typography variant="subtitle1" color="textPrimary">
-                {props.title}
+                <div className={classes.title}>{title}</div>
+                <div className={classes.subtitle}>{info}</div>
             </Typography>
             <ResponsiveContainer>
                 <AreaChart
-                    data={props.data}
+                    data={data}
                     margin={{
                         top: 24,
                         right: 24,
@@ -90,10 +89,10 @@ function LineGraph(props, theme) {
                     <Tooltip content={<CustomTooltip />} />
                     <Area
                         type="monotone"
-                        dataKey={props.what}
-                        stroke={props.color}
-                        fill={props.color}
-                        activeDot={{ r: 8 }}
+                        dataKey={dataKey}
+                        stroke={color}
+                        fill={color}
+                        activeDot={{ r: 4 }}
                     />
                 </AreaChart>
             </ResponsiveContainer>

@@ -228,6 +228,7 @@ const actions2 = [
 function ViewAccounts(props) {
     const { accounts, fetchAccounts, newAccount, history, location } = props;
     const params = queryString.parse(location.search);
+
     if ("start_date" in params) {
         params["start_date"] = new Date(Number(params["start_date"]));
     }

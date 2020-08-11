@@ -9,8 +9,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         padding: 20,
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-evenly",
@@ -44,31 +44,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SubscriptionsSummary(props) {
     const classes = useStyles();
+    const { data } = props;
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.details}>
                 <Summary
                     title="Total Subscriptions"
-                    period={props.period}
-                    number={props.subscribers}
-                    change={props.subscribersChange}
-                    delta={props.subscribersDelta}
+                    period={data.period}
+                    number={data.subscribers}
+                    change={data.subscribersChange}
+                    delta={data.subscribersDelta}
                 />
                 <Divider />
                 <Summary
                     title="Subscriber Lifetime Value"
-                    period={props.period}
-                    number={props.ltv}
-                    change={props.ltvChange}
-                    delta={props.ltvDelta}
+                    period={data.period}
+                    number={`₹ ${data.ltv}`}
+                    change={`₹ ${data.ltvChange}`}
+                    delta={data.ltvDelta}
                 />
                 <Divider />
                 <Summary
                     title="Subscriber Churn Rate"
-                    period={props.period}
-                    number={props.churnRate}
-                    change={props.churnChange}
-                    delta={props.churnDelta}
+                    period={data.period}
+                    number={`${data.churnRate}%`}
+                    change={`${data.churnChange}%`}
+                    delta={data.churnDelta}
                 />
             </CardContent>
         </Card>

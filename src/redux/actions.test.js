@@ -9,7 +9,6 @@ import {
     subscriptions,
     transactions,
     invoices,
-    data,
 } from "../mock";
 
 const middlewares = [thunk];

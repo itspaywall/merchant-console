@@ -7,11 +7,11 @@ import LineGraph from "./LineGraph";
 const useStyles = makeStyles((theme) => ({
     root: {
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
     },
     content: {
         minHeight: 600,
@@ -32,22 +32,27 @@ const useStyles = makeStyles((theme) => ({
 
 function SubscriberCharts(props) {
     const classes = useStyles();
+
+    const { subscriberData, churnRateData } = props;
+
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 <LineGraph
-                    data={props.subscriberData}
-                    title={"Net Subscriber Change"}
-                    what={"Subscribers"}
-                    color={"#4285F4"}
+                    data={subscriberData}
+                    title="Net Subscriber Change"
+                    name="Subscribers"
+                    dataKey="subscribers"
+                    color="#4285F4"
                     info="The net change in the absolute number of subscribers."
                 />
                 <div className={classes.space}></div>
                 <LineGraph
-                    data={props.churnRateData}
-                    title={"Subscriber Churn Rate"}
-                    what={"Churn Rate"}
-                    color={"#EA4335"}
+                    data={churnRateData}
+                    title="Subscriber Churn Rate"
+                    name="Churn Rate"
+                    dataKey="churnRate"
+                    color="#EA4335"
                     info="The rate at which customers stop subscribing."
                 />
             </CardContent>

@@ -47,7 +47,7 @@ export default function Summary(props) {
             >
                 {props.period}
             </Typography>
-            <Typography component="h4" variant="h4">
+            <Typography component="h3" variant="h3">
                 {props.number}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">

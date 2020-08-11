@@ -9,8 +9,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         padding: 20,
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-evenly",
@@ -42,33 +42,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PlanSummary(props) {
+export default function RevenueSummary(props) {
     const classes = useStyles();
+    const { data } = props;
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.details}>
                 <Summary
-                    title="Total Plans Converted"
-                    period={props.period}
-                    number={props.conversions}
-                    change={props.conversionsChange}
-                    delta={props.conversionsDelta}
+                    title="Total Billed Revenue"
+                    period={data.period}
+                    number={`₹ ${data.totalRevenue}`}
+                    change={`₹ ${data.totalRevenueChange}`}
+                    delta={data.totalRevenueDelta}
                 />
                 <Divider />
                 <Summary
-                    title="Plans Conversion Rate"
-                    period={props.period}
-                    number={props.conversionRate}
-                    change={props.conversionRateChange}
-                    delta={props.conversionRateDelta}
+                    title="Recovered Revenue"
+                    period={data.period}
+                    number={`₹ ${data.recoveredRevenue}`}
+                    change={`₹ ${data.recoveredRevenueChange}`}
+                    delta={data.recoveredRevenueDelta}
                 />
                 <Divider />
                 <Summary
-                    title="Plans Cancellation Rate"
-                    period={props.period}
-                    number={props.cancellationRate}
-                    change={props.cancellationRateChange}
-                    delta={props.cancellationRateDelta}
+                    title="Revenue Past Due"
+                    period={data.period}
+                    number={`₹ ${data.dueRevenue}`}
+                    change={`₹ ${data.dueRevenueChange}`}
+                    delta={data.dueRevenueDelta}
                 />
             </CardContent>
         </Card>

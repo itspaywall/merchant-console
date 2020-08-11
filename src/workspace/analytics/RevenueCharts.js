@@ -7,44 +7,49 @@ import BarGraph from "./BarGraph";
 const useStyles = makeStyles((theme) => ({
     root: {
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-    },
-    content: {
-        minHeight: 600,
-        maxHeight: 600,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
     },
 }));
 
 function RevenueCharts(props) {
     const classes = useStyles();
 
+    const { revenueData, transactionData } = props;
+
     return (
         <Card className={classes.root} variant="outlined">
-            <CardContent className={classes.content}>
+            <CardContent>
                 <BarGraph
-                    data={props.revenueData}
+                    data={revenueData}
                     title="Revenue Status"
-                    keys={["Billed Revenue", "Revenue Past Due"]}
+                    names={["Billed Revenue", "Revenue Past Due"]}
+                    keys={["billedRevenue", "revenuePastDue"]}
                     info="The split-up of recovered and due revenue."
+                    color="blues"
                 />
                 <BarGraph
-                    data={props.transactionData}
+                    data={transactionData}
                     title="Transactions Breakdown"
-                    keys={[
+                    names={[
                         "Pending",
                         "Payment Failed",
                         "No Billing Info",
                         "Cancelled",
                         "Converted",
                     ]}
+                    keys={[
+                        "pending",
+                        "paymentFailed",
+                        "noBillingInfo",
+                        "cancelled",
+                        "converted",
+                    ]}
                     info="The split-up of all transactions."
+                    color="reds"
                 />
             </CardContent>
         </Card>

@@ -7,43 +7,47 @@ import BarGraph from "./BarGraph";
 const useStyles = makeStyles((theme) => ({
     root: {
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-    },
-    content: {
-        minHeight: 600,
-        maxHeight: 600,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
     },
 }));
 
 function PlanCharts(props) {
     const classes = useStyles();
 
+    const { planData, conversionData } = props;
+
     return (
         <Card className={classes.root} variant="outlined">
-            <CardContent className={classes.content}>
+            <CardContent>
                 <BarGraph
-                    data={props.planData}
+                    data={planData}
                     title="Plans Breakdown"
-                    keys={[
+                    names={[
                         "Gold Plan",
                         "Silver Plan",
                         "Bronze Plan",
                         "Platinum Plan",
                     ]}
+                    keys={[
+                        "goldPlan",
+                        "silverPlan",
+                        "bronzePlan",
+                        "platinumPlan",
+                    ]}
                     info="The split-up of net subscribers for each plan."
+                    color="purples"
                 />
                 <BarGraph
-                    data={props.conversionData}
+                    data={conversionData}
                     title="Conversions Breakdown"
-                    keys={["New", "Reactivated", "Churned"]}
+                    names={["New", "Reactivated", "Churned"]}
+                    keys={["new", "reactivated", "churned"]}
                     info="The split-up of all monthly changes in your customer base."
+                    color="oranges"
                 />
             </CardContent>
         </Card>
