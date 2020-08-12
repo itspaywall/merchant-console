@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     chip: {
         margin: 2,
     },
+    field: {
+        marginTop: 20,
+    },
 }));
 
 // date_range_picker, phone_number, email_address
@@ -150,21 +153,38 @@ export default function RecordForm(props) {
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container={true} spacing={3} className={classes.root}>
+            <Grid container={true} className={classes.root}>
                 {groups.map((group, groupIndex) =>
                     group.children.map((field, fieldIndex) =>
                         (!showMore && field.quickAdd) ||
                         (showMore && groupIndex === tabIndex) ? (
-                            <Grid key={field.identifier} item={true} lg={12}>
+                            <Grid
+                                key={field.identifier}
+                                item={true}
+                                lg={12}
+                                className={classes.field}
+                            >
                                 {field.type === "text" && (
                                     <TextField
-                                        className={
-                                            fieldIndex > 0 ? "mt-8" : "mt-0"
-                                        }
                                         label={field.label}
                                         id={field.identifier}
                                         name={field.identifier}
                                         type="text"
+                                        variant="outlined"
+                                        fullWidth={true}
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                        size="medium"
+                                    />
+                                )}
+
+                                {field.type === "password" && (
+                                    <TextField
+                                        label={field.label}
+                                        id={field.identifier}
+                                        name={field.identifier}
+                                        type="password"
                                         variant="outlined"
                                         fullWidth={true}
                                         required={field.required}
