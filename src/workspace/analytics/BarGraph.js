@@ -52,26 +52,16 @@ const months = {
     Dec: "December",
 };
 
-const blues = ["#90CAF9", "#42A5F5", "#1E88E5", "#1565C0", "#0D47A1"];
-const reds = ["#FFCDD2", "#E57373", "#F44336", "#D32F2F", "#B71C1C"];
-const purples = ["#E1BEE7", "#BA68C8", "#9C27B0", "#7B1FA2", "#4A148C"];
-const oranges = ["#FFE0B2", "#FFB74D", "#FF9800", "#F57C00", "#E65100"];
+const colors = {
+    blues: ["#90CAF9", "#42A5F5", "#1E88E5", "#1565C0", "#0D47A1"],
+    reds: ["#FFCDD2", "#E57373", "#F44336", "#D32F2F", "#B71C1C"],
+    purples: ["#E1BEE7", "#BA68C8", "#9C27B0", "#7B1FA2", "#4A148C"],
+    oranges: ["#FFE0B2", "#FFB74D", "#FF9800", "#F57C00", "#E65100"],
+};
 
 function BarGraph(props, theme) {
     const classes = useStyles();
-
     const { title, names, info, data, keys, color } = props;
-
-    let selected = [];
-    if (color === "oranges") {
-        selected = oranges;
-    } else if (color === "reds") {
-        selected = reds;
-    } else if (color === "purples") {
-        selected = purples;
-    } else {
-        selected = blues;
-    }
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (active) {
@@ -85,7 +75,7 @@ function BarGraph(props, theme) {
                         <div className={classes.parent}>
                             <div
                                 className={classes.item}
-                                style={{ color: selected[index] }}
+                                style={{ color: colors[color][index] }}
                             >
                                 ◼
                             </div>
@@ -126,7 +116,7 @@ function BarGraph(props, theme) {
                             name={names[index]}
                             dataKey={bar}
                             stackId="a"
-                            fill={selected[index]}
+                            fill={colors[color][index]}
                         />
                     ))}
                 </BarChart>
