@@ -37,6 +37,31 @@ function notificationReducer(state = null, action) {
     return state;
 }
 
+function analyticsReducer(
+    state = {
+        subscriptionSummary: {},
+        revenueSummary: {},
+        planSummary: {},
+        subscriberData: [],
+        churnRateData: [],
+        revenueData: [],
+        transactionData: [],
+        planData: [],
+        conversionData: [],
+    },
+    action
+) {
+    switch (action.type) {
+        case ActionTypes.FETCH_ANALYTICS_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 function accountsReducer(state = [], action) {
     switch (action.type) {
         case ActionTypes.FETCH_ACCOUNTS_COMPLETE: {
@@ -184,6 +209,7 @@ function planReducer(state = null, action) {
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
+    analytics: analyticsReducer,
     accounts: accountsReducer,
     account: accountReducer,
     subscriptions: subscriptionsReducer,

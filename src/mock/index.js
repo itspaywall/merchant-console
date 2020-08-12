@@ -15,6 +15,24 @@ export const accounts = [];
 export const subscriptions = [];
 export const transactions = [];
 export const invoices = [];
+export const analytics = {};
+
+const growth = ["positive", "negative"];
+
+const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
 
 const paymentMethods = ["cash", "credit_card", "debit_card", "online"];
 
@@ -490,4 +508,170 @@ mock.onPut(PUT_INVOICE_URL).reply((request) => {
     } else {
         return [404];
     }
+});
+
+// Analytics Data
+
+function createSubscriptionSummary() {
+    const subscriptionSummary = {
+        period: "Last 30 days",
+        subscribers: faker.random.number({ min: 10, max: 99 }),
+        subscribersChange: faker.random.number({
+            min: 1,
+            max: 10,
+        }),
+        subscribersDelta: faker.random.arrayElement(growth),
+        ltv: faker.random.number({ min: 10, max: 99 }),
+        ltvChange: faker.random.number({ min: 10, max: 99 }),
+        ltvDelta: faker.random.arrayElement(growth),
+        churnRate: faker.random.number({ min: 10, max: 99 }),
+        churnChange: faker.random.number({ min: 10, max: 99 }),
+        churnDelta: faker.random.arrayElement(growth),
+    };
+    return subscriptionSummary;
+}
+
+function createRevenueSummary() {
+    const revenueSummary = {
+        period: "Last 30 days",
+        totalRevenue: faker.random.number({ min: 10, max: 99 }),
+        totalRevenueChange: faker.random.number({
+            min: 1000,
+            max: 9999,
+        }),
+        totalRevenueDelta: faker.random.arrayElement(growth),
+        recoveredRevenue: faker.random.number({ min: 10, max: 99 }),
+        recoveredRevenueChange: faker.random.number({
+            min: 1000,
+            max: 9999,
+        }),
+        recoveredRevenueDelta: faker.random.arrayElement(growth),
+        dueRevenue: faker.random.number({ min: 1000, max: 9999 }),
+        dueRevenueChange: faker.random.number({ min: 10, max: 99 }),
+        dueRevenueDelta: faker.random.arrayElement(growth),
+    };
+    return revenueSummary;
+}
+
+function createPlanSummary() {
+    const planSummary = {
+        period: "Last 30 days",
+        conversions: faker.random.number({ min: 10, max: 99 }),
+        conversionsChange: faker.random.number({
+            min: 1,
+            max: 10,
+        }),
+        conversionsDelta: faker.random.arrayElement(growth),
+        conversionRate: faker.random.number({ min: 10, max: 99 }),
+        conversionRateChange: faker.random.number({
+            min: 10,
+            max: 99,
+        }),
+        conversionRateDelta: faker.random.arrayElement(growth),
+        cancellationRate: faker.random.number({ min: 10, max: 99 }),
+        cancellationRateChange: faker.random.number({
+            min: 10,
+            max: 99,
+        }),
+        cancellationRateDelta: faker.random.arrayElement(growth),
+    };
+    return planSummary;
+}
+
+function createSubscriberData() {
+    const subscriberData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {};
+        item.month = months[i];
+        item.subscribers = faker.random.number({ min: 10, max: 99 });
+        subscriberData.push(item);
+    }
+    return subscriberData;
+}
+
+function createChurnRateData() {
+    const churnRateData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {};
+        item.month = months[i];
+        item.churnRate = faker.random.number({ min: 1, max: 10 });
+        churnRateData.push(item);
+    }
+    return churnRateData;
+}
+
+function createRevenueData() {
+    const revenueData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            billedRevenue: faker.random.number({ min: 10, max: 99 }),
+            revenuePastDue: faker.random.number({ min: 10, max: 99 }),
+        };
+        revenueData.push(item);
+    }
+    return revenueData;
+}
+
+function createTransactionData() {
+    const transactionData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            pending: faker.random.number({ min: 10, max: 99 }),
+            paymentFailed: faker.random.number({ min: 10, max: 99 }),
+            noBillingInfo: faker.random.number({ min: 10, max: 99 }),
+            cancelled: faker.random.number({ min: 10, max: 99 }),
+            converted: faker.random.number({ min: 10, max: 99 }),
+        };
+        transactionData.push(item);
+    }
+    return transactionData;
+}
+
+function createPlanData() {
+    const planData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            goldPlan: faker.random.number({ min: 10, max: 99 }),
+            silverPlan: faker.random.number({ min: 10, max: 99 }),
+            bronzePlan: faker.random.number({ min: 10, max: 99 }),
+            platinumPlan: faker.random.number({ min: 10, max: 99 }),
+        };
+        planData.push(item);
+    }
+    return planData;
+}
+
+function createConversionData() {
+    const conversionData = [];
+    for (let i = 0; i < months.length; i++) {
+        const item = {
+            month: months[i],
+            new: faker.random.number({ min: 10, max: 99 }),
+            reactivated: faker.random.number({ min: 10, max: 99 }),
+            churned: faker.random.number({ min: 10, max: 99 }),
+        };
+        conversionData.push(item);
+    }
+    return conversionData;
+}
+
+function generateAnalyticsFakeData() {
+    analytics.subscriptionSummary = createSubscriptionSummary();
+    analytics.revenueSummary = createRevenueSummary();
+    analytics.planSummary = createPlanSummary();
+    analytics.subscriberData = createSubscriberData();
+    analytics.churnRateData = createChurnRateData();
+    analytics.revenueData = createRevenueData();
+    analytics.transactionData = createTransactionData();
+    analytics.planData = createPlanData();
+    analytics.conversionData = createConversionData();
+}
+
+generateAnalyticsFakeData();
+
+mock.onGet("/api/v1/analytics").reply((request) => {
+    return [200, analytics];
 });

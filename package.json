@@ -8,9 +8,6 @@
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.56",
         "@material-ui/pickers": "^3.2.10",
-        "@nivo/bar": "^0.62.0",
-        "@nivo/line": "^0.62.0",
-        "@nivo/pie": "^0.62.0",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
@@ -25,6 +22,7 @@
         "react-router-config": "^5.1.1",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.1",
+        "recharts": "^1.8.5",
         "redux": "^4.0.5",
         "redux-devtools-extension": "^2.13.8",
         "redux-thunk": "^2.3.0"

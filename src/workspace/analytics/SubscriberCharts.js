@@ -7,11 +7,11 @@ import LineGraph from "./LineGraph";
 const useStyles = makeStyles((theme) => ({
     root: {
         borderRadius: 0,
-        minHeight: 600,
-        maxHeight: 600,
+        minHeight: 700,
+        maxHeight: 700,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
     },
     content: {
         minHeight: 600,
@@ -32,31 +32,28 @@ const useStyles = makeStyles((theme) => ({
 
 function SubscriberCharts(props) {
     const classes = useStyles();
-    const renderTitle1 = (count) =>
-        count === 1 ? `${count} subscriber` : `${count} subscribers`;
-    const renderTitle2 = (count) => `${count}% `;
+
+    const { subscriberData, churnRateData } = props;
 
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 <LineGraph
-                    data={props.data}
-                    title={"Net Subscriber Change"}
-                    color={"#2196f3"}
-                    graphColor={"paired"}
-                    axisLeft={"Subscriptions"}
-                    axisBottom={"Months"}
-                    renderTitle={renderTitle1}
+                    data={subscriberData}
+                    title="Net Subscriber Change"
+                    name="Subscribers"
+                    dataKey="subscribers"
+                    color="#4285F4"
+                    info="The net change in the absolute number of subscribers."
                 />
                 <div className={classes.space}></div>
                 <LineGraph
-                    data={props.data}
-                    title={"Subscriber Churn Rate"}
-                    color={"#ff1744"}
-                    graphColor={"set1"}
-                    axisLeft={"Subscriptions"}
-                    axisBottom={"Months"}
-                    renderTitle={renderTitle2}
+                    data={churnRateData}
+                    title="Subscriber Churn Rate"
+                    name="Churn Rate"
+                    dataKey="churnRate"
+                    color="#EA4335"
+                    info="The rate at which customers stop subscribing."
                 />
             </CardContent>
         </Card>

@@ -55,6 +55,13 @@ const workspaceConfiguration = [
         component: React.lazy(() => import("./plan/ViewPlans")),
         exact: true,
     },
+
+    // Analytics
+    {
+        path: "/analytics",
+        component: React.lazy(() => import("./analytics/Analytics")),
+        exact: true,
+    },
 ];
 
 export default workspaceConfiguration;
