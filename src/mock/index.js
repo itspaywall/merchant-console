@@ -280,7 +280,7 @@ generateFakeData();
 
 mock.onPost("/api/v1/plans").reply((request) => {
     const plan = JSON.parse(request.data);
-    plan.id = faker.random.uuid();
+    plan.identifier = faker.random.uuid();
     plans.push(plan);
 
     return [200, plan];
@@ -325,7 +325,7 @@ mock.onPut(PUT_PLAN_URL).reply((request) => {
 
 mock.onPost("/api/v1/accounts").reply((request) => {
     const account = JSON.parse(request.data);
-    account.id = faker.random.uuid();
+    account.identifier = faker.random.uuid();
     accounts.push(account);
 
     return [200, account];
@@ -375,7 +375,7 @@ mock.onPut(PUT_ACCOUNT_URL).reply((request) => {
 
 mock.onPost("/api/v1/subscriptions").reply((request) => {
     const subscription = JSON.parse(request.data);
-    subscription.id = faker.random.uuid();
+    subscription.identifier = faker.random.uuid();
     subscriptions.push(subscription);
 
     return [200, subscription];
@@ -423,7 +423,7 @@ mock.onPut(PUT_SUBSCRIPTION_URL).reply((request) => {
 
 mock.onPost("/api/v1/transactions").reply((request) => {
     const transaction = JSON.parse(request.data);
-    transaction.id = faker.random.uuid();
+    transaction.identifier = faker.random.uuid();
     transactions.push(transaction);
 
     return [200, transaction];
@@ -467,7 +467,7 @@ mock.onPut(PUT_TRANSACTION_URL).reply((request) => {
 
 mock.onPost("/api/v1/invoices").reply((request) => {
     const invoice = JSON.parse(request.data);
-    invoice.id = faker.random.uuid();
+    invoice.identifier = faker.random.uuid();
     invoice.push(invoice);
 
     return [200, invoice];

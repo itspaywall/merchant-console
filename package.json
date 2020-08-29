@@ -1,6 +1,7 @@
 {
     "name": "hubble-console",
     "version": "0.1.0",
+    "homepage": "https://subscriptions.hubblesuite.com/",
     "private": true,
     "dependencies": {
         "@date-io/date-fns": "1.x",
