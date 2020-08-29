@@ -1,5 +1,8 @@
 import * as ActionTypes from "./actionTypes";
 import axios from "axios";
+import { newClient } from "../server/api";
+
+const client = newClient();
 
 /* ACCOUNT
  *  1. newAccount()
@@ -24,7 +27,7 @@ export function newAccount() {
 export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
-        return axios.post("/api/v1/accounts", account).then((response) => {
+        return client.newAccount(account).then((response) => {
             // const account = response.data;
             dispatch(
                 showNotification("Successfully created account", "SUCCESS")
@@ -36,15 +39,11 @@ export function createAccount(account) {
 export function saveAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
-        return axios
-            .put("/api/v1/accounts/" + account.identifier, account)
-            .then((response) => {
-                const account = response.data;
-                dispatch(fetchAccountComplete(account));
-                dispatch(
-                    showNotification("Successfully saved account", "SUCCESS")
-                );
-            });
+        return client.saveAccount(account).then((response) => {
+            const account = response.data;
+            dispatch(fetchAccountComplete(account));
+            dispatch(showNotification("Successfully saved account", "SUCCESS"));
+        });
     };
 }
 
@@ -55,10 +54,10 @@ export function fetchAccountComplete(account) {
     };
 }
 
-export function fetchAccount(identifier) {
+export function fetchAccount(id) {
     return (dispatch) => {
         // dispatch(showNotification('Loading account...', 'LOADING'));
-        return axios.get("/api/v1/accounts/" + identifier).then((response) => {
+        return client.getAccount(id).then((response) => {
             const account = response.data;
             dispatch(fetchAccountComplete(account));
         });
@@ -75,7 +74,7 @@ export function fetchAccountsComplete(accounts) {
 export function fetchAccounts(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading accounts...', 'LOADING'));
-        return axios.get("/api/v1/accounts", { params }).then((response) => {
+        return client.getAccounts(params).then((response) => {
             const accounts = response.data;
             for (let i = 0; i < accounts.length; i++) {
                 const account = accounts[i];
@@ -122,38 +121,25 @@ export function newSubscription() {
 export function createSubscription(subscription) {
     return (dispatch) => {
         dispatch(showNotification("Saving subscription...", "LOADING"));
-        return axios
-            .post("/api/v1/subscriptions", subscription)
-            .then((response) => {
-                // const newSubscription = response.data;
-                dispatch(
-                    showNotification(
-                        "Successfully created subscription",
-                        "SUCCESS"
-                    )
-                );
-            });
+        return client.newSubscription(subscription).then((response) => {
+            // const newSubscription = response.data;
+            dispatch(
+                showNotification("Successfully created subscription", "SUCCESS")
+            );
+        });
     };
 }
 
 export function saveSubscription(subscription) {
     return (dispatch) => {
         dispatch(showNotification("Saving subscription...", "LOADING"));
-        return axios
-            .put(
-                "/api/v1/subscriptions/" + subscription.identifier,
-                subscription
-            )
-            .then((response) => {
-                const subscription = response.data;
-                dispatch(fetchSubscriptionComplete(subscription));
-                dispatch(
-                    showNotification(
-                        "Successfully saved subscription",
-                        "SUCCESS"
-                    )
-                );
-            });
+        return client.saveSubscription(subscription).then((response) => {
+            const subscription = response.data;
+            dispatch(fetchSubscriptionComplete(subscription));
+            dispatch(
+                showNotification("Successfully saved subscription", "SUCCESS")
+            );
+        });
     };
 }
 
@@ -164,15 +150,13 @@ export function fetchSubscriptionComplete(subscription) {
     };
 }
 
-export function fetchSubscription(identifier) {
+export function fetchSubscription(id) {
     return (dispatch) => {
         // dispatch(showNotification('Loading subscription...', 'LOADING'));
-        return axios
-            .get("/api/v1/subscriptions/" + identifier)
-            .then((response) => {
-                const subscription = response.data;
-                dispatch(fetchSubscriptionComplete(subscription));
-            });
+        return client.getSubscription(id).then((response) => {
+            const subscription = response.data;
+            dispatch(fetchSubscriptionComplete(subscription));
+        });
     };
 }
 
@@ -186,16 +170,14 @@ export function fetchSubscriptionsComplete(subscriptions) {
 export function fetchSubscriptions(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading subscriptions...', 'LOADING'));
-        return axios
-            .get("/api/v1/subscriptions", { params })
-            .then((response) => {
-                const subscriptions = response.data;
-                for (let i = 0; i < subscriptions.length; i++) {
-                    const subscription = subscriptions[i];
-                    subscription.createdOn = new Date(subscription.createdOn);
-                }
-                dispatch(fetchSubscriptionsComplete(subscriptions));
-            });
+        return client.getSubscriptions(params).then((response) => {
+            const subscriptions = response.data;
+            for (let i = 0; i < subscriptions.length; i++) {
+                const subscription = subscriptions[i];
+                subscription.createdOn = new Date(subscription.createdOn);
+            }
+            dispatch(fetchSubscriptionsComplete(subscriptions));
+        });
     };
 }
 
@@ -235,15 +217,11 @@ export function newInvoice() {
 export function saveInvoice(invoice) {
     return (dispatch) => {
         dispatch(showNotification("Saving invoice...", "LOADING"));
-        return axios
-            .put("/api/v1/invoices/" + invoice.identifier, invoice)
-            .then((response) => {
-                const invoice = response.data;
-                dispatch(fetchInvoiceComplete(invoice));
-                dispatch(
-                    showNotification("Successfully saved invoice", "SUCCESS")
-                );
-            });
+        return client.saveInvoice(invoice).then((response) => {
+            const invoice = response.data;
+            dispatch(fetchInvoiceComplete(invoice));
+            dispatch(showNotification("Successfully saved invoice", "SUCCESS"));
+        });
     };
 }
 
@@ -254,10 +232,10 @@ export function fetchInvoiceComplete(invoice) {
     };
 }
 
-export function fetchInvoice(identifier) {
+export function fetchInvoice(id) {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoice...', 'LOADING'));
-        return axios.get("/api/v1/invoices/" + identifier).then((response) => {
+        return client.getInvoice(id).then((response) => {
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
         });
@@ -274,7 +252,7 @@ export function fetchInvoicesComplete(invoices) {
 export function fetchInvoices(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading invoices...', 'LOADING'));
-        return axios.get("/api/v1/invoices", { params }).then((response) => {
+        return client.getInvoices(params).then((response) => {
             const invoices = response.data;
             for (let i = 0; i < invoices.length; i++) {
                 const invoice = invoices[i];
@@ -321,35 +299,25 @@ export function newTransaction() {
 export function createTransaction(transaction) {
     return (dispatch) => {
         dispatch(showNotification("Saving transaction...", "LOADING"));
-        return axios
-            .post("/api/v1/transactions", transaction)
-            .then((response) => {
-                // const newPlan = response.data;
-                dispatch(
-                    showNotification(
-                        "Successfully created transaction",
-                        "SUCCESS"
-                    )
-                );
-            });
+        return client.newTransaction(transaction).then((response) => {
+            // const newPlan = response.data;
+            dispatch(
+                showNotification("Successfully created transaction", "SUCCESS")
+            );
+        });
     };
 }
 
 export function saveTransaction(transaction) {
     return (dispatch) => {
         dispatch(showNotification("Saving transaction...", "LOADING"));
-        return axios
-            .put("/api/v1/transactions/" + transaction.identifier, transaction)
-            .then((response) => {
-                const transaction = response.data;
-                dispatch(fetchTransactionComplete(transaction));
-                dispatch(
-                    showNotification(
-                        "Successfully saved transaction",
-                        "SUCCESS"
-                    )
-                );
-            });
+        return client.saveTransaction(transaction).then((response) => {
+            const transaction = response.data;
+            dispatch(fetchTransactionComplete(transaction));
+            dispatch(
+                showNotification("Successfully saved transaction", "SUCCESS")
+            );
+        });
     };
 }
 
@@ -360,15 +328,13 @@ export function fetchTransactionComplete(transaction) {
     };
 }
 
-export function fetchTransaction(identifier) {
+export function fetchTransaction(id) {
     return (dispatch) => {
         // dispatch(showNotification('Loading transaction...', 'LOADING'));
-        return axios
-            .get("/api/v1/transactions/" + identifier)
-            .then((response) => {
-                const transaction = response.data;
-                dispatch(fetchTransactionComplete(transaction));
-            });
+        return client.getTransaction(id).then((response) => {
+            const transaction = response.data;
+            dispatch(fetchTransactionComplete(transaction));
+        });
     };
 }
 
@@ -382,16 +348,14 @@ export function fetchTransactionsComplete(transactions) {
 export function fetchTransactions(params) {
     return (dispatch) => {
         // dispatch(showNotification('Loading transactions...', 'LOADING'));
-        return axios
-            .get("/api/v1/transactions", { params })
-            .then((response) => {
-                const transactions = response.data;
-                for (let i = 0; i < transactions.length; i++) {
-                    const transaction = transactions[i];
-                    transaction.createdOn = new Date(transaction.createdOn);
-                }
-                dispatch(fetchTransactionsComplete(transactions));
-            });
+        return client.getTransactions(params).then((response) => {
+            const transactions = response.data;
+            for (let i = 0; i < transactions.length; i++) {
+                const transaction = transactions[i];
+                transaction.createdOn = new Date(transaction.createdOn);
+            }
+            dispatch(fetchTransactionsComplete(transactions));
+        });
     };
 }
 
@@ -431,7 +395,7 @@ export function newPlan() {
 export function createPlan(plan) {
     return (dispatch) => {
         dispatch(showNotification("Saving plan...", "LOADING"));
-        return axios.post("/api/v1/plans", plan).then((response) => {
+        return client.newPlan(plan).then((response) => {
             // const newPlan = response.data;
             dispatch(showNotification("Successfully created plan", "SUCCESS"));
         });
@@ -441,15 +405,11 @@ export function createPlan(plan) {
 export function savePlan(plan) {
     return (dispatch) => {
         dispatch(showNotification("Saving plan...", "LOADING"));
-        return axios
-            .put("/api/v1/plans/" + plan.identifier, plan)
-            .then((response) => {
-                const plan = response.data;
-                dispatch(fetchPlanComplete(plan));
-                dispatch(
-                    showNotification("Successfully saved plan", "SUCCESS")
-                );
-            });
+        return client.savePlan(plan).then((response) => {
+            const plan = response.data;
+            dispatch(fetchPlanComplete(plan));
+            dispatch(showNotification("Successfully saved plan", "SUCCESS"));
+        });
     };
 }
 
@@ -460,10 +420,10 @@ export function fetchPlanComplete(plan) {
     };
 }
 
-export function fetchPlan(identifier) {
+export function fetchPlan(id) {
     return (dispatch) => {
         // dispatch(showNotification('Loading plan...', 'LOADING'));
-        return axios.get("/api/v1/plans/" + identifier).then((response) => {
+        return client.getPlan(id).then((response) => {
             const plan = response.data;
             dispatch(fetchPlanComplete(plan));
         });
@@ -480,7 +440,7 @@ export function fetchPlansComplete(plans) {
 export function fetchPlans() {
     return (dispatch) => {
         // dispatch(showNotification('Loading plans...', 'LOADING'));
-        return axios.get("/api/v1/plans").then((response) => {
+        return client.getPlans({}).then((response) => {
             const plans = response.data;
             dispatch(fetchPlansComplete(plans));
         });
@@ -501,8 +461,7 @@ export function clearPlan() {
     };
 }
 
-/* Analytics
- */
+/* Analytics */
 
 export function fetchAnalyticsComplete(analytics) {
     return {

@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import "./mock";
+// import "./server/mock";
 import rootReducer from "./redux/reducers";
 
 const store = createStore(
