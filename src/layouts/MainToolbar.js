@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MainToolbar(props) {
-    const { toggleDrawer, drawerOpen, user } = props;
+    const { toggleDrawer, drawerOpen, user, logout } = props;
     const classes = useStyles();
     const [addDialogAnchor, setAddDialogAnchor] = React.useState(null);
 
@@ -113,6 +113,7 @@ function MainToolbar(props) {
                         variant="text"
                         size="small"
                         color="secondary"
+                        onClick={logout}
                     >
                         <LogoutIcon className={classes.icon} />
                         Logout {user.firstName}
@@ -137,6 +138,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     fetchUser: actions.fetchUser,
+    logout: actions.logout,
 };
 
 export default connect(

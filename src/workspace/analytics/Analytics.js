@@ -26,6 +26,8 @@ function Analytics(props) {
     const classes = useStyles();
     const { analytics, fetchAnalytics } = props;
 
+    console.log(analytics);
+
     const subscriptionSummary = analytics.subscriptionSummary;
     const revenueSummary = analytics.revenueSummary;
     const planSummary = analytics.planSummary;

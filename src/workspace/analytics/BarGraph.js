@@ -64,7 +64,7 @@ function BarGraph(props, theme) {
     const { title, names, info, data, keys, color } = props;
 
     const CustomTooltip = ({ active, payload, label }) => {
-        if (active) {
+        if (active && payload) {
             return (
                 <Paper className={classes.tooltip} elevation={4}>
                     <div className={classes.item}>

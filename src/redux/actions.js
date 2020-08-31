@@ -539,3 +539,16 @@ export function fetchUser() {
         );
     };
 }
+
+export function logout() {
+    return async (dispatch) => {
+        try {
+            const client = await crossStorage.connection;
+            await client.del("user");
+        } catch (error) {
+            console.log(error);
+        }
+        /* Redirect the user to the login page. */
+        dispatch(fetchUserComplete(null));
+    };
+}

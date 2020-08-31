@@ -52,7 +52,7 @@ function LineGraph(props, theme) {
     const { title, name, color, dataKey, info, data } = props;
 
     const CustomTooltip = ({ active, payload, label }) => {
-        if (active) {
+        if (active && payload) {
             return (
                 <Paper className={classes.tooltip} elevation={4}>
                     <div
