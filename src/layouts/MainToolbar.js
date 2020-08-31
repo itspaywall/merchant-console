@@ -8,10 +8,14 @@ import {
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import clsx from "clsx";
-import AddDialog from "./AddDialog";
+import { connect } from "react-redux";
 
 import AddIcon from "@material-ui/icons/Add";
 import MenuIcon from "@material-ui/icons/Menu";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
+
+import AddDialog from "./AddDialog";
+import * as actions from "../redux/actions";
 
 const drawerWidth = 240;
 
@@ -49,10 +53,19 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 16,
         paddingRight: 16,
     },
+    logoutButton: {
+        marginLeft: 8,
+        paddingLeft: 16,
+        paddingRight: 16,
+    },
+    icon: {
+        dispay: "inline-block",
+        marginRight: 4,
+    },
 }));
 
 function MainToolbar(props) {
-    const { toggleDrawer, drawerOpen } = props;
+    const { toggleDrawer, drawerOpen, user } = props;
     const classes = useStyles();
     const [addDialogAnchor, setAddDialogAnchor] = React.useState(null);
 
@@ -91,8 +104,18 @@ function MainToolbar(props) {
                         color="primary"
                         onClick={handleOpenAddDialog}
                     >
-                        <AddIcon />
+                        <AddIcon className={classes.icon} />
                         Quick Add
+                    </Button>
+
+                    <Button
+                        className={classes.logoutButton}
+                        variant="text"
+                        size="small"
+                        color="secondary"
+                    >
+                        <LogoutIcon className={classes.icon} />
+                        Logout {user.firstName}
                     </Button>
                 </div>
 
@@ -106,4 +129,17 @@ function MainToolbar(props) {
     );
 }
 
-export default withRouter(MainToolbar);
+function mapStateToProps(state) {
+    return {
+        user: state.user,
+    };
+}
+
+const mapDispatchToProps = {
+    fetchUser: actions.fetchUser,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withRouter(MainToolbar));

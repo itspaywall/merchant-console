@@ -1,6 +1,7 @@
 import * as ActionTypes from "./actionTypes";
 import axios from "axios";
 import { newClient } from "../server/api";
+import crossStorage from "../common/crossStorage";
 
 const client = newClient();
 
@@ -506,5 +507,35 @@ export function closeNotification() {
     return {
         type: ActionTypes.CLOSE_NOTIFICATION,
         payload: null,
+    };
+}
+
+export function fetchUserComplete(user) {
+    return {
+        type: ActionTypes.FETCH_USER_COMPLETE,
+        payload: user,
+    };
+}
+
+export function fetchUserFailed() {
+    return {
+        type: ActionTypes.FETCH_USER_FAILED,
+        payload: null,
+    };
+}
+
+export function fetchUser() {
+    return async (dispatch) => {
+        let user = null;
+        try {
+            const client = await crossStorage.connection;
+            user = await client.get("user");
+        } catch (error) {
+            console.log(error);
+        }
+
+        dispatch(
+            user ? fetchUserComplete(JSON.parse(user)) : fetchUserFailed()
+        );
     };
 }
