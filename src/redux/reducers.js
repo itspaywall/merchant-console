@@ -206,6 +206,31 @@ function planReducer(state = null, action) {
     }
 }
 
+function userReducer(state = null, action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_USER_COMPLETE: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
+function isUserLoadingReducer(state = true, action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_USER_COMPLETE:
+        case ActionTypes.FETCH_USER_FAILED: {
+            return false;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
@@ -220,6 +245,8 @@ const rootReducer = combineReducers({
     plan: planReducer,
     invoices: invoicesReducer,
     invoice: invoiceReducer,
+    user: userReducer,
+    isUserLoading: isUserLoadingReducer,
 });
 
 export default rootReducer;

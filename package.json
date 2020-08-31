@@ -13,6 +13,7 @@
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
         "axios": "^0.19.2",
+        "cross-storage": "^1.0.0",
         "date-fns": "^2.14.0",
         "prop-types": "^15.7.2",
         "query-string": "^6.13.1",
@@ -29,7 +30,7 @@
         "redux-thunk": "^2.3.0"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "PORT=4000 react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
