@@ -11,8 +11,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
     },
     image: {
-        width: 800,
-        height: "auto",
+        width: "auto",
+        height: 400,
+        marginTop: 96,
     },
     message: {
         fontSize: 20,
@@ -26,25 +27,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NoRecords(props) {
     const classes = useStyles();
-    const { message, actionText, actionHandler } = props;
+    const { message, actionText, actionHandler, action, image } = props;
 
     return (
         <div className={classes.container}>
-            <img
-                className={classes.image}
-                src="assets/images/no-accounts.svg"
-                alt=""
-            />
+            <img className={classes.image} src={image} alt="" />
             <Typography className={classes.message}>{message}</Typography>
-            <Button
-                className={classes.action}
-                variant="contained"
-                size="large"
-                color="secondary"
-                onClick={actionHandler}
-            >
-                {actionText}
-            </Button>
+            {action && (
+                <Button
+                    className={classes.action}
+                    variant="contained"
+                    size="large"
+                    color="secondary"
+                    onClick={actionHandler}
+                >
+                    {actionText}
+                </Button>
+            )}
         </div>
     );
 }

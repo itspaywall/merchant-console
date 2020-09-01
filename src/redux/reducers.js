@@ -37,20 +37,7 @@ function notificationReducer(state = null, action) {
     return state;
 }
 
-function analyticsReducer(
-    state = {
-        subscriptionSummary: {},
-        revenueSummary: {},
-        planSummary: {},
-        subscriberData: [],
-        churnRateData: [],
-        revenueData: [],
-        transactionData: [],
-        planData: [],
-        conversionData: [],
-    },
-    action
-) {
+function analyticsReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_ANALYTICS_COMPLETE: {
             return action.payload;

@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
+import NoRecords from "../common/NoRecords";
 import * as actions from "../../redux/actions";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -161,18 +162,30 @@ function ViewPlans(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            <div className={classes.container}>
-                <WorkspaceTable
-                    headers={headers}
-                    onSelected={setSelected}
-                    rows={plans}
-                    selected={selected}
-                    compact={compact}
-                    onClick={onClick}
-                    renderCellValue={renderCellValue}
-                    rowsPerPage={10}
+            {plans.length > 0 && (
+                <div className={classes.container}>
+                    <WorkspaceTable
+                        headers={headers}
+                        onSelected={setSelected}
+                        rows={plans}
+                        selected={selected}
+                        compact={compact}
+                        onClick={onClick}
+                        renderCellValue={renderCellValue}
+                        rowsPerPage={10}
+                    />
+                </div>
+            )}
+
+            {plans.length === 0 && (
+                <NoRecords
+                    message="You have not created any plans yet."
+                    action={true}
+                    actionText="Create Plan"
+                    actionHandler={newPlan}
+                    image="assets/images/empty-plans.svg"
                 />
-            </div>
+            )}
         </div>
     );
 }

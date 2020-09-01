@@ -360,8 +360,10 @@ function ViewAccounts(props) {
             {accounts.length === 0 && (
                 <NoRecords
                     message="You have not created any accounts yet."
+                    action={true}
                     actionText="Create Account"
                     actionHandler={newAccount}
+                    image="assets/images/empty-accounts.svg"
                 />
             )}
         </div>
