@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
 import WorkspaceFilter from "../common/WorkspaceFilter";
+import NoRecords from "../common/NoRecords";
 import { toURLParams, toFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
 import { toDateString } from "../../utils";
@@ -330,29 +331,39 @@ function ViewAccounts(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            <Grid container={true} className={classes.container}>
-                <Grid item={true} lg={openFilter ? 10 : 12}>
-                    <WorkspaceTable
-                        headers={headers}
-                        onSelected={setSelected}
-                        rows={accounts}
-                        selected={selected}
-                        compact={compact}
-                        onClick={onClick}
-                        renderCellValue={renderCellValue}
-                    />
-                </Grid>
-                {openFilter && (
-                    <Grid item={true} lg={2} className={classes.filter}>
-                        <WorkspaceFilter
-                            fields={filterFields}
-                            values={filterValues}
-                            onValueChange={onFilterValueChange}
-                            onClear={onFilterClear}
+            {accounts.length > 0 && (
+                <Grid container={true} className={classes.container}>
+                    <Grid item={true} lg={openFilter ? 10 : 12}>
+                        <WorkspaceTable
+                            headers={headers}
+                            onSelected={setSelected}
+                            rows={accounts}
+                            selected={selected}
+                            compact={compact}
+                            onClick={onClick}
+                            renderCellValue={renderCellValue}
                         />
                     </Grid>
-                )}
-            </Grid>
+                    {openFilter && (
+                        <Grid item={true} lg={2} className={classes.filter}>
+                            <WorkspaceFilter
+                                fields={filterFields}
+                                values={filterValues}
+                                onValueChange={onFilterValueChange}
+                                onClear={onFilterClear}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
+            )}
+
+            {accounts.length === 0 && (
+                <NoRecords
+                    message="You have not created any accounts yet."
+                    actionText="Create Account"
+                    actionHandler={newAccount}
+                />
+            )}
         </div>
     );
 }

@@ -528,23 +528,24 @@ export function fetchUser() {
     return async (dispatch) => {
         let user = null;
         try {
-            const client = await crossStorage.connection;
-            user = await client.get("user");
+            const csClient = await crossStorage.connection;
+            user = JSON.parse(await csClient.get("user"));
+            axios.defaults.headers.common = {
+                Authorization: `bearer ${user.accessToken}`,
+            };
         } catch (error) {
             console.log(error);
         }
 
-        dispatch(
-            user ? fetchUserComplete(JSON.parse(user)) : fetchUserFailed()
-        );
+        dispatch(user ? fetchUserComplete(user) : fetchUserFailed());
     };
 }
 
 export function logout() {
     return async (dispatch) => {
         try {
-            const client = await crossStorage.connection;
-            await client.del("user");
+            const csClient = await crossStorage.connection;
+            await csClient.del("user");
         } catch (error) {
             console.log(error);
         }
