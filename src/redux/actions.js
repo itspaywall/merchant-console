@@ -29,7 +29,7 @@ export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return client.newAccount(account).then((response) => {
-            // const account = response.data;
+            dispatch(fetchAccounts({}));
             dispatch(
                 showNotification("Successfully created account", "SUCCESS")
             );
@@ -41,6 +41,7 @@ export function saveAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return client.saveAccount(account).then((response) => {
+            dispatch(fetchAccounts({}));
             const account = response.data;
             dispatch(fetchAccountComplete(account));
             dispatch(showNotification("Successfully saved account", "SUCCESS"));
@@ -72,17 +73,28 @@ export function fetchAccountsComplete(accounts) {
     };
 }
 
+export function internalRedirect(path) {
+    return {
+        type: ActionTypes.INTERNAL_REDIRECT,
+        payload: path,
+    };
+}
+
 export function fetchAccounts(params) {
-    return (dispatch) => {
+    return async (dispatch) => {
         // dispatch(showNotification('Loading accounts...', 'LOADING'));
-        return client.getAccounts(params).then((response) => {
+        try {
+            const response = await client.getAccounts(params);
             const accounts = response.data;
             for (let i = 0; i < accounts.length; i++) {
                 const account = accounts[i];
-                account.createdOn = new Date(account.createdOn);
+                account.createdAt = new Date(account.createdAt);
             }
             dispatch(fetchAccountsComplete(accounts));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(internalRedirect("/error/500"));
+        }
     };
 }
 

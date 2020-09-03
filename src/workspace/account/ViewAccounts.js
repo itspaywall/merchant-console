@@ -26,18 +26,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headers = [
-    { identifier: "name", numeric: false, disablePadding: true, label: "Name" },
     {
-        identifier: "email",
+        identifier: "userName",
         numeric: false,
         disablePadding: false,
-        label: "Email",
+        label: "User Name",
     },
     {
-        identifier: "company",
+        identifier: "name",
         numeric: false,
         disablePadding: false,
-        label: "Company",
+        label: "Name",
+    },
+    {
+        identifier: "emailAddress",
+        numeric: false,
+        disablePadding: false,
+        label: "Email Address",
+    },
+    {
+        identifier: "phoneNumber",
+        numeric: false,
+        disablePadding: false,
+        label: "Phone Number",
     },
     {
         identifier: "created",
@@ -45,12 +56,12 @@ const headers = [
         disablePadding: false,
         label: "Created",
     },
-    {
+    /*{
         identifier: "plans",
         numeric: false,
         disablePadding: false,
         label: "Plans",
-    },
+    },*/
 ];
 
 const filterFields = [
@@ -292,25 +303,34 @@ function ViewAccounts(props) {
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
         switch (column.identifier) {
+            case "userName": {
+                return row.userName;
+            }
+
             case "name": {
                 return row.firstName + " " + row.lastName;
             }
 
-            case "email": {
-                return row.emailAddress;
+            case "emailAddress": {
+                return row.emailAddress ? row.emailAddress : "—";
             }
 
             case "company": {
                 return row.companyName;
             }
 
-            case "created": {
-                return toDateString(row.createdOn);
+            case "phoneNumber": {
+                return row.phoneNumber ? row.phoneNumber : "—";
             }
 
+            case "created": {
+                return toDateString(row.createdAt);
+            }
+
+            /*
             case "plans": {
                 return "TODO";
-            }
+            }*/
 
             default: {
                 return "Unknown Column";

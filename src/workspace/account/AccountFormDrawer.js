@@ -23,7 +23,7 @@ const groups = [
                 label: "User Name",
                 identifier: "userName",
                 type: "text",
-                required: false,
+                required: true,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
