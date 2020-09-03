@@ -111,13 +111,25 @@ function MainLayout(props) {
                     </Snackbar>
                 );
             }
+
+            const severityMap = {
+                SUCCESS: "success",
+                ERROR: "error",
+            };
+            const severity = severityMap[notification.category]
+                ? severityMap[notification.category]
+                : "SUCCESS";
+
             return (
                 <Snackbar
                     open={true}
                     autoHideDuration={6000}
                     onClose={handleCloseNotification}
                 >
-                    <Alert severity="success" onClose={handleCloseNotification}>
+                    <Alert
+                        severity={severity}
+                        onClose={handleCloseNotification}
+                    >
                         {notification.message}
                     </Alert>
                 </Snackbar>

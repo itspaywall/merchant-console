@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { useParams, withRouter } from "react-router-dom";
 
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
-import SubscriptionCard from "../subscription/SubscriptionCard";
+// import SubscriptionCard from "../subscription/SubscriptionCard";
 import AccountCard from "./AccountCard";
 import * as actions from "../../redux/actions";
 
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/*
 const subscriptions = [
     {
         identifier: "1",
@@ -62,6 +63,7 @@ const subscriptions = [
         estimatedTotal: "200 INR",
     },
 ];
+*/
 
 // Some fields aren't being rendered.
 function ViewAccount(props) {
@@ -77,6 +79,8 @@ function ViewAccount(props) {
         fetchAccount(identifier);
         return clearAccount;
     }, [identifier, fetchAccount, clearAccount]);
+
+    console.log(account);
 
     return (
         <div>
@@ -96,11 +100,21 @@ function ViewAccount(props) {
                         <AccountCard
                             className={classes.accountCard}
                             onEdit={handleEditAccount}
-                            {...account}
+                            firstName={account.firstName}
+                            lastName={account.lastName}
+                            emailAddress={account.emailAddress}
+                            phoneNumber={account.phoneNumber}
+                            userName={account.userName}
+                            addressLine1={account.addressLine1}
+                            addressLine2={account.addressLine2}
+                            country={account.country}
+                            city={account.city}
+                            state={account.state}
+                            zipCode={account.zipCode}
                         />
                     </div>
 
-                    <div className={classes.section}>
+                    {/*<div className={classes.section}>
                         <Typography
                             variant="h2"
                             className={classes.sectionTitle}
@@ -136,7 +150,7 @@ function ViewAccount(props) {
                                 </Grid>
                             ))}
                         </Grid>
-                    </div>
+                    </div>*/}
                 </div>
             )}
         </div>

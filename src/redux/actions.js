@@ -38,14 +38,18 @@ export function createAccount(account) {
 }
 
 export function saveAccount(account) {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
-        return client.saveAccount(account).then((response) => {
+        try {
+            const response = await client.saveAccount(account);
             dispatch(fetchAccounts({}));
-            const account = response.data;
-            dispatch(fetchAccountComplete(account));
+            const newAccount = response.data;
+            dispatch(fetchAccountComplete(newAccount));
             dispatch(showNotification("Successfully saved account", "SUCCESS"));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save account", "ERROR"));
+        }
     };
 }
 
