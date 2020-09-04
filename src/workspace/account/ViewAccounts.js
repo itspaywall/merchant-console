@@ -233,6 +233,8 @@ const actions2 = [
     },
 ];
 
+const DEFAULT_ROWS_PER_PAGE = 20;
+
 /* [TODO]
  * 1. Filter logic
  * 2. Add `accountStatus`` and `subscriptions` fields to the Account entity.
@@ -240,6 +242,33 @@ const actions2 = [
 function ViewAccounts(props) {
     const { accounts, fetchAccounts, newAccount, history, location } = props;
     const params = queryString.parse(location.search);
+    const classes = useStyles();
+    const [selected, setSelected] = useState([]);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
+    const [compact, setCompact] = useState(false);
+    const [page, setPage] = useState(parseInt(params.page, 10) || 0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        params.limit || DEFAULT_ROWS_PER_PAGE
+    );
+    // TODO: Should we cache this?
+    const defaultFilterValues = toFilterState(filterFields, params);
+    const [filterValues, setFilterValues] = useState(defaultFilterValues);
+
+    const generateURL = (values, page, rowsPerPage) => {
+        const flatValues = toURLParams(filterFields, values);
+        const params = new URLSearchParams(flatValues);
+        params.append("page", page);
+        params.append("limit", rowsPerPage);
+
+        history.push("/accounts?" + params.toString());
+    };
+
+    // Both the parameters must appear together. Otherwise, we automatically reset them both.
+    if (!("page" in params) || !("limit" in params)) {
+        generateURL(filterValues, page, rowsPerPage);
+    }
 
     if ("start_date" in params) {
         params["start_date"] = new Date(Number(params["start_date"]));
@@ -247,18 +276,6 @@ function ViewAccounts(props) {
     if ("end_date" in params) {
         params["end_date"] = new Date(Number(params["end_date"]));
     }
-
-    const classes = useStyles();
-    const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(
-        Object.keys(params).length > 0
-    );
-    const [compact, setCompact] = useState(false);
-
-    // TODO: Should we cache this?
-
-    const defaultFilterValues = toFilterState(filterFields, params);
-    const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
         if (type === "new") {
@@ -271,18 +288,7 @@ function ViewAccounts(props) {
     };
 
     const onClick = (account) => {
-        history.push("/accounts/" + account.identifier);
-    };
-
-    const generateURL = (values) => {
-        if (values) {
-            const flatValues = toURLParams(filterFields, values);
-            const params = new URLSearchParams(flatValues);
-
-            history.push("/accounts?" + params.toString());
-        } else {
-            history.push("/accounts");
-        }
+        history.push("/accounts/" + account.id);
     };
 
     // TODO: Create a deep copy without serializing !
@@ -291,14 +297,14 @@ function ViewAccounts(props) {
         newValues[field] = value;
         setFilterValues(newValues);
 
-        generateURL(newValues);
+        generateURL(newValues, page, rowsPerPage);
     };
 
     const onFilterClear = () => {
         const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
 
-        generateURL(null);
+        generateURL(defaultValues, page, rowsPerPage);
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
@@ -338,10 +344,24 @@ function ViewAccounts(props) {
         }
     };
 
+    const onChangePage = (newPage) => {
+        setPage(newPage);
+        generateURL(filterValues, newPage, rowsPerPage);
+    };
+
+    const onChangeRowsPerPage = (newRowsPerPage) => {
+        setPage(0);
+        setRowsPerPage(newRowsPerPage);
+        generateURL(filterValues, 0, newRowsPerPage);
+    };
+
     useEffect(() => {
+        console.log(filterFields, filterValues);
         const flatValues = toURLParams(filterFields, filterValues);
+        flatValues.page = page;
+        flatValues.limit = rowsPerPage;
         fetchAccounts(flatValues);
-    }, [fetchAccounts, filterValues]);
+    }, [fetchAccounts, filterValues, page, rowsPerPage]);
 
     return (
         <div>
@@ -351,17 +371,22 @@ function ViewAccounts(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {accounts.length > 0 && (
+            {accounts && (
                 <Grid container={true} className={classes.container}>
                     <Grid item={true} lg={openFilter ? 10 : 12}>
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
-                            rows={accounts}
                             selected={selected}
                             compact={compact}
                             onClick={onClick}
                             renderCellValue={renderCellValue}
+                            rows={accounts.records}
+                            totalRows={accounts.totalRecords}
+                            page={page}
+                            rowsPerPage={rowsPerPage}
+                            onChangePage={onChangePage}
+                            onChangeRowsPerPage={onChangeRowsPerPage}
                         />
                     </Grid>
                     {openFilter && (
@@ -377,7 +402,7 @@ function ViewAccounts(props) {
                 </Grid>
             )}
 
-            {accounts.length === 0 && (
+            {(!accounts || accounts.records.length === 0) && (
                 <NoRecords
                     message="You have not created any accounts yet."
                     action={true}

@@ -81,15 +81,16 @@ export function toFilterState(fields, params) {
             }
 
             if (field.startIdentifier in params) {
-                result[field.identifier].startDate =
-                    params[field.startIdentifier];
+                const timestamp = parseInt(params[field.startIdentifier], 10);
+                result[field.identifier].startDate = new Date(timestamp);
             } else {
                 result[field.identifier].startDate =
                     field.defaultValue.startDate;
             }
 
             if (field.endIdentifier in params) {
-                result[field.identifier].endDate = params[field.endIdentifier];
+                const timestamp = parseInt(params[field.endIdentifier], 10);
+                result[field.identifier].endDate = new Date(timestamp);
             } else {
                 result[field.identifier].endDate = field.defaultValue.endDate;
             }

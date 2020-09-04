@@ -90,14 +90,15 @@ export function fetchAccounts(params) {
         try {
             const response = await client.getAccounts(params);
             const accounts = response.data;
-            for (let i = 0; i < accounts.length; i++) {
-                const account = accounts[i];
+            const records = accounts.records;
+            for (let i = 0; i < records.length; i++) {
+                const account = records[i];
                 account.createdAt = new Date(account.createdAt);
             }
             dispatch(fetchAccountsComplete(accounts));
         } catch (error) {
             console.log(error);
-            dispatch(internalRedirect("/error/500"));
+            dispatch(showNotification("Failed to fetch accounts", "ERROR"));
         }
     };
 }

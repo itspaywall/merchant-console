@@ -49,7 +49,7 @@ function analyticsReducer(state = null, action) {
     }
 }
 
-function accountsReducer(state = [], action) {
+function accountsReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_ACCOUNTS_COMPLETE: {
             return action.payload;
