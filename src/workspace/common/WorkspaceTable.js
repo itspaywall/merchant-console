@@ -11,7 +11,10 @@ import Paper from "@material-ui/core/Paper";
 
 import WorkspaceTableHead from "./WorkspaceTableHead";
 
-function descendingComparator(a, b, orderBy) {
+/* The default comparator is recommended if the column IDs and the values are primitive.
+ * Otherwise you should provide a custom descending comparator.
+ */
+function defaultDescendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -21,20 +24,23 @@ function descendingComparator(a, b, orderBy) {
     return 0;
 }
 
-function getComparator(order, orderBy) {
+function getComparator(descendingComparator, order, orderBy) {
     return order === "desc"
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
+    const auxillary = array.map((value, index) => [value, index]);
+    auxillary.sort((a, b) => {
         const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
+        if (order !== 0) {
+            return order;
+        }
         return a[1] - b[1];
     });
-    return stabilizedThis.map((el) => el[0]);
+    console.log(auxillary.map((value) => value[0]));
+    return auxillary.map((value) => value[0]);
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -76,13 +82,14 @@ export default function WorkspaceTable(props) {
         onChangePage,
         rowsPerPage,
         onChangeRowsPerPage,
+        descendingComparator,
     } = props;
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
 
     const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === "asc";
-        setOrder(isAsc ? "desc" : "asc");
+        const ascending = orderBy === property && order === "asc";
+        setOrder(ascending ? "desc" : "asc");
         setOrderBy(property);
     };
 
@@ -148,7 +155,12 @@ export default function WorkspaceTable(props) {
                         <TableBody>
                             {stableSort(
                                 rows,
-                                getComparator(order, orderBy)
+                                getComparator(
+                                    descendingComparator ||
+                                        defaultDescendingComparator,
+                                    order,
+                                    orderBy
+                                )
                             ).map((row, index) => {
                                 const isItemSelected =
                                     selected.indexOf(row.id) >= 0;

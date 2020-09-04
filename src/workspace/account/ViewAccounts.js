@@ -27,31 +27,31 @@ const useStyles = makeStyles((theme) => ({
 
 const headers = [
     {
-        identifier: "userName",
+        id: "userName",
         numeric: false,
         disablePadding: false,
         label: "User Name",
     },
     {
-        identifier: "name",
+        id: "name",
         numeric: false,
         disablePadding: false,
         label: "Name",
     },
     {
-        identifier: "emailAddress",
+        id: "emailAddress",
         numeric: false,
         disablePadding: false,
         label: "Email Address",
     },
     {
-        identifier: "phoneNumber",
+        id: "phoneNumber",
         numeric: false,
         disablePadding: false,
         label: "Phone Number",
     },
     {
-        identifier: "created",
+        id: "created",
         numeric: false,
         disablePadding: false,
         label: "Created",
@@ -113,6 +113,7 @@ const filterFields = [
             endDate: new Date(),
         },
     },
+    /*
     {
         identifier: "account_status",
         type: "select",
@@ -176,7 +177,7 @@ const filterFields = [
             },
         ],
         defaultValue: "all",
-    },
+    },*/
 ];
 
 const actions1 = [
@@ -307,8 +308,35 @@ function ViewAccounts(props) {
         generateURL(defaultValues, page, rowsPerPage);
     };
 
+    const descendingComparator = (accountA, accountB, orderBy) => {
+        const keys = {
+            userName: "userName",
+            name: "firstName",
+            emailAddress: "emailAddress",
+            phoneNumber: "phoneNumber",
+            created: "createdAt",
+        };
+        const key = keys[orderBy];
+        let valueA = accountA[key];
+        let valueB = accountB[key];
+
+        if (typeof valueA === "string") {
+            valueA = valueA.toLowerCase();
+        } else if (valueA instanceof Date) {
+            valueA = valueA.getTime();
+        }
+
+        if (typeof valueB === "string") {
+            valueB = valueB.toLowerCase();
+        } else if (valueB instanceof Date) {
+            valueB = valueB.getTime();
+        }
+
+        return valueB < valueA ? -1 : valueB > valueA ? 1 : 0;
+    };
+
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
-        switch (column.identifier) {
+        switch (column.id) {
             case "userName": {
                 return row.userName;
             }
@@ -319,10 +347,6 @@ function ViewAccounts(props) {
 
             case "emailAddress": {
                 return row.emailAddress ? row.emailAddress : "—";
-            }
-
-            case "company": {
-                return row.companyName;
             }
 
             case "phoneNumber": {
@@ -387,6 +411,7 @@ function ViewAccounts(props) {
                             rowsPerPage={rowsPerPage}
                             onChangePage={onChangePage}
                             onChangeRowsPerPage={onChangeRowsPerPage}
+                            descendingComparator={descendingComparator}
                         />
                     </Grid>
                     {openFilter && (
