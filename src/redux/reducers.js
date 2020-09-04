@@ -49,7 +49,7 @@ function analyticsReducer(state = null, action) {
     }
 }
 
-function accountsReducer(state = [], action) {
+function accountsReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_ACCOUNTS_COMPLETE: {
             return action.payload;
@@ -218,6 +218,18 @@ function isUserLoadingReducer(state = true, action) {
     }
 }
 
+function internalRedirectReducer(state = null, action) {
+    switch (action.type) {
+        case ActionTypes.INTERNAL_REDIRECT: {
+            return action.payload;
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
 const rootReducer = combineReducers({
     openDialog: dialogReducer,
     notification: notificationReducer,
@@ -234,6 +246,7 @@ const rootReducer = combineReducers({
     invoice: invoiceReducer,
     user: userReducer,
     isUserLoading: isUserLoadingReducer,
+    internalRedirect: internalRedirectReducer,
 });
 
 export default rootReducer;

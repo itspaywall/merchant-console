@@ -91,11 +91,18 @@ export default function RecordForm(props) {
         onValueChange(field, newValue);
     };
 
+    /* The value from the backend can be null. Therefore, we consider falsy values are errors
+     * only if they are required.
+     */
     const validateEmail = (field) => {
-        const value = values[field.identifier].toLowerCase();
-        // eslint-disable-next-line
-        const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return !value || pattern.test(value);
+        const value = values[field.identifier];
+        if (value) {
+            const temporary = value.toLowerCase();
+            // eslint-disable-next-line
+            const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return pattern.test(temporary);
+        }
+        return !field.required;
     };
 
     const validatePhoneNumber = (field) => {

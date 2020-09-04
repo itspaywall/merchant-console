@@ -7,11 +7,14 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
+// import Checkbox from "@material-ui/core/Checkbox";
 
 import WorkspaceTableHead from "./WorkspaceTableHead";
 
-function descendingComparator(a, b, orderBy) {
+/* The default comparator is recommended if the column IDs and the values are primitive.
+ * Otherwise you should provide a custom descending comparator.
+ */
+function defaultDescendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -21,20 +24,23 @@ function descendingComparator(a, b, orderBy) {
     return 0;
 }
 
-function getComparator(order, orderBy) {
+function getComparator(descendingComparator, order, orderBy) {
     return order === "desc"
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
+    const auxillary = array.map((value, index) => [value, index]);
+    auxillary.sort((a, b) => {
         const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
+        if (order !== 0) {
+            return order;
+        }
         return a[1] - b[1];
     });
-    return stabilizedThis.map((el) => el[0]);
+    console.log(auxillary.map((value) => value[0]));
+    return auxillary.map((value) => value[0]);
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -65,75 +71,63 @@ export default function WorkspaceTable(props) {
     const classes = useStyles();
     const {
         onSelected,
-        rows,
         headers,
         selected,
         compact,
         onClick,
         renderCellValue,
+        rows,
+        totalRows,
+        page,
+        onChangePage,
+        rowsPerPage,
+        onChangeRowsPerPage,
+        descendingComparator,
     } = props;
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(props.rowsPerPage);
 
     const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === "asc";
-        setOrder(isAsc ? "desc" : "asc");
+        const ascending = orderBy === property && order === "asc";
+        setOrder(ascending ? "desc" : "asc");
         setOrderBy(property);
     };
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelection = rows.map((row) => row.identifier);
+            const newSelection = rows.map((row) => row.id);
             onSelected(newSelection);
         } else {
             onSelected([]);
         }
     };
 
-    const makeHandleSelect = (name) => (event) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected = [];
+    // const makeHandleSelect = (name) => (event) => {
+    //     const selectedIndex = selected.indexOf(name);
+    //     let newSelected = [];
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
+    //     if (selectedIndex === -1) {
+    //         newSelected = newSelected.concat(selected, name);
+    //     } else if (selectedIndex === 0) {
+    //         newSelected = newSelected.concat(selected.slice(1));
+    //     } else if (selectedIndex === selected.length - 1) {
+    //         newSelected = newSelected.concat(selected.slice(0, -1));
+    //     } else if (selectedIndex > 0) {
+    //         newSelected = newSelected.concat(
+    //             selected.slice(0, selectedIndex),
+    //             selected.slice(selectedIndex + 1)
+    //         );
+    //     }
 
-        onSelected(newSelected);
-    };
+    //     onSelected(newSelected);
+    // };
 
-    const makeClickHandler = (row, index) => () => {
-        onClick(row);
-    };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    const emptyRows =
-        rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - rows.length;
 
     const renderCells = (row, rowIndex) => (
         <React.Fragment>
             {headers.map((column, columnIndex) => (
-                <TableCell onClick={makeClickHandler(row, rowIndex)}>
+                <TableCell onClick={() => onClick(row)}>
                     {renderCellValue(row, rowIndex, column, columnIndex)}
                 </TableCell>
             ))}
@@ -159,37 +153,39 @@ export default function WorkspaceTable(props) {
                             headers={headers}
                         />
                         <TableBody>
-                            {stableSort(rows, getComparator(order, orderBy))
-                                .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
+                            {stableSort(
+                                rows,
+                                getComparator(
+                                    descendingComparator ||
+                                        defaultDescendingComparator,
+                                    order,
+                                    orderBy
                                 )
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(
-                                        row.identifier
-                                    );
+                            ).map((row, index) => {
+                                const isItemSelected =
+                                    selected.indexOf(row.id) >= 0;
 
-                                    return (
-                                        <TableRow
-                                            hover={true}
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.identifier}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
+                                return (
+                                    <TableRow
+                                        hover={true}
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={row.identifier}
+                                        selected={isItemSelected}
+                                    >
+                                        {/*<TableCell padding="checkbox">
                                                 <Checkbox
                                                     checked={isItemSelected}
                                                     onChange={makeHandleSelect(
                                                         row.identifier
                                                     )}
                                                 />
-                                            </TableCell>
+                                            </TableCell>*/}
 
-                                            {renderCells(row, index)}
-                                        </TableRow>
-                                    );
-                                })}
+                                        {renderCells(row, index)}
+                                    </TableRow>
+                                );
+                            })}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{
@@ -203,19 +199,17 @@ export default function WorkspaceTable(props) {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[10, 20, 30, 40, 50]}
+                    rowsPerPageOptions={[20, 40, 60, 80, 100]}
                     component="div"
-                    count={rows.length}
+                    count={totalRows}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onChangePage={(event, newPage) => onChangePage(newPage)}
+                    onChangeRowsPerPage={(event) =>
+                        onChangeRowsPerPage(parseInt(event.target.value, 10))
+                    }
                 />
             </Paper>
         </div>
     );
 }
-
-WorkspaceTable.defaultProps = {
-    rowsPerPage: 15,
-};

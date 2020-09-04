@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import Checkbox from "@material-ui/core/Checkbox";
+// import Checkbox from "@material-ui/core/Checkbox";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 export default function WorkspaceTableHead(props) {
     const {
         classes,
-        onSelectAll,
+        // onSelectAll,
         order,
         orderBy,
-        selectionCount,
-        rowCount,
+        // selectionCount,
+        // rowCount,
         onRequestSort,
         headers,
     } = props;
@@ -24,7 +24,7 @@ export default function WorkspaceTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                {/*<TableCell padding="checkbox">
                     <Checkbox
                         indeterminate={
                             selectionCount > 0 && selectionCount < rowCount
@@ -32,7 +32,7 @@ export default function WorkspaceTableHead(props) {
                         checked={rowCount > 0 && selectionCount === rowCount}
                         onChange={onSelectAll}
                     />
-                </TableCell>
+                </TableCell>*/}
                 {headers.map((header) => (
                     <TableCell
                         key={header.id}

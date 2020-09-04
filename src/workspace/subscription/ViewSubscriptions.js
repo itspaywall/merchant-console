@@ -311,7 +311,7 @@ function ViewSubscriptions(props) {
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
         switch (column.identifier) {
             case "plan": {
-                return row.plan.name;
+                return "TODO"; // row.plan.name;
             }
 
             case "name": {

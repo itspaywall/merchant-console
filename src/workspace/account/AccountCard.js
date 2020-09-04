@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 import CardActions from "@material-ui/core/CardActions";
 
 import EditIcon from "@material-ui/icons/Edit";
-import CloseIcon from "@material-ui/icons/Close";
+// import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 16,
     },
     edit: {
-        marginLeft: 8,
+        marginLeft: "auto",
         color: theme.palette.primary.main,
         paddingLeft: 16,
         paddingRight: 16,
@@ -46,30 +46,55 @@ const useStyles = makeStyles((theme) => ({
 
 const fields = [
     {
-        identifier: "companyName",
-        title: "Company",
-        size: 6,
-    },
-    {
-        identifier: "position",
-        title: "Position",
-        size: 6,
-    },
-    {
         identifier: "emailAddress",
         title: "Email Address",
         size: 6,
+        render: (props) =>
+            props.emailAddress ? props.emailAddress : "Unavailable",
     },
     {
         identifier: "phoneNumber",
         title: "Phone Number",
         size: 6,
+        render: (props) =>
+            props.phoneNumber ? props.phoneNumber : "Unavailable",
+    },
+    {
+        identifier: "address",
+        title: "Address",
+        size: 6,
+        render: (props) =>
+            props.addressLine1 ? (
+                <React.Fragment>
+                    {props.addressLine1}
+                    <br />
+                    {props.addressLine2 && (
+                        <React.Fragment>
+                            {props.addressLine2}
+                            <br />
+                        </React.Fragment>
+                    )}
+                    {props.city}
+                    <br />
+                    {props.state} {props.zipCode}
+                    <br />
+                    {props.country}
+                </React.Fragment>
+            ) : (
+                "Unavailable"
+            ),
     },
 ];
 
 function AccountCard(props) {
     const classes = useStyles();
-    const { className, firstName, lastName, userName, onEdit, onClose } = props;
+    const {
+        className,
+        firstName,
+        lastName,
+        userName,
+        onEdit /*, onClose */,
+    } = props;
 
     return (
         <Card className={clsx(classes.root, className)}>
@@ -80,7 +105,7 @@ function AccountCard(props) {
                     </Avatar>
                 }
                 title={firstName + " " + lastName}
-                subtitle={userName}
+                subheader={userName}
             />
 
             <CardContent>
@@ -96,41 +121,19 @@ function AccountCard(props) {
                                     {field.title}
                                 </Typography>
                                 <Typography className={classes.value}>
-                                    {props[field.identifier]}
+                                    {field.render(props)}
                                 </Typography>
                             </Grid>
                         </React.Fragment>
                     ))}
-                    <Grid item={true} lg={12}>
-                        <Typography
-                            variant="subtitle1"
-                            color="textSecondary"
-                            className={classes.title}
-                        >
-                            Address
-                        </Typography>
-                        {props.addressLine1}
-                        <br />
-                        {props.addressLine2 && (
-                            <React.Fragment>
-                                {props.addressLine2}
-                                <br />
-                            </React.Fragment>
-                        )}
-                        {props.city}
-                        <br />
-                        {props.state} {props.zipCode}
-                        <br />
-                        {props.country}
-                    </Grid>
                 </Grid>
             </CardContent>
 
             <CardActions>
-                <Button className={classes.close} onClick={onClose}>
+                {/*<Button className={classes.close} onClick={onClose}>
                     <CloseIcon className={classes.icon} />
                     Close
-                </Button>
+                </Button>*/}
                 <Button className={classes.edit} onClick={onEdit}>
                     <EditIcon className={classes.icon} />
                     Edit

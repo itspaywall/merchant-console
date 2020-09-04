@@ -29,7 +29,7 @@ export function createAccount(account) {
     return (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
         return client.newAccount(account).then((response) => {
-            // const account = response.data;
+            dispatch(fetchAccounts({}));
             dispatch(
                 showNotification("Successfully created account", "SUCCESS")
             );
@@ -38,13 +38,18 @@ export function createAccount(account) {
 }
 
 export function saveAccount(account) {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(showNotification("Saving account...", "LOADING"));
-        return client.saveAccount(account).then((response) => {
-            const account = response.data;
-            dispatch(fetchAccountComplete(account));
+        try {
+            const response = await client.saveAccount(account);
+            dispatch(fetchAccounts({}));
+            const newAccount = response.data;
+            dispatch(fetchAccountComplete(newAccount));
             dispatch(showNotification("Successfully saved account", "SUCCESS"));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save account", "ERROR"));
+        }
     };
 }
 
@@ -72,17 +77,29 @@ export function fetchAccountsComplete(accounts) {
     };
 }
 
+export function internalRedirect(path) {
+    return {
+        type: ActionTypes.INTERNAL_REDIRECT,
+        payload: path,
+    };
+}
+
 export function fetchAccounts(params) {
-    return (dispatch) => {
+    return async (dispatch) => {
         // dispatch(showNotification('Loading accounts...', 'LOADING'));
-        return client.getAccounts(params).then((response) => {
+        try {
+            const response = await client.getAccounts(params);
             const accounts = response.data;
-            for (let i = 0; i < accounts.length; i++) {
-                const account = accounts[i];
-                account.createdOn = new Date(account.createdOn);
+            const records = accounts.records;
+            for (let i = 0; i < records.length; i++) {
+                const account = records[i];
+                account.createdAt = new Date(account.createdAt);
             }
             dispatch(fetchAccountsComplete(accounts));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch accounts", "ERROR"));
+        }
     };
 }
 
