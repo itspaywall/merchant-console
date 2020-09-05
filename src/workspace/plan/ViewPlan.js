@@ -65,7 +65,12 @@ function ViewPlan(props) {
                         <PlanCard
                             className={classes.planCard}
                             onEdit={handleEdit}
-                            {...plan}
+                            name={plan.name}
+                            code={plan.code}
+                            price={plan.price}
+                            term={plan.term}
+                            setupFee={plan.setupFee}
+                            trial={plan.trial}
                         />
                     </div>
                 </div>

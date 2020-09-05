@@ -164,7 +164,7 @@ function transactionReducer(state = null, action) {
     }
 }
 
-function plansReducer(state = [], action) {
+function plansReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_PLANS_COMPLETE: {
             return action.payload;

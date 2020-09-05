@@ -414,20 +414,25 @@ export function createPlan(plan) {
     return (dispatch) => {
         dispatch(showNotification("Saving plan...", "LOADING"));
         return client.newPlan(plan).then((response) => {
-            // const newPlan = response.data;
+            dispatch(fetchPlans({}));
             dispatch(showNotification("Successfully created plan", "SUCCESS"));
         });
     };
 }
 
 export function savePlan(plan) {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(showNotification("Saving plan...", "LOADING"));
-        return client.savePlan(plan).then((response) => {
-            const plan = response.data;
-            dispatch(fetchPlanComplete(plan));
+        try {
+            const response = await client.savePlan(plan);
+            dispatch(fetchPlans({}));
+            const newPlan = response.data;
+            dispatch(fetchPlanComplete(newPlan));
             dispatch(showNotification("Successfully saved plan", "SUCCESS"));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save plan", "ERROR"));
+        }
     };
 }
 
@@ -455,13 +460,21 @@ export function fetchPlansComplete(plans) {
     };
 }
 
-export function fetchPlans() {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading plans...', 'LOADING'));
-        return client.getPlans({}).then((response) => {
+export function fetchPlans(params) {
+    return async (dispatch) => {
+        try {
+            const response = await client.getPlans(params);
             const plans = response.data;
+            const records = plans.records;
+            for (let i = 0; i < records.length; i++) {
+                const plan = records[i];
+                plan.createdAt = new Date(plan.createdAt);
+            }
             dispatch(fetchPlansComplete(plans));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch plans", "ERROR"));
+        }
     };
 }
 

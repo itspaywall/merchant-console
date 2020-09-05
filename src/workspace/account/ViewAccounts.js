@@ -395,7 +395,7 @@ function ViewAccounts(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {accounts && (
+            {accounts && accounts.records.length > 0 && (
                 <Grid container={true} className={classes.container}>
                     <Grid item={true} lg={openFilter ? 10 : 12}>
                         <WorkspaceTable
