@@ -16,6 +16,7 @@ import {
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Chip from "@material-ui/core/Chip";
+import CountrySelect from "./CountrySelect";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -411,6 +412,10 @@ export default function RecordForm(props) {
                                         }
                                         size="medium"
                                     />
+                                )}
+
+                                {field.type === "country" && (
+                                    <CountrySelect label={field.label} />
                                 )}
                             </Grid>
                         ) : null

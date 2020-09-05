@@ -9,7 +9,7 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
 
-import RecordForm from "../RecordForm";
+import RecordForm from "./RecordForm";
 import * as actions from "../../redux/actions";
 import { connect } from "react-redux";
 
