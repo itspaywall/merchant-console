@@ -67,10 +67,14 @@ function ViewPlan(props) {
                             onEdit={handleEdit}
                             name={plan.name}
                             code={plan.code}
+                            createdAt={plan.createdAt}
                             price={plan.price}
                             term={plan.term}
+                            termUnit={plan.termUnit}
                             setupFee={plan.setupFee}
                             trial={plan.trial}
+                            trialUnit={plan.trialUnit}
+                            renews={plan.renews}
                         />
                     </div>
                 </div>

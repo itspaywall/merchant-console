@@ -45,52 +45,60 @@ const useStyles = makeStyles((theme) => ({
 
 const fields = [
     {
-        identifier: "createdOn",
-        title: "Created On",
+        identifier: "createdAt",
+        title: "Created At",
         size: 6,
-        render: (props) => props.createdOn,
+        render: (props) => props.createdAt.substring(0, 10),
+        check: (props) => (props.createdAt ? true : false),
     },
     {
         identifier: "billingPeriod",
         title: "Billing Period",
         size: 6,
         render: (props) => props.billingPeriod + " " + props.billingPeriodUnit,
+        check: (props) => (props.billingPeriod ? true : false),
     },
     {
         identifier: "pricePerBillingPeriod",
         title: "Price",
         size: 6,
-        render: (props) => props.pricePerBillingPeriod + " INR",
+        render: (props) => props.price + " INR",
+        check: (props) => (props.price ? true : false),
     },
     {
         identifier: "setupFee",
         title: "Setup Fee",
         size: 6,
         render: (props) => props.setupFee + " INR",
+        check: (props) => (props.setupFee ? true : false),
     },
     {
         identifier: "trialPeriod",
         title: "Trial Period",
         size: 6,
-        render: (props) => props.trialPeriod + " " + props.trialPeriodUnit,
+        render: (props) => props.trial + " " + props.trialUnit,
+        check: (props) => (props.trail ? true : false),
     },
     {
         identifier: "term",
         title: "Term",
         size: 6,
         render: (props) => props.term + " " + props.termUnit,
+        check: (props) => ("term" in props ? true : false),
     },
     {
         identifier: "starts",
         title: "Starts",
         size: 6,
         render: (props) => props.starts,
+        check: (props) => (props.starts ? true : false),
     },
     {
         identifier: "renew",
         title: "Renews",
         size: 6,
         render: (props) => (props.renews ? "Yes" : "No"),
+        check: (props) => (props.renews ? true : false),
     },
 ];
 
@@ -112,22 +120,27 @@ function PlanCard(props) {
 
             <CardContent>
                 <Grid container={true} spacing={2}>
-                    {fields.map((field) => (
-                        <React.Fragment>
-                            <Grid item={true} lg={field.size}>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="textSecondary"
-                                    className={classes.title}
-                                >
-                                    {field.title}
-                                </Typography>
-                                <Typography className={classes.value}>
-                                    {field.render(props)}
-                                </Typography>
-                            </Grid>
-                        </React.Fragment>
-                    ))}
+                    {fields.map((field) =>
+                        field.check(props) ? (
+                            <React.Fragment>
+                                <Grid item={true} lg={field.size}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="textSecondary"
+                                        className={classes.title}
+                                    >
+                                        {field.title}
+                                    </Typography>
+                                    <Typography className={classes.value}>
+                                        {field.render(props)}
+                                        {console.log(props)}
+                                    </Typography>
+                                </Grid>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment />
+                        )
+                    )}
                 </Grid>
             </CardContent>
 
