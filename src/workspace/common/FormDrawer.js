@@ -96,7 +96,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FormDrawer(props) {
-    const { closeDialog, title, groups, open, onSave } = props;
+    const {
+        closeDialog,
+        title,
+        groups,
+        open,
+        onSave,
+        options,
+        updateLookupOptions,
+    } = props;
     const classes = useStyles(props);
     const [showMore, setShowMore] = React.useState(props.showMore);
     const [values, setValues] = React.useState(props.values);
@@ -170,6 +178,8 @@ function FormDrawer(props) {
                             onValueChange={handleValueChange}
                             tabIndex={tabIndex}
                             showMore={showMore}
+                            options={options}
+                            updateLookupOptions={updateLookupOptions}
                         />
                     </div>
                 </div>

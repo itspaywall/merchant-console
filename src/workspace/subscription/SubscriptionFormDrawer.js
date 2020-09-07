@@ -9,9 +9,22 @@ const groups = [
         label: "Basic",
         children: [
             {
+                label: "Account",
+                identifier: "account",
+                type: "account_lookup",
+                required: true,
+                readOnly: false,
+                quickAdd: true,
+                unique: false,
+                hidden: false,
+                tooltip: "The account associated with the subscription.",
+                multipleValues: false,
+                defaultValue: null,
+            },
+            {
                 label: "Plan",
                 identifier: "plan",
-                type: "lookup",
+                type: "account_lookup",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -19,7 +32,7 @@ const groups = [
                 hidden: false,
                 tooltip: "The plan associated with the subscription.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: null,
             },
             {
                 label: "Billing Period",

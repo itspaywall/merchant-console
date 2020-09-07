@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
@@ -17,7 +17,10 @@ import {
 } from "@material-ui/pickers";
 import Chip from "@material-ui/core/Chip";
 import CountrySelect from "./CountrySelect";
+import Lookup from "./Lookup";
+import { newClient } from "../../server/api";
 
+const client = newClient();
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
@@ -43,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 20,
     },
 }));
+
+// const options = [{ firstName: "Hello", lastName: "World", userName: "hello" }];
 
 // date_range_picker, phone_number, email_address
 // multiple_options (multiselect), single_option (drop down)
@@ -74,9 +79,37 @@ export function extractValues(groups) {
     return result;
 }
 
+function prepareLookupContexts(groups) {
+    const result = {};
+    groups.forEach((group) => {
+        group.children.forEach((field) => {
+            if (field.type === "account_lookup") {
+                const context = {
+                    updateOptions: async function (field, text) {
+                        if (text) {
+                            const response = await client.getAccounts({
+                                search: text,
+                            });
+                            this.setOptions(response.data.records);
+                        } else {
+                            this.setOptions([]);
+                        }
+                    },
+                };
+                const [options, setOptions] = useState([]);
+                context.options = options;
+                context.setOptions = setOptions;
+                result[field.identifier] = context;
+            }
+        });
+    });
+    return result;
+}
+
 export default function RecordForm(props) {
     const { values, groups, showMore, onValueChange, tabIndex } = props;
     const classes = useStyles(props);
+    const contexts = prepareLookupContexts(groups);
 
     const makeChangeHandler = (field) => (event) => {
         onValueChange(field, event.target.value);
@@ -92,6 +125,11 @@ export default function RecordForm(props) {
         const newValue = Object.assign({}, values[field.identifier]);
         // ISO format
         newValue[which] = format(date, "yyyy/MM/dd");
+        onValueChange(field, newValue);
+    };
+
+    const makeLookupChangeHandler = (field) => (event, value) => {
+        const newValue = Object.assign({}, value);
         onValueChange(field, newValue);
     };
 
@@ -161,6 +199,8 @@ export default function RecordForm(props) {
             </Select>
         </FormControl>
     );
+
+    console.log(values);
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -416,6 +456,32 @@ export default function RecordForm(props) {
 
                                 {field.type === "country" && (
                                     <CountrySelect label={field.label} />
+                                )}
+
+                                {field.type === "account_lookup" && (
+                                    <Lookup
+                                        label={field.label}
+                                        options={
+                                            contexts[field.identifier].options
+                                        }
+                                        updateOptions={(searchText) =>
+                                            contexts[
+                                                field.identifier
+                                            ].updateOptions(field, searchText)
+                                        }
+                                        onChange={makeLookupChangeHandler(
+                                            field
+                                        )}
+                                        value={values[field.identifier]}
+                                        renderOptionLabel={(option) =>
+                                            `${option.userName}`
+                                        }
+                                        renderOption={(option) => (
+                                            <React.Fragment>
+                                                {`${option.userName} • ${option.firstName} ${option.lastName}`}
+                                            </React.Fragment>
+                                        )}
+                                    />
                                 )}
                             </Grid>
                         ) : null

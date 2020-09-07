@@ -26,21 +26,25 @@ export function newAccount() {
 
 // TODO: Error boundaries
 export function createAccount(account) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving account...", "LOADING"));
-        return client.newAccount(account).then((response) => {
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving account...", "LOADING"));
+            await client.newAccount(account);
             dispatch(fetchAccounts({}));
             dispatch(
                 showNotification("Successfully created account", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to create account", "ERROR"));
+        }
     };
 }
 
 export function saveAccount(account) {
     return async (dispatch) => {
-        dispatch(showNotification("Saving account...", "LOADING"));
         try {
+            dispatch(showNotification("Saving account...", "LOADING"));
             const response = await client.saveAccount(account);
             dispatch(fetchAccounts({}));
             const newAccount = response.data;
@@ -61,12 +65,16 @@ export function fetchAccountComplete(account) {
 }
 
 export function fetchAccount(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading account...', 'LOADING'));
-        return client.getAccount(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading account...', 'LOADING'));
+            const response = await client.getAccount(id);
             const account = response.data;
             dispatch(fetchAccountComplete(account));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch account", "ERROR"));
+        }
     };
 }
 
@@ -86,8 +94,8 @@ export function internalRedirect(path) {
 
 export function fetchAccounts(params) {
     return async (dispatch) => {
-        // dispatch(showNotification('Loading accounts...', 'LOADING'));
         try {
+            // dispatch(showNotification('Loading accounts...', 'LOADING'));
             const response = await client.getAccounts(params);
             const accounts = response.data;
             const records = accounts.records;
@@ -137,27 +145,36 @@ export function newSubscription() {
 }
 
 export function createSubscription(subscription) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving subscription...", "LOADING"));
-        return client.newSubscription(subscription).then((response) => {
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving subscription...", "LOADING"));
+            await client.newSubscription(subscription);
             // const newSubscription = response.data;
             dispatch(
                 showNotification("Successfully created subscription", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                showNotification("Failed to create subscription", "ERROR")
+            );
+        }
     };
 }
 
 export function saveSubscription(subscription) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving subscription...", "LOADING"));
-        return client.saveSubscription(subscription).then((response) => {
-            const subscription = response.data;
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving subscription...", "LOADING"));
+            await client.saveSubscription(subscription);
             dispatch(fetchSubscriptionComplete(subscription));
             dispatch(
                 showNotification("Successfully saved subscription", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save subscription", "ERROR"));
+        }
     };
 }
 
@@ -169,15 +186,19 @@ export function fetchSubscriptionComplete(subscription) {
 }
 
 export function fetchSubscription(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading subscription...', 'LOADING'));
-        return client.getSubscription(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading subscription...', 'LOADING'));
+            const response = await client.getSubscription(id);
             const subscription = response.data;
             dispatch(fetchSubscriptionComplete(subscription));
-        });
+        } catch (error) {
+            console.log(error);
+            showNotification("Failed to fetch subscription", "ERROR");
+        }
     };
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function fetchSubscriptionsComplete(subscriptions) {
     return {
         type: ActionTypes.FETCH_SUBSCRIPTIONS_COMPLETE,
