@@ -246,10 +246,10 @@ function ViewPlans(props) {
         const keys = {
             name: "name",
             code: "code",
-            price: "price",
+            price: "pricePerBillingPeriod",
             term: "term",
             setupFee: "setupFee",
-            trial: "trial",
+            trial: "trialPeriod",
             created: "createdAt",
         };
         const key = keys[orderBy];

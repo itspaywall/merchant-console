@@ -8,10 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { green } from "@material-ui/core/colors";
-import Button from "@material-ui/core/Button";
-import CardActions from "@material-ui/core/CardActions";
-
-import EditIcon from "@material-ui/icons/Edit";
+import { toDateString } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -48,63 +45,61 @@ const fields = [
         identifier: "createdAt",
         title: "Created At",
         size: 6,
-        render: (props) => props.createdAt.substring(0, 10),
-        check: (props) => (props.createdAt ? true : false),
+        render: (props) =>
+            toDateString(new Date(props.createdAt.substring(0, 10))),
     },
     {
         identifier: "billingPeriod",
         title: "Billing Period",
         size: 6,
-        render: (props) => props.billingPeriod + " " + props.billingPeriodUnit,
-        check: (props) => (props.billingPeriod ? true : false),
+        render: (props) =>
+            props.billingPeriod
+                ? props.billingPeriod + " " + props.billingPeriodUnit
+                : "Unavailable",
     },
     {
         identifier: "pricePerBillingPeriod",
         title: "Price",
         size: 6,
-        render: (props) => props.price + " INR",
-        check: (props) => (props.price ? true : false),
+        render: (props) =>
+            props.pricePerBillingPeriod
+                ? props.pricePerBillingPeriod + " INR"
+                : "Unavailable",
     },
     {
         identifier: "setupFee",
         title: "Setup Fee",
         size: 6,
-        render: (props) => props.setupFee + " INR",
-        check: (props) => (props.setupFee ? true : false),
+        render: (props) =>
+            props.setupFee ? props.setupFee + " INR" : "Unavailable",
     },
     {
         identifier: "trialPeriod",
         title: "Trial Period",
         size: 6,
-        render: (props) => props.trial + " " + props.trialUnit,
-        check: (props) => (props.trail ? true : false),
+        render: (props) =>
+            props.trialPeriod
+                ? props.trialPeriod + " " + props.trialPeriodUnit
+                : "Unavailable",
     },
     {
         identifier: "term",
         title: "Term",
         size: 6,
-        render: (props) => props.term + " " + props.termUnit,
-        check: (props) => ("term" in props ? true : false),
-    },
-    {
-        identifier: "starts",
-        title: "Starts",
-        size: 6,
-        render: (props) => props.starts,
-        check: (props) => (props.starts ? true : false),
+        render: (props) =>
+            props.term ? props.term + " " + props.termUnit : "Unavailable",
     },
     {
         identifier: "renew",
         title: "Renews",
         size: 6,
         render: (props) => (props.renews ? "Yes" : "No"),
-        check: (props) => (props.renews ? true : false),
     },
 ];
 
 function PlanCard(props) {
     const classes = useStyles();
-    const { className, name, code, description, onEdit } = props;
+    const { className, name, code, description } = props;
 
     return (
         <Card className={clsx(classes.root, className)}>
@@ -114,42 +109,38 @@ function PlanCard(props) {
                         {name.substring(0, 1).toUpperCase()}
                     </Avatar>
                 }
-                title={name + " (" + code + ")"}
+                title={name}
+                subheader={code}
                 subtitle={description}
             />
 
             <CardContent>
                 <Grid container={true} spacing={2}>
-                    {fields.map((field) =>
-                        field.check(props) ? (
-                            <React.Fragment>
-                                <Grid item={true} lg={field.size}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        color="textSecondary"
-                                        className={classes.title}
-                                    >
-                                        {field.title}
-                                    </Typography>
-                                    <Typography className={classes.value}>
-                                        {field.render(props)}
-                                        {console.log(props)}
-                                    </Typography>
-                                </Grid>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment />
-                        )
-                    )}
+                    {fields.map((field) => (
+                        <React.Fragment>
+                            <Grid item={true} lg={field.size}>
+                                <Typography
+                                    variant="subtitle1"
+                                    color="textSecondary"
+                                    className={classes.title}
+                                >
+                                    {field.title}
+                                </Typography>
+                                <Typography className={classes.value}>
+                                    {field.render(props)}
+                                </Typography>
+                            </Grid>
+                        </React.Fragment>
+                    ))}
                 </Grid>
             </CardContent>
 
-            <CardActions>
+            {/*<CardActions>
                 <Button className={classes.edit} onClick={onEdit}>
                     <EditIcon className={classes.icon} />
                     Edit
                 </Button>
-            </CardActions>
+            </CardActions>*/}
         </Card>
     );
 }
