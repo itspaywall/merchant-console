@@ -65,7 +65,19 @@ function ViewPlan(props) {
                         <PlanCard
                             className={classes.planCard}
                             onEdit={handleEdit}
-                            {...plan}
+                            name={plan.name}
+                            code={plan.code}
+                            description={plan.description}
+                            createdAt={plan.createdAt}
+                            pricePerBillingPeriod={plan.pricePerBillingPeriod}
+                            billingPeriod={plan.billingPeriod}
+                            billingPeriodUnit={plan.billingPeriodUnit}
+                            term={plan.term}
+                            termUnit={plan.termUnit}
+                            setupFee={plan.setupFee}
+                            trialPeriod={plan.trialPeriod}
+                            trialPeriodUnit={plan.trialPeriodUnit}
+                            renews={plan.renews}
                         />
                     </div>
                 </div>

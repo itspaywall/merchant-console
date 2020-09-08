@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
         margin: 2,
     },
     field: {
-        marginTop: 20,
+        width: "100%",
+        maginLeft: 16,
+        marginRight: 16,
+        marginBottom: 20,
     },
 }));
 

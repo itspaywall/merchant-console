@@ -20,16 +20,23 @@ import Drawer from "@material-ui/core/Drawer";
 
 const rightDrawerWidth = 600;
 const wideDrawerWidth = 1000;
-const navigationWidth = 200;
+const navigationWidth = 100;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: rightDrawerWidth,
         display: "flex",
         flexDirection: "column",
+
+        [theme.breakpoints.down("md")]: {
+            width: 400,
+        },
     },
     rootWide: {
         width: wideDrawerWidth,
+        [theme.breakpoints.down("md")]: {
+            width: 500,
+        },
     },
     appBar: {},
     toolbar: {
@@ -44,11 +51,15 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "row",
     },
     navigation: {
-        width: navigationWidth,
+        width: "navigationWidth",
         height: "calc(100vh - 128px)",
         paddingTop: 24,
         paddingBottom: 24,
-        marginRight: 16,
+        marginRight: 24,
+    },
+    listItem: {
+        paddingLeft: 40,
+        paddingRight: 40,
     },
     content: {
         paddingTop: 24,
@@ -67,9 +78,17 @@ const useStyles = makeStyles((theme) => ({
         padding: 16,
         display: "flex",
         flexDirection: "row-reverse",
+
+        [theme.breakpoints.down("md")]: {
+            width: 400,
+        },
     },
     actionsWide: {
         width: wideDrawerWidth,
+
+        [theme.breakpoints.down("md")]: {
+            width: 500,
+        },
     },
     spring: {
         flexGrow: 1,
@@ -123,6 +142,7 @@ function FormDrawer(props) {
                         <List component="nav" className={classes.navigation}>
                             {groups.map((group, groupIndex) => (
                                 <ListItem
+                                    className={classes.listItem}
                                     key={group.identifier}
                                     button={true}
                                     selected={tabIndex === groupIndex}

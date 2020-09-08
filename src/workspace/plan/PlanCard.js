@@ -8,10 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { green } from "@material-ui/core/colors";
-import Button from "@material-ui/core/Button";
-import CardActions from "@material-ui/core/CardActions";
-
-import EditIcon from "@material-ui/icons/Edit";
+import { toDateString } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -45,46 +42,52 @@ const useStyles = makeStyles((theme) => ({
 
 const fields = [
     {
-        identifier: "createdOn",
-        title: "Created On",
+        identifier: "createdAt",
+        title: "Created At",
         size: 6,
-        render: (props) => props.createdOn,
+        render: (props) =>
+            toDateString(new Date(props.createdAt.substring(0, 10))),
     },
     {
         identifier: "billingPeriod",
         title: "Billing Period",
         size: 6,
-        render: (props) => props.billingPeriod + " " + props.billingPeriodUnit,
+        render: (props) =>
+            props.billingPeriod
+                ? props.billingPeriod + " " + props.billingPeriodUnit
+                : "Unavailable",
     },
     {
         identifier: "pricePerBillingPeriod",
         title: "Price",
         size: 6,
-        render: (props) => props.pricePerBillingPeriod + " INR",
+        render: (props) =>
+            props.pricePerBillingPeriod
+                ? props.pricePerBillingPeriod + " INR"
+                : "Unavailable",
     },
     {
         identifier: "setupFee",
         title: "Setup Fee",
         size: 6,
-        render: (props) => props.setupFee + " INR",
+        render: (props) =>
+            props.setupFee ? props.setupFee + " INR" : "Unavailable",
     },
     {
         identifier: "trialPeriod",
         title: "Trial Period",
         size: 6,
-        render: (props) => props.trialPeriod + " " + props.trialPeriodUnit,
+        render: (props) =>
+            props.trialPeriod
+                ? props.trialPeriod + " " + props.trialPeriodUnit
+                : "Unavailable",
     },
     {
         identifier: "term",
         title: "Term",
         size: 6,
-        render: (props) => props.term + " " + props.termUnit,
-    },
-    {
-        identifier: "starts",
-        title: "Starts",
-        size: 6,
-        render: (props) => props.starts,
+        render: (props) =>
+            props.term ? props.term + " " + props.termUnit : "Unavailable",
     },
     {
         identifier: "renew",
@@ -96,7 +99,7 @@ const fields = [
 
 function PlanCard(props) {
     const classes = useStyles();
-    const { className, name, code, description, onEdit } = props;
+    const { className, name, code, description } = props;
 
     return (
         <Card className={clsx(classes.root, className)}>
@@ -106,7 +109,8 @@ function PlanCard(props) {
                         {name.substring(0, 1).toUpperCase()}
                     </Avatar>
                 }
-                title={name + " (" + code + ")"}
+                title={name}
+                subheader={code}
                 subtitle={description}
             />
 
@@ -131,12 +135,12 @@ function PlanCard(props) {
                 </Grid>
             </CardContent>
 
-            <CardActions>
+            {/*<CardActions>
                 <Button className={classes.edit} onClick={onEdit}>
                     <EditIcon className={classes.icon} />
                     Edit
                 </Button>
-            </CardActions>
+            </CardActions>*/}
         </Card>
     );
 }
