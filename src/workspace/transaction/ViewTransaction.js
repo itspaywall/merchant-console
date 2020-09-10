@@ -37,9 +37,9 @@ const useStyles = makeStyles((theme) => ({
 function ViewTransaction(props) {
     const classes = useStyles();
     const {
+        transaction,
         fetchTransaction,
         clearTransaction,
-        transaction,
         editTransaction,
     } = props;
     const { identifier } = useParams();
@@ -70,12 +70,13 @@ function ViewTransaction(props) {
                         </Typography>
                         <TransactionCard
                             className={classes.transactionCard}
+                            referenceId={transaction.referenceId}
                             amount={transaction.amount}
+                            comments={transaction.comments}
                             tax={transaction.tax}
                             action={transaction.action}
                             paymentMethod={transaction.paymentMethod}
-                            createdOn={transaction.createdOn}
-                            refundable={transaction.refundable}
+                            createdAt={transaction.createdAt}
                             onEdit={handleEditTransaction}
                         />
                     </div>

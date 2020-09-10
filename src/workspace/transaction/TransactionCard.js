@@ -2,16 +2,13 @@ import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { green } from "@material-ui/core/colors";
-
-import EditIcon from "@material-ui/icons/Edit";
+import { toDateString } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -50,6 +47,12 @@ const methodNames = {
 
 const fields = [
     {
+        identifier: "referenceId",
+        title: "Reference ID",
+        size: 6,
+        render: (transaction) => transaction.referenceId,
+    },
+    {
         identifier: "action",
         title: "Action",
         size: 6,
@@ -62,41 +65,40 @@ const fields = [
         render: (transaction) => methodNames[transaction.paymentMethod],
     },
     {
-        identifier: "createdOn",
+        identifier: "createdAt",
         title: "Transaction Date",
         size: 6,
-        render: (transaction) => transaction.createdOn,
-    },
-    {
-        identifier: "refundable",
-        title: "Refundable",
-        size: 6,
-        render: (transaction) => (transaction.refundable ? "Yes" : "No"),
+        render: (transaction) =>
+            toDateString(new Date(transaction.createdAt.substring(0, 10))),
     },
     {
         identifier: "amount",
         title: "Amount",
         size: 6,
-        render: (transaction) => transaction.amount + " INR",
+        render: (transaction) =>
+            transaction.amount ? transaction.amount + " INR" : "Unavailable",
     },
     {
         identifier: "tax",
         title: "Tax",
         size: 6,
-        render: (transaction) => transaction.tax + " INR",
+        render: (transaction) =>
+            transaction.tax ? transaction.tax + " INR" : "Unavailable",
     },
     {
         identifier: "total",
         title: "Total Amount",
         size: 12,
-        render: (transaction) => transaction.amount + transaction.tax + " INR",
+        render: (transaction) =>
+            transaction.amount && transaction.tax
+                ? transaction.amount + transaction.tax + " INR"
+                : "Unavailable",
     },
 ];
 
 function TransactionCard(props) {
     const classes = useStyles();
-    const { className, onEdit } = props;
-
+    const { className } = props;
     return (
         <Card className={clsx(classes.root, className)}>
             <CardHeader
@@ -124,12 +126,13 @@ function TransactionCard(props) {
                     ))}
                 </Grid>
             </CardContent>
-            <CardActions>
+
+            {/*<CardActions>
                 <Button className={classes.button} onClick={onEdit}>
                     <EditIcon className={classes.icon} />
                     Edit
                 </Button>
-            </CardActions>
+            </CardActions>*/}
         </Card>
     );
 }
