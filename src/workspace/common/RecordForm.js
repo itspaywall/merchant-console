@@ -79,15 +79,21 @@ export function extractValues(groups) {
     return result;
 }
 
+const apis = {
+    account_lookup: client.getAccounts,
+    plan_lookup: client.getPlans,
+};
+
 function prepareLookupContexts(groups) {
     const result = {};
     groups.forEach((group) => {
         group.children.forEach((field) => {
-            if (field.type === "account_lookup") {
+            if (field.type in apis) {
                 const context = {
                     updateOptions: async function (field, text) {
                         if (text) {
-                            const response = await client.getAccounts({
+                            const api = apis[field.type];
+                            const response = await api({
                                 search: text,
                             });
                             this.setOptions(response.data.records);
@@ -129,8 +135,7 @@ export default function RecordForm(props) {
     };
 
     const makeLookupChangeHandler = (field) => (event, value) => {
-        const newValue = Object.assign({}, value);
-        onValueChange(field, newValue);
+        onValueChange(field, value ? Object.assign({}, value) : null);
     };
 
     /* The value from the backend can be null. Therefore, we consider falsy values are errors
@@ -479,6 +484,33 @@ export default function RecordForm(props) {
                                         renderOption={(option) => (
                                             <React.Fragment>
                                                 {`${option.userName} • ${option.firstName} ${option.lastName}`}
+                                            </React.Fragment>
+                                        )}
+                                    />
+                                )}
+
+                                {field.type === "plan_lookup" && (
+                                    <Lookup
+                                        label={field.label}
+                                        options={
+                                            contexts[field.identifier].options
+                                        }
+                                        updateOptions={(searchText) =>
+                                            contexts[
+                                                field.identifier
+                                            ].updateOptions(field, searchText)
+                                        }
+                                        onChange={makeLookupChangeHandler(
+                                            field
+                                        )}
+                                        value={values[field.identifier]}
+                                        renderOptionLabel={(option) =>
+                                            console.log(option) ||
+                                            `${option.name}`
+                                        }
+                                        renderOption={(option) => (
+                                            <React.Fragment>
+                                                {`${option.code} • ${option.name}`}
                                             </React.Fragment>
                                         )}
                                     />

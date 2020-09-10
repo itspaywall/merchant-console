@@ -46,7 +46,8 @@ export default function Lookup(props) {
             )}
             onInputChange={(event, inputValue, reason) => {
                 if (reason === "input") {
-                    updateOptions(inputValue);
+                    // Convert empty strings to null.
+                    updateOptions(inputValue ? inputValue : null);
                 }
                 setInputValue(inputValue);
             }}

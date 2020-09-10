@@ -24,7 +24,7 @@ const groups = [
             {
                 label: "Plan",
                 identifier: "plan",
-                type: "account_lookup",
+                type: "plan_lookup",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
