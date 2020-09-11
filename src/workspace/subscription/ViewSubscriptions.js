@@ -323,7 +323,7 @@ function ViewSubscriptions(props) {
             }
 
             case "created": {
-                return toDateString(row.createdOn);
+                return toDateString(row.createdAt);
             }
 
             case "nextInvoice": {
