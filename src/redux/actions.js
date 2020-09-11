@@ -211,8 +211,9 @@ export function fetchSubscriptions(params) {
         try {
             const response = await client.getSubscriptions(params);
             const subscriptions = response.data;
-            for (let i = 0; i < subscriptions.length; i++) {
-                const subscription = subscriptions[i];
+            const records = subscriptions.records;
+            for (let i = 0; i < records.length; i++) {
+                const subscription = records[i];
                 subscription.createdAt = new Date(subscription.createdAt);
             }
             dispatch(fetchSubscriptionsComplete(subscriptions));
@@ -261,8 +262,8 @@ export function saveInvoice(invoice) {
         try {
             dispatch(showNotification("Saving invoice...", "LOADING"));
             const response = await client.saveInvoice(invoice);
-            const invoice = response.data;
-            dispatch(fetchInvoiceComplete(invoice));
+            const newInvoice = response.data;
+            dispatch(fetchInvoiceComplete(newInvoice));
             dispatch(showNotification("Successfully saved invoice", "SUCCESS"));
         } catch (error) {
             console.log(error);
@@ -282,7 +283,7 @@ export function fetchInvoice(id) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading invoice...', 'LOADING'));
-            const invoice = await client.getInvoice(id);
+            const response = await client.getInvoice(id);
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
         } catch (error) {
@@ -370,8 +371,8 @@ export function saveTransaction(transaction) {
         try {
             dispatch(showNotification("Saving transaction...", "LOADING"));
             const response = await client.saveTransaction(transaction);
-            const transaction = response.data;
-            dispatch(fetchTransactionComplete(transaction));
+            const newTransaction = response.data;
+            dispatch(fetchTransactionComplete(newTransaction));
             dispatch(
                 showNotification("Successfully saved transaction", "SUCCESS")
             );

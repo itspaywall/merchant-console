@@ -39,29 +39,29 @@ const headers = [
         label: "Plan",
     },
     {
-        identifier: "name",
+        identifier: "quantity",
         numeric: false,
         disablePadding: false,
-        label: "Name",
+        label: "Quantity",
     },
-    {
+    /*{
         identifier: "status",
         numeric: false,
         disablePadding: false,
         label: "Status",
-    },
+    },*/
     {
         identifier: "created",
         numeric: false,
         disablePadding: false,
         label: "Created",
     },
-    {
+    /*{
         identifier: "nextInvoice",
         numeric: false,
         disablePadding: false,
         label: "Next Invoice",
-    },
+    },*/
 ];
 
 const filterFields = [
@@ -113,7 +113,7 @@ const filterFields = [
             endDate: new Date(),
         },
     },
-    {
+    /*{
         // TODO: Change type to switch.
         identifier: "trial_status",
         type: "select",
@@ -181,7 +181,7 @@ const filterFields = [
             },
         ],
         defaultValue: "all",
-    },
+    },*/
 ];
 
 const actions1 = [
@@ -238,6 +238,8 @@ const actions2 = [
     },
 ];
 
+const DEFAULT_ROWS_PER_PAGE = 20;
+
 /* [TODO]
  * 1. Filter logic
  */
@@ -250,6 +252,33 @@ function ViewSubscriptions(props) {
         location,
     } = props;
     const params = queryString.parse(location.search);
+    const classes = useStyles();
+    const [selected, setSelected] = useState([]);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
+    const [compact, setCompact] = useState(false);
+    const [page, setPage] = useState(parseInt(params.page, 10) || 0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        params.limit || DEFAULT_ROWS_PER_PAGE
+    );
+    // TODO: Should we cache this?
+    const defaultFilterValues = toFilterState(filterFields, params);
+    const [filterValues, setFilterValues] = useState(defaultFilterValues);
+
+    const generateURL = (values, page, rowsPerPage) => {
+        const flatValues = toURLParams(filterFields, values);
+        const params = new URLSearchParams(flatValues);
+        params.append("page", page);
+        params.append("limit", rowsPerPage);
+
+        history.push("/subscriptions?" + params.toString());
+    };
+
+    // Both the parameters must appear together. Otherwise, we automatically reset them both.
+    if (!("page" in params) || !("limit" in params)) {
+        generateURL(filterValues, page, rowsPerPage);
+    }
 
     if ("start_date" in params) {
         params["start_date"] = new Date(Number(params["start_date"]));
@@ -257,17 +286,6 @@ function ViewSubscriptions(props) {
     if ("end_date" in params) {
         params["end_date"] = new Date(Number(params["end_date"]));
     }
-
-    const classes = useStyles();
-    const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(
-        Object.keys(params).length > 0
-    );
-    const [compact, setCompact] = useState(false);
-
-    // TODO: Should we cache this?
-    const defaultFilterValues = toFilterState(filterFields, params);
-    const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
         if (type === "new") {
@@ -279,47 +297,74 @@ function ViewSubscriptions(props) {
         }
     };
 
-    const generateURL = (values) => {
-        if (values) {
-            const flatValues = toURLParams(filterFields, values);
-            const params = new URLSearchParams(flatValues);
-
-            history.push("/subscriptions?" + params.toString());
-        } else {
-            history.push("/subscriptions");
-        }
-    };
-
     const onClick = (subscription) => {
-        history.push("/subscriptions/" + subscription.identifier);
+        history.push("/subscriptions/" + subscription.id);
     };
 
-    // TODO: Create a deep copy without serializing !
+    // TODO: Create a deep copy without serializing!
     const onFilterValueChange = (field, value) => {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
-        generateURL(newValues);
+
+        generateURL(newValues, page, rowsPerPage);
     };
 
     const onFilterClear = () => {
         const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
-        generateURL(null);
+
+        generateURL(defaultValues, page, rowsPerPage);
+    };
+
+    const descendingComparator = (accountA, accountB, orderBy) => {
+        let valueA;
+        let valueB;
+        switch (orderBy) {
+            case "plan": {
+                valueA = accountA.plan.name.toLowerCase();
+                valueB = accountB.plan.name.toLowerCase();
+                break;
+            }
+
+            case "name": {
+                valueA = (
+                    accountA.account.firstName + accountA.account.lastName
+                ).toLowerCase();
+                valueB = (
+                    accountB.account.firstName + accountB.account.lastName
+                ).toLowerCase();
+                break;
+            }
+
+            case "createdAt": {
+                valueA = accountA.createdAt.getTime();
+                valueB = accountB.createdAt.getTime();
+                break;
+            }
+
+            default: {
+                valueA = accountA[orderBy];
+                valueB = accountB[orderBy];
+                break;
+            }
+        }
+
+        return valueB < valueA ? -1 : valueB > valueA ? 1 : 0;
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
         switch (column.identifier) {
             case "plan": {
-                return "TODO"; // row.plan.name;
+                return row.plan.name;
             }
 
             case "name": {
-                return "TODO";
+                return row.account.firstName + " " + row.account.lastName;
             }
 
-            case "status": {
-                return "TODO";
+            case "quantity": {
+                return row.quantity;
             }
 
             case "created": {
@@ -336,10 +381,24 @@ function ViewSubscriptions(props) {
         }
     };
 
+    const onChangePage = (newPage) => {
+        setPage(newPage);
+        generateURL(filterValues, newPage, rowsPerPage);
+    };
+
+    const onChangeRowsPerPage = (newRowsPerPage) => {
+        setPage(0);
+        setRowsPerPage(newRowsPerPage);
+        generateURL(filterValues, 0, newRowsPerPage);
+    };
+
     useEffect(() => {
+        console.log(filterFields, filterValues);
         const flatValues = toURLParams(filterFields, filterValues);
+        flatValues.page = page;
+        flatValues.limit = rowsPerPage;
         fetchSubscriptions(flatValues);
-    }, [fetchSubscriptions, filterValues]);
+    }, [fetchSubscriptions, filterValues, page, rowsPerPage]);
 
     return (
         <div>
@@ -349,17 +408,23 @@ function ViewSubscriptions(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {subscriptions.length > 0 && (
+            {subscriptions && subscriptions.records.length > 0 && (
                 <Grid container={true} className={classes.container}>
                     <Grid item={true} lg={openFilter ? 10 : 12}>
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
-                            rows={subscriptions}
                             selected={selected}
                             compact={compact}
                             onClick={onClick}
                             renderCellValue={renderCellValue}
+                            rows={subscriptions.records}
+                            totalRows={subscriptions.totalRecords}
+                            page={page}
+                            rowsPerPage={rowsPerPage}
+                            onChangePage={onChangePage}
+                            onChangeRowsPerPage={onChangeRowsPerPage}
+                            descendingComparator={descendingComparator}
                         />
                     </Grid>
                     {openFilter && (
@@ -375,15 +440,16 @@ function ViewSubscriptions(props) {
                 </Grid>
             )}
 
-            {subscriptions.length === 0 && (
-                <NoRecords
-                    message="You have not created any subscriptions yet."
-                    action={true}
-                    actionText="Create Subscription"
-                    actionHandler={newSubscription}
-                    image="assets/images/empty-subscriptions.svg"
-                />
-            )}
+            {!subscriptions ||
+                (subscriptions.length === 0 && (
+                    <NoRecords
+                        message="You have not created any subscriptions yet."
+                        action={true}
+                        actionText="Create Subscription"
+                        actionHandler={newSubscription}
+                        image="assets/images/empty-subscriptions.svg"
+                    />
+                ))}
         </div>
     );
 }

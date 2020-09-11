@@ -78,7 +78,7 @@ function accountReducer(state = null, action) {
     }
 }
 
-function subscriptionsReducer(state = [], action) {
+function subscriptionsReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_SUBSCRIPTIONS_COMPLETE: {
             return action.payload;
