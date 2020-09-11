@@ -95,6 +95,39 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function toRequest(groups, values) {
+    const result = {};
+    groups.forEach((group) => {
+        group.children.forEach((field) => {
+            /*if (field.type === "time_range") {
+                result[field.identifier] = values[field.identifier].option;
+                if (values[field.identifier].option === "custom") {
+                    result[field.startIdentifier] = values[
+                        field.identifier
+                    ].startDate.getTime();
+                    result[field.endIdentifier] = values[
+                        field.identifier
+                    ].endDate.getTime();
+                }
+            }*/
+            switch (field.type) {
+                case "account_lookup":
+                case "plan_lookup": {
+                    result[field.identifier] = values[field.identifier].id;
+                    break;
+                }
+
+                default: {
+                    result[field.identifier] = values[field.identifier];
+                    break;
+                }
+            }
+        });
+    });
+    console.log(result);
+    return result;
+}
+
 function FormDrawer(props) {
     const {
         closeDialog,
@@ -114,9 +147,9 @@ function FormDrawer(props) {
     };
     const handleSave = () => {
         closeDialog();
-        onSave(values);
+        onSave(toRequest(groups, values));
     };
-    // TODO: Create a deep copy without serializing !
+    // TODO: Create a deep copy without serializing!
     const handleValueChange = (field, value) => {
         const newValues = JSON.parse(JSON.stringify(values));
         newValues[field.identifier] = value;

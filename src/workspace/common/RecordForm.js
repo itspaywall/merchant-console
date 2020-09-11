@@ -299,10 +299,9 @@ export default function RecordForm(props) {
                                                   )
                                         }
                                         margin="normal"
-                                        onChange={makeDateChangeHandler(
-                                            field,
-                                            "startDate"
-                                        )}
+                                        onChange={(value) =>
+                                            onValueChange(field, value)
+                                        }
                                         size="medium"
                                     />
                                 )}
@@ -486,6 +485,8 @@ export default function RecordForm(props) {
                                                 {`${option.userName} • ${option.firstName} ${option.lastName}`}
                                             </React.Fragment>
                                         )}
+                                        name={field.identifier}
+                                        required={field.required}
                                     />
                                 )}
 
@@ -513,6 +514,8 @@ export default function RecordForm(props) {
                                                 {`${option.code} • ${option.name}`}
                                             </React.Fragment>
                                         )}
+                                        name={field.identifier}
+                                        required={field.required}
                                     />
                                 )}
                             </Grid>

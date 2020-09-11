@@ -18,6 +18,8 @@ export default function Lookup(props) {
         onChange,
         renderOption,
         renderOptionLabel,
+        name,
+        required,
     } = props;
     const classes = useStyles();
     const [inputValue, setInputValue] = React.useState("");
@@ -42,6 +44,8 @@ export default function Lookup(props) {
                         autoComplete:
                             "new-password" /* Disable autocomplete and autofill */,
                     }}
+                    required={required}
+                    name={name}
                 />
             )}
             onInputChange={(event, inputValue, reason) => {
