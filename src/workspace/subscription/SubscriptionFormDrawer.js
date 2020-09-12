@@ -1,65 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { extractValues } from "../RecordForm";
-
+import { extractValues } from "../common/RecordForm";
 import FormDrawer from "../common/FormDrawer";
 
 const groups = [
     {
         label: "Basic",
         children: [
-            /*{
-                identifier: "date_range",
-                type: "date_range",
-                title: "Time Range",
-                startTitle: "Start Date",
-                endTitle: "End Date",
-                options: [
-                    {
-                        value: "all_time",
-                        title: "All Time",
-                    },
-                    {
-                        value: "last_3_months",
-                        title: "Last 3 Months",
-                    },
-                    {
-                        value: "last_6_months",
-                        title: "Last 6 Months",
-                    },
-                    {
-                        value: "last_9_months",
-                        title: "Last 9 Months",
-                    },
-                    {
-                        value: "last_12_months",
-                        title: "Last 12 Months",
-                    },
-                    {
-                        value: "last_15_months",
-                        title: "Last 15 Months",
-                    },
-                    {
-                        value: "last_18_months",
-                        title: "Last 18 Months",
-                    },
-                    {
-                        value: "custom",
-                        title: "Custom",
-                    },
-                ],
+            {
+                label: "Account",
+                identifier: "accountId",
+                type: "account_lookup",
+                required: true,
+                readOnly: false,
                 quickAdd: true,
-                defaultValue: {
-                    option: "all_time",
-                    startDate: null,
-                    endDate: null,
-                },
-            }*/
+                unique: false,
+                hidden: false,
+                tooltip: "The account associated with the subscription.",
+                multipleValues: false,
+                defaultValue: null,
+            },
             {
                 label: "Plan",
-                identifier: "plan",
-                type: "text",
+                identifier: "planId",
+                type: "plan_lookup",
                 required: true,
                 readOnly: false,
                 quickAdd: true,
@@ -67,13 +32,38 @@ const groups = [
                 hidden: false,
                 tooltip: "The plan associated with the subscription.",
                 multipleValues: false,
-                defaultValue: "",
+                defaultValue: null,
+            },
+            {
+                label: "Quantity",
+                identifier: "quantity",
+                type: "number",
+                required: true,
+                readOnly: false,
+                quickAdd: true,
+                unique: false,
+                hidden: false,
+                tooltip: "The quantity of the plan.",
+                multipleValues: false,
+                defaultValue: null,
+            },
+            {
+                label: "Starts",
+                identifier: "starts",
+                type: "date",
+                required: false,
+                readOnly: false,
+                quickAdd: true,
+                unique: false,
+                hidden: false,
+                tooltip: "Start date of the subscription.",
+                multipleValues: false,
             },
             {
                 label: "Billing Period",
                 identifier: "billingPeriod",
                 type: "number",
-                required: true,
+                required: false,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
@@ -120,7 +110,7 @@ const groups = [
             },
             {
                 label: "Trial Period",
-                identifier: "trailPeriod",
+                identifier: "trialPeriod",
                 type: "number",
                 required: false,
                 readOnly: false,
@@ -153,18 +143,6 @@ const groups = [
                 tooltip: "Number of units of trial period.",
                 multipleValues: false,
                 defaultValue: "days",
-            },
-            {
-                label: "Starts",
-                identifier: "starts",
-                type: "date",
-                required: false,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "Start date of the subscription.",
-                multipleValues: false,
             },
             {
                 label: "Term",
@@ -203,8 +181,8 @@ const groups = [
                 defaultValue: "days",
             },
             {
-                label: "Renew",
-                identifier: "renew",
+                label: "Renews",
+                identifier: "renews",
                 type: "switch",
                 required: false,
                 readOnly: false,

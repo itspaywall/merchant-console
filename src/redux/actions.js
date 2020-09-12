@@ -26,21 +26,25 @@ export function newAccount() {
 
 // TODO: Error boundaries
 export function createAccount(account) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving account...", "LOADING"));
-        return client.newAccount(account).then((response) => {
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving account...", "LOADING"));
+            await client.newAccount(account);
             dispatch(fetchAccounts({}));
             dispatch(
                 showNotification("Successfully created account", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to create account", "ERROR"));
+        }
     };
 }
 
 export function saveAccount(account) {
     return async (dispatch) => {
-        dispatch(showNotification("Saving account...", "LOADING"));
         try {
+            dispatch(showNotification("Saving account...", "LOADING"));
             const response = await client.saveAccount(account);
             dispatch(fetchAccounts({}));
             const newAccount = response.data;
@@ -61,12 +65,16 @@ export function fetchAccountComplete(account) {
 }
 
 export function fetchAccount(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading account...', 'LOADING'));
-        return client.getAccount(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading account...', 'LOADING'));
+            const response = await client.getAccount(id);
             const account = response.data;
             dispatch(fetchAccountComplete(account));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch account", "ERROR"));
+        }
     };
 }
 
@@ -86,8 +94,8 @@ export function internalRedirect(path) {
 
 export function fetchAccounts(params) {
     return async (dispatch) => {
-        // dispatch(showNotification('Loading accounts...', 'LOADING'));
         try {
+            // dispatch(showNotification('Loading accounts...', 'LOADING'));
             const response = await client.getAccounts(params);
             const accounts = response.data;
             const records = accounts.records;
@@ -137,27 +145,36 @@ export function newSubscription() {
 }
 
 export function createSubscription(subscription) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving subscription...", "LOADING"));
-        return client.newSubscription(subscription).then((response) => {
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving subscription...", "LOADING"));
+            await client.newSubscription(subscription);
             // const newSubscription = response.data;
             dispatch(
                 showNotification("Successfully created subscription", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                showNotification("Failed to create subscription", "ERROR")
+            );
+        }
     };
 }
 
 export function saveSubscription(subscription) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving subscription...", "LOADING"));
-        return client.saveSubscription(subscription).then((response) => {
-            const subscription = response.data;
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving subscription...", "LOADING"));
+            await client.saveSubscription(subscription);
             dispatch(fetchSubscriptionComplete(subscription));
             dispatch(
                 showNotification("Successfully saved subscription", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save subscription", "ERROR"));
+        }
     };
 }
 
@@ -169,12 +186,16 @@ export function fetchSubscriptionComplete(subscription) {
 }
 
 export function fetchSubscription(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading subscription...', 'LOADING'));
-        return client.getSubscription(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading subscription...', 'LOADING'));
+            const response = await client.getSubscription(id);
             const subscription = response.data;
             dispatch(fetchSubscriptionComplete(subscription));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch subscription", "ERROR"));
+        }
     };
 }
 
@@ -186,16 +207,20 @@ export function fetchSubscriptionsComplete(subscriptions) {
 }
 
 export function fetchSubscriptions(params) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading subscriptions...', 'LOADING'));
-        return client.getSubscriptions(params).then((response) => {
+    return async (dispatch) => {
+        try {
+            const response = await client.getSubscriptions(params);
             const subscriptions = response.data;
-            for (let i = 0; i < subscriptions.length; i++) {
-                const subscription = subscriptions[i];
-                subscription.createdOn = new Date(subscription.createdOn);
+            const records = subscriptions.records;
+            for (let i = 0; i < records.length; i++) {
+                const subscription = records[i];
+                subscription.createdAt = new Date(subscription.createdAt);
             }
             dispatch(fetchSubscriptionsComplete(subscriptions));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch subscriptions", "ERROR"));
+        }
     };
 }
 
@@ -233,13 +258,17 @@ export function newInvoice() {
 }
 
 export function saveInvoice(invoice) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving invoice...", "LOADING"));
-        return client.saveInvoice(invoice).then((response) => {
-            const invoice = response.data;
-            dispatch(fetchInvoiceComplete(invoice));
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving invoice...", "LOADING"));
+            const response = await client.saveInvoice(invoice);
+            const newInvoice = response.data;
+            dispatch(fetchInvoiceComplete(newInvoice));
             dispatch(showNotification("Successfully saved invoice", "SUCCESS"));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save invoice", "ERROR"));
+        }
     };
 }
 
@@ -251,12 +280,16 @@ export function fetchInvoiceComplete(invoice) {
 }
 
 export function fetchInvoice(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading invoice...', 'LOADING'));
-        return client.getInvoice(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading invoice...', 'LOADING'));
+            const response = await client.getInvoice(id);
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch invoice", "ERROR"));
+        }
     };
 }
 
@@ -268,16 +301,20 @@ export function fetchInvoicesComplete(invoices) {
 }
 
 export function fetchInvoices(params) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading invoices...', 'LOADING'));
-        return client.getInvoices(params).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading invoices...', 'LOADING'));
+            const response = await client.getInvoices(params);
             const invoices = response.data;
             for (let i = 0; i < invoices.length; i++) {
                 const invoice = invoices[i];
-                invoice.createdOn = new Date(invoice.createdOn);
+                invoice.createdAt = new Date(invoice.createdAt);
             }
             dispatch(fetchInvoicesComplete(invoices));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch invoices", "ERROR"));
+        }
     };
 }
 
@@ -315,30 +352,31 @@ export function newTransaction() {
 }
 
 export function createTransaction(transaction) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving transaction...", "LOADING"));
-        return client.newTransaction(transaction).then((response) => {
-            dispatch(fetchTransactions({}));
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving transaction...", "LOADING"));
+            await client.newTransaction(transaction);
             dispatch(
                 showNotification("Successfully created transaction", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to create transaction", "ERROR"));
+        }
     };
 }
 
 export function saveTransaction(transaction) {
     return async (dispatch) => {
-        dispatch(showNotification("Saving transaction...", "LOADING"));
         try {
+            dispatch(showNotification("Saving transaction...", "LOADING"));
             const response = await client.saveTransaction(transaction);
-            dispatch(fetchTransactions({}));
             const newTransaction = response.data;
             dispatch(fetchTransactionComplete(newTransaction));
             dispatch(
                 showNotification("Successfully saved transaction", "SUCCESS")
             );
         } catch (error) {
-            console.log(error);
             dispatch(showNotification("Failed to save transaction", "ERROR"));
         }
     };
@@ -430,8 +468,8 @@ export function createPlan(plan) {
 
 export function savePlan(plan) {
     return async (dispatch) => {
-        dispatch(showNotification("Saving plan...", "LOADING"));
         try {
+            dispatch(showNotification("Saving plan...", "LOADING"));
             const response = await client.savePlan(plan);
             dispatch(fetchPlans({}));
             const newPlan = response.data;
@@ -452,12 +490,16 @@ export function fetchPlanComplete(plan) {
 }
 
 export function fetchPlan(id) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading plan...', 'LOADING'));
-        return client.getPlan(id).then((response) => {
+    return async (dispatch) => {
+        try {
+            // dispatch(showNotification('Loading plan...', 'LOADING'));
+            const response = await client.getPlan(id);
             const plan = response.data;
             dispatch(fetchPlanComplete(plan));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save plan", "ERROR"));
+        }
     };
 }
 
@@ -510,11 +552,17 @@ export function fetchAnalyticsComplete(analytics) {
 }
 
 export function fetchAnalytics(params) {
-    return (dispatch) => {
-        return axios.get("/api/v1/analytics", { params }).then((response) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.get("/api/v1/analytics", { params });
             const analytics = response.data;
             dispatch(fetchAnalyticsComplete(analytics));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                showNotification("Failed to fetch analytics data", "ERROR")
+            );
+        }
     };
 }
 

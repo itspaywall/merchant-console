@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { extractValues } from "../RecordForm";
-
+import { extractValues } from "../common/RecordForm";
 import FormDrawer from "../common/FormDrawer";
 
 const groups = [

@@ -292,7 +292,7 @@ function ViewAccounts(props) {
         history.push("/accounts/" + account.id);
     };
 
-    // TODO: Create a deep copy without serializing !
+    // TODO: Create a deep copy without serializing!
     const onFilterValueChange = (field, value) => {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;

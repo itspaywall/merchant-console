@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { extractValues } from "../RecordForm";
-
+import { extractValues } from "../common/RecordForm";
 import FormDrawer from "../common/FormDrawer";
 
 // text, large_text, number, date_picker, date_range_picker, switch, phone_number, email_address

@@ -5,7 +5,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
-import RecordForm, { extractValues } from "../RecordForm";
+import RecordForm, { extractValues } from "../common/RecordForm";
 
 const useStyles = makeStyles((theme) => ({
     root: {

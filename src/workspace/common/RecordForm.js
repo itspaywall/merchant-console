@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
@@ -16,7 +16,11 @@ import {
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Chip from "@material-ui/core/Chip";
+import CountrySelect from "./CountrySelect";
+import Lookup from "./Lookup";
+import { newClient } from "../../server/api";
 
+const client = newClient();
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
@@ -42,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 20,
     },
 }));
+
+// const options = [{ firstName: "Hello", lastName: "World", userName: "hello" }];
 
 // date_range_picker, phone_number, email_address
 // multiple_options (multiselect), single_option (drop down)
@@ -73,9 +79,43 @@ export function extractValues(groups) {
     return result;
 }
 
+const apis = {
+    account_lookup: client.getAccounts,
+    plan_lookup: client.getPlans,
+};
+
+function prepareLookupContexts(groups) {
+    const result = {};
+    groups.forEach((group) => {
+        group.children.forEach((field) => {
+            if (field.type in apis) {
+                const context = {
+                    updateOptions: async function (field, text) {
+                        if (text) {
+                            const api = apis[field.type];
+                            const response = await api({
+                                search: text,
+                            });
+                            this.setOptions(response.data.records);
+                        } else {
+                            this.setOptions([]);
+                        }
+                    },
+                };
+                const [options, setOptions] = useState([]);
+                context.options = options;
+                context.setOptions = setOptions;
+                result[field.identifier] = context;
+            }
+        });
+    });
+    return result;
+}
+
 export default function RecordForm(props) {
     const { values, groups, showMore, onValueChange, tabIndex } = props;
     const classes = useStyles(props);
+    const contexts = prepareLookupContexts(groups);
 
     const makeChangeHandler = (field) => (event) => {
         onValueChange(field, event.target.value);
@@ -92,6 +132,10 @@ export default function RecordForm(props) {
         // ISO format
         newValue[which] = format(date, "yyyy/MM/dd");
         onValueChange(field, newValue);
+    };
+
+    const makeLookupChangeHandler = (field) => (event, value) => {
+        onValueChange(field, value ? Object.assign({}, value) : null);
     };
 
     /* The value from the backend can be null. Therefore, we consider falsy values are errors
@@ -160,6 +204,8 @@ export default function RecordForm(props) {
             </Select>
         </FormControl>
     );
+
+    console.log(values);
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -253,10 +299,9 @@ export default function RecordForm(props) {
                                                   )
                                         }
                                         margin="normal"
-                                        onChange={makeDateChangeHandler(
-                                            field,
-                                            "startDate"
-                                        )}
+                                        onChange={(value) =>
+                                            onValueChange(field, value)
+                                        }
                                         size="medium"
                                     />
                                 )}
@@ -410,6 +455,67 @@ export default function RecordForm(props) {
                                                 : "Please specify a valid phone number."
                                         }
                                         size="medium"
+                                    />
+                                )}
+
+                                {field.type === "country" && (
+                                    <CountrySelect label={field.label} />
+                                )}
+
+                                {field.type === "account_lookup" && (
+                                    <Lookup
+                                        label={field.label}
+                                        options={
+                                            contexts[field.identifier].options
+                                        }
+                                        updateOptions={(searchText) =>
+                                            contexts[
+                                                field.identifier
+                                            ].updateOptions(field, searchText)
+                                        }
+                                        onChange={makeLookupChangeHandler(
+                                            field
+                                        )}
+                                        value={values[field.identifier]}
+                                        renderOptionLabel={(option) =>
+                                            `${option.userName}`
+                                        }
+                                        renderOption={(option) => (
+                                            <React.Fragment>
+                                                {`${option.userName} • ${option.firstName} ${option.lastName}`}
+                                            </React.Fragment>
+                                        )}
+                                        name={field.identifier}
+                                        required={field.required}
+                                    />
+                                )}
+
+                                {field.type === "plan_lookup" && (
+                                    <Lookup
+                                        label={field.label}
+                                        options={
+                                            contexts[field.identifier].options
+                                        }
+                                        updateOptions={(searchText) =>
+                                            contexts[
+                                                field.identifier
+                                            ].updateOptions(field, searchText)
+                                        }
+                                        onChange={makeLookupChangeHandler(
+                                            field
+                                        )}
+                                        value={values[field.identifier]}
+                                        renderOptionLabel={(option) =>
+                                            console.log(option) ||
+                                            `${option.name}`
+                                        }
+                                        renderOption={(option) => (
+                                            <React.Fragment>
+                                                {`${option.code} • ${option.name}`}
+                                            </React.Fragment>
+                                        )}
+                                        name={field.identifier}
+                                        required={field.required}
                                     />
                                 )}
                             </Grid>
