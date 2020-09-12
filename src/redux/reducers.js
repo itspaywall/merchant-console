@@ -135,7 +135,7 @@ function invoiceReducer(state = null, action) {
     }
 }
 
-function transactionsReducer(state = [], action) {
+function transactionsReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_TRANSACTIONS_COMPLETE: {
             return action.payload;

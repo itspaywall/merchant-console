@@ -318,7 +318,7 @@ export function createTransaction(transaction) {
     return (dispatch) => {
         dispatch(showNotification("Saving transaction...", "LOADING"));
         return client.newTransaction(transaction).then((response) => {
-            // const newPlan = response.data;
+            dispatch(fetchTransactions({}));
             dispatch(
                 showNotification("Successfully created transaction", "SUCCESS")
             );
@@ -327,15 +327,20 @@ export function createTransaction(transaction) {
 }
 
 export function saveTransaction(transaction) {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(showNotification("Saving transaction...", "LOADING"));
-        return client.saveTransaction(transaction).then((response) => {
-            const transaction = response.data;
-            dispatch(fetchTransactionComplete(transaction));
+        try {
+            const response = await client.saveTransaction(transaction);
+            dispatch(fetchTransactions({}));
+            const newTransaction = response.data;
+            dispatch(fetchTransactionComplete(newTransaction));
             dispatch(
                 showNotification("Successfully saved transaction", "SUCCESS")
             );
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to save transaction", "ERROR"));
+        }
     };
 }
 
@@ -348,7 +353,6 @@ export function fetchTransactionComplete(transaction) {
 
 export function fetchTransaction(id) {
     return (dispatch) => {
-        // dispatch(showNotification('Loading transaction...', 'LOADING'));
         return client.getTransaction(id).then((response) => {
             const transaction = response.data;
             dispatch(fetchTransactionComplete(transaction));
@@ -364,16 +368,20 @@ export function fetchTransactionsComplete(transactions) {
 }
 
 export function fetchTransactions(params) {
-    return (dispatch) => {
-        // dispatch(showNotification('Loading transactions...', 'LOADING'));
-        return client.getTransactions(params).then((response) => {
+    return async (dispatch) => {
+        try {
+            const response = await client.getTransactions(params);
             const transactions = response.data;
-            for (let i = 0; i < transactions.length; i++) {
-                const transaction = transactions[i];
-                transaction.createdOn = new Date(transaction.createdOn);
+            const records = transactions.records;
+            for (let i = 0; i < records.length; i++) {
+                const transaction = records[i];
+                transaction.createdAt = new Date(transaction.createdAt);
             }
             dispatch(fetchTransactionsComplete(transactions));
-        });
+        } catch (error) {
+            console.log(error);
+            dispatch(showNotification("Failed to fetch transactions", "ERROR"));
+        }
     };
 }
 

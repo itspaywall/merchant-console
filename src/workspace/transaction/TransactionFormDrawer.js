@@ -9,19 +9,19 @@ const groups = [
     {
         label: "Basic",
         children: [
-            /*{
-                label: "Subscription",
-                identifier: "subscription",
+            {
+                label: "Reference ID",
+                identifier: "referenceId",
                 type: "text",
-                required: false,
+                required: true,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
                 hidden: false,
-                tooltip: "The plan associated with a subscription.",
-                multipleValues: true,
+                tooltip: "Reference ID of the transaction.",
+                multipleValues: false,
                 defaultValue: "",
-            },*/
+            },
             {
                 label: "Comments",
                 identifier: "comments",
@@ -119,19 +119,6 @@ const groups = [
                 tooltip: "Method of Payment.",
                 multipleValues: false,
                 defaultValue: "cash",
-            },
-            {
-                label: "Refundable",
-                identifier: "refundable",
-                type: "switch",
-                required: false,
-                readOnly: false,
-                quickAdd: true,
-                unique: false,
-                hidden: false,
-                tooltip: "The refund policy of the transaction.",
-                multipleValues: false,
-                defaultValue: false,
             },
         ],
     },
