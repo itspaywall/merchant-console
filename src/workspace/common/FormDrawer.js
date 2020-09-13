@@ -124,7 +124,6 @@ function toRequest(groups, values) {
             }
         });
     });
-    console.log(result);
     return result;
 }
 
@@ -142,6 +141,8 @@ function FormDrawer(props) {
     const [showMore, setShowMore] = React.useState(props.showMore);
     const [values, setValues] = React.useState(props.values);
     const [tabIndex, setTabIndex] = React.useState(0);
+    const [formInvalid, setFormInvalid] = React.useState(true);
+
     const handleShowMore = () => {
         setShowMore(!showMore);
     };
@@ -153,7 +154,6 @@ function FormDrawer(props) {
     const handleValueChange = (field, value) => {
         const newValues = JSON.parse(JSON.stringify(values));
         newValues[field.identifier] = value;
-
         setValues(newValues);
     };
 
@@ -213,6 +213,7 @@ function FormDrawer(props) {
                             showMore={showMore}
                             options={options}
                             updateLookupOptions={updateLookupOptions}
+                            setFormInvalid={setFormInvalid}
                         />
                     </div>
                 </div>
@@ -226,6 +227,7 @@ function FormDrawer(props) {
                     }
                 >
                     <Button
+                        disabled={formInvalid}
                         onClick={handleSave}
                         color="primary"
                         className={classes.dialogAction}

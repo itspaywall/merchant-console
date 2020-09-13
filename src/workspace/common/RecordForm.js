@@ -84,6 +84,17 @@ const apis = {
     plan_lookup: client.getPlans,
 };
 
+function prepareValidationLists(groups) {
+    let required = groups[0].children
+        .filter((field) => field.required === true)
+        .map((field) => field.identifier);
+    let requiredState = {};
+    for (let i = 0; i < required.length; i++) {
+        requiredState[required[i]] = false;
+    }
+    return requiredState;
+}
+
 function prepareLookupContexts(groups) {
     const result = {};
     groups.forEach((group) => {
@@ -113,9 +124,88 @@ function prepareLookupContexts(groups) {
 }
 
 export default function RecordForm(props) {
-    const { values, groups, showMore, onValueChange, tabIndex } = props;
+    const {
+        values,
+        groups,
+        showMore,
+        onValueChange,
+        tabIndex,
+        setFormInvalid,
+    } = props;
     const classes = useStyles(props);
     const contexts = prepareLookupContexts(groups);
+    const requiredState = React.useState(prepareValidationLists(groups));
+
+    const validateUserName = (field) => {
+        const value = values[field.identifier];
+        if (value) {
+            const temporary = value.toLowerCase();
+            // eslint-disable-next-line
+            const pattern = /^[\D][\w]{2,}/;
+            return pattern.test(temporary);
+        }
+        return !field.required;
+    };
+
+    const validateEmail = (field) => {
+        const value = values[field.identifier];
+        if (value) {
+            const temporary = value.toLowerCase();
+            // eslint-disable-next-line
+            const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return pattern.test(temporary);
+        }
+        return !field.required;
+    };
+
+    const validatePhoneNumber = (field) => {
+        const value = values[field.identifier];
+        if (value) {
+            const temporary = value.toLowerCase();
+            // eslint-disable-next-line
+            const pattern1 = /(\d{3}[.-]?){2}\d{4}$/;
+            const pattern2 = /(\d{4}[.-]?)(\d{3}[.-]?)\d{4}$/;
+            return pattern1.test(temporary) || pattern2.test(temporary);
+        }
+        return !field.required;
+    };
+
+    const validateName = (field) => {
+        const value = values[field.identifier];
+        if (value) {
+            const temporary = value.toLowerCase();
+            // eslint-disable-next-line
+            const pattern = /^[\D]{3,}$/;
+            return pattern.test(temporary);
+        }
+        return !field.required;
+    };
+
+    const validators = {
+        userName: validateUserName,
+        firstName: validateName,
+        lastName: validateName,
+        emailAddress: validateEmail,
+        phoneNumber: validatePhoneNumber,
+    };
+    const updateValidationLists = (field) => {
+        const validator = validators[field.identifier];
+        if (validator) {
+            requiredState[field.identifier] = validator(field);
+        } else {
+            requiredState[field.identifier] = true;
+        }
+        let arr = [];
+        for (let i in requiredState) {
+            arr.push(requiredState[i]);
+        }
+        if (!arr.includes(false)) {
+            setFormInvalid(false);
+        } else {
+            setFormInvalid(true);
+        }
+        console.log(requiredState);
+    };
 
     const makeChangeHandler = (field) => (event) => {
         onValueChange(field, event.target.value);
@@ -136,26 +226,6 @@ export default function RecordForm(props) {
 
     const makeLookupChangeHandler = (field) => (event, value) => {
         onValueChange(field, value ? Object.assign({}, value) : null);
-    };
-
-    /* The value from the backend can be null. Therefore, we consider falsy values are errors
-     * only if they are required.
-     */
-    const validateEmail = (field) => {
-        const value = values[field.identifier];
-        if (value) {
-            const temporary = value.toLowerCase();
-            // eslint-disable-next-line
-            const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return pattern.test(temporary);
-        }
-        return !field.required;
-    };
-
-    const validatePhoneNumber = (field) => {
-        // eslint-disable-next-line
-        // const pattern = /^([+]?\d{1,2}[.-\s]?)?(\d{3}[.-]?){2}\d{4}$/;
-        return true;
     };
 
     const renderSelect = (field) => (
@@ -205,7 +275,28 @@ export default function RecordForm(props) {
         </FormControl>
     );
 
-    console.log(values);
+    // const validators = {
+    //     "name": validateName,
+    //     "user_name": validateUserName,
+    //     "phone_number": validatePhoneNumber,
+    //     "email_address": validateEmail,
+    // }
+    // let result = true;
+    // outer: for (let i = 0; i < groups.length; i++) {
+    //     const group = groups[i];
+    //     const children = group.children;
+    //     for (let j = 0; j < children.length; j++) {
+    //         const field = children[j];
+    //         const validator = validators[field.type];
+    //         if (validator) {
+    //             result = validator(field);
+    //             if (!result) {
+    //                 break outer;
+    //             }
+    //         }
+    //     }
+    // }
+    // onValidityUpdate(result);
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -220,20 +311,25 @@ export default function RecordForm(props) {
                                 lg={12}
                                 className={classes.field}
                             >
-                                {field.type === "text" && (
-                                    <TextField
-                                        label={field.label}
-                                        id={field.identifier}
-                                        name={field.identifier}
-                                        type="text"
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        size="medium"
-                                    />
-                                )}
+                                {updateValidationLists(field)}
+
+                                {field.type === "text" &&
+                                    field.identifier !== "userName" &&
+                                    field.identifier !== "firstName" &&
+                                    field.identifier !== "lastName" && (
+                                        <TextField
+                                            label={field.label}
+                                            id={field.identifier}
+                                            name={field.identifier}
+                                            type="text"
+                                            variant="outlined"
+                                            fullWidth={true}
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            size="medium"
+                                        />
+                                    )}
 
                                 {field.type === "password" && (
                                     <TextField
@@ -415,6 +511,49 @@ export default function RecordForm(props) {
 
                                 {field.type === "multi_select" &&
                                     renderMultiSelect(field)}
+
+                                {field.identifier === "userName" && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                        error={!validateUserName(field)}
+                                        helperText={
+                                            validateUserName(field)
+                                                ? ""
+                                                : "Please enter a valid username that is atleast 3 characters long and starts with an alphabet."
+                                        }
+                                        size="medium"
+                                    />
+                                )}
+
+                                {(field.identifier === "firstName" ||
+                                    field.identifier === "lastName") && (
+                                    <TextField
+                                        id={field.identifier}
+                                        label={field.label}
+                                        name={field.identifier}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        required={field.required}
+                                        value={values[field.identifier]}
+                                        onChange={makeChangeHandler(field)}
+                                        error={!validateName(field)}
+                                        helperText={
+                                            validateName(field)
+                                                ? ""
+                                                : "Please enter a valid name that is atleast 3 characters long, and doesn't have numbers."
+                                        }
+                                        size="medium"
+                                    />
+                                )}
 
                                 {field.type === "email_address" && (
                                     <TextField

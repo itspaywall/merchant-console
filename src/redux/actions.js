@@ -219,7 +219,9 @@ export function fetchSubscriptions(params) {
             dispatch(fetchSubscriptionsComplete(subscriptions));
         } catch (error) {
             console.log(error);
-            dispatch(showNotification("Failed to fetch subscriptions", "ERROR"));
+            dispatch(
+                showNotification("Failed to fetch subscriptions", "ERROR")
+            );
         }
     };
 }
@@ -457,12 +459,15 @@ export function newPlan() {
 }
 
 export function createPlan(plan) {
-    return (dispatch) => {
-        dispatch(showNotification("Saving plan...", "LOADING"));
-        return client.newPlan(plan).then((response) => {
-            dispatch(fetchPlans({}));
+    return async (dispatch) => {
+        try {
+            dispatch(showNotification("Saving plan...", "LOADING"));
+            await client.newAccount(plan);
+            dispatch(fetchAccounts({}));
             dispatch(showNotification("Successfully created plan", "SUCCESS"));
-        });
+        } catch (error) {
+            dispatch(showNotification("Failed to create plan", "ERROR"));
+        }
     };
 }
 

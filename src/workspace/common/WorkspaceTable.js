@@ -39,7 +39,6 @@ function stableSort(array, comparator) {
         }
         return a[1] - b[1];
     });
-    console.log(auxillary.map((value) => value[0]));
     return auxillary.map((value) => value[0]);
 }
 

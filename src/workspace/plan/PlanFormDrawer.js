@@ -11,8 +11,8 @@ const groups = [
             {
                 label: "Name",
                 identifier: "name",
-                type: "text",
-                required: true,
+                type: "name",
+                required: false,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
