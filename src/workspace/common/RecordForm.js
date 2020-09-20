@@ -123,6 +123,8 @@ function prepareLookupContexts(groups) {
     return result;
 }
 
+let firstCall = true; // Used to call helperText and error message triggers when false
+
 export default function RecordForm(props) {
     const {
         values,
@@ -135,8 +137,12 @@ export default function RecordForm(props) {
     const classes = useStyles(props);
     const contexts = prepareLookupContexts(groups);
     const requiredState = React.useState(prepareValidationLists(groups));
+    const triggers = React.useState(prepareValidationLists(groups));
 
     const validateUserName = (field) => {
+        if (!firstCall) {
+            triggers[field.identifier] = true;
+        }
         const value = values[field.identifier];
         if (value) {
             const temporary = value.toLowerCase();
@@ -148,6 +154,9 @@ export default function RecordForm(props) {
     };
 
     const validateEmail = (field) => {
+        if (!firstCall) {
+            triggers[field.identifier] = true;
+        }
         const value = values[field.identifier];
         if (value) {
             const temporary = value.toLowerCase();
@@ -159,6 +168,9 @@ export default function RecordForm(props) {
     };
 
     const validatePhoneNumber = (field) => {
+        if (!firstCall) {
+            triggers[field.identifier] = true;
+        }
         const value = values[field.identifier];
         if (value) {
             const temporary = value.toLowerCase();
@@ -171,6 +183,9 @@ export default function RecordForm(props) {
     };
 
     const validateName = (field) => {
+        if (!firstCall) {
+            triggers[field.identifier] = true;
+        }
         const value = values[field.identifier];
         if (value) {
             const temporary = value.toLowerCase();
@@ -204,10 +219,10 @@ export default function RecordForm(props) {
         } else {
             setFormInvalid(true);
         }
-        console.log(requiredState);
     };
 
     const makeChangeHandler = (field) => (event) => {
+        firstCall = false;
         onValueChange(field, event.target.value);
     };
 
@@ -523,11 +538,17 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        error={!validateUserName(field)}
+                                        error={
+                                            triggers[field.identifier]
+                                                ? !validateUserName(field)
+                                                : false
+                                        }
                                         helperText={
-                                            validateUserName(field)
-                                                ? ""
-                                                : "Please enter a valid username that is atleast 3 characters long and starts with an alphabet."
+                                            triggers[field.identifier]
+                                                ? validateUserName(field)
+                                                    ? ""
+                                                    : "Please enter a valid username that is atleast 3 characters long and starts with an alphabet."
+                                                : ""
                                         }
                                         size="medium"
                                     />
@@ -545,11 +566,17 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        error={!validateName(field)}
+                                        error={
+                                            triggers[field.identifier]
+                                                ? !validateName(field)
+                                                : false
+                                        }
                                         helperText={
-                                            validateName(field)
-                                                ? ""
-                                                : "Please enter a valid name that is atleast 3 characters long, and doesn't have numbers."
+                                            triggers[field.identifier]
+                                                ? validateName(field)
+                                                    ? ""
+                                                    : "Please enter a valid name that is atleast 3 characters long, and doesn't have numbers."
+                                                : ""
                                         }
                                         size="medium"
                                     />
@@ -566,11 +593,17 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        error={!validateEmail(field)}
+                                        error={
+                                            triggers[field.identifier]
+                                                ? !validateEmail(field)
+                                                : false
+                                        }
                                         helperText={
-                                            validateEmail(field)
-                                                ? ""
-                                                : "Please specify a valid email address."
+                                            triggers[field.identifier]
+                                                ? validateEmail(field)
+                                                    ? ""
+                                                    : "Please specify a valid email address."
+                                                : ""
                                         }
                                         size="medium"
                                     />
@@ -587,11 +620,17 @@ export default function RecordForm(props) {
                                         required={field.required}
                                         value={values[field.identifier]}
                                         onChange={makeChangeHandler(field)}
-                                        error={!validatePhoneNumber(field)}
+                                        error={
+                                            triggers[field.identifier]
+                                                ? !validatePhoneNumber(field)
+                                                : false
+                                        }
                                         helperText={
-                                            validatePhoneNumber(field)
-                                                ? ""
-                                                : "Please specify a valid phone number."
+                                            triggers[field.identifier]
+                                                ? validatePhoneNumber(field)
+                                                    ? ""
+                                                    : "Please specify a valid phone number."
+                                                : ""
                                         }
                                         size="medium"
                                     />
