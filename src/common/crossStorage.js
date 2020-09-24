@@ -2,7 +2,7 @@ import crossStorage from "cross-storage";
 
 const newCrossStorage = async () => {
     const result = new crossStorage.CrossStorageClient(
-        "http://localhost:3000/hub.html"
+        `${process.env.REACT_APP_WEBSITE_URL}/hub.html`
     );
     await result.onConnect();
     return result;

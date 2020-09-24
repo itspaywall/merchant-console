@@ -50,7 +50,7 @@ function App(props) {
         }
 
         if (!isUserLoading && !user) {
-            window.location = "http://localhost:3000/login";
+            window.location = `${process.env.REACT_APP_WEBSITE_URL}/login`;
         }
 
         return null;

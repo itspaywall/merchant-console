@@ -3,7 +3,7 @@ import axios from "axios";
 const DEFAULT_API_VERSION = "v1";
 
 export function newClient(version = DEFAULT_API_VERSION) {
-    axios.defaults.baseURL = `http://localhost:3001/api/${version}`;
+    axios.defaults.baseURL = `${process.env.REACT_APP_API_URL}/api/${version}`;
 
     return {
         // Account
