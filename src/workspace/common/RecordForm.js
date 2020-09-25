@@ -19,6 +19,7 @@ import Chip from "@material-ui/core/Chip";
 import CountrySelect from "./CountrySelect";
 import Lookup from "./Lookup";
 import { newClient } from "../../server/api";
+import Formsy from "formsy-react";
 
 const client = newClient();
 const useStyles = makeStyles((theme) => ({
@@ -84,17 +85,6 @@ const apis = {
     plan_lookup: client.getPlans,
 };
 
-function prepareValidationLists(groups) {
-    let required = groups[0].children
-        .filter((field) => field.required === true)
-        .map((field) => field.identifier);
-    let requiredState = {};
-    for (let i = 0; i < required.length; i++) {
-        requiredState[required[i]] = false;
-    }
-    return requiredState;
-}
-
 function prepareLookupContexts(groups) {
     const result = {};
     groups.forEach((group) => {
@@ -123,8 +113,6 @@ function prepareLookupContexts(groups) {
     return result;
 }
 
-let firstCall = true; // Used to call helperText and error message triggers when false
-
 export default function RecordForm(props) {
     const {
         values,
@@ -132,97 +120,13 @@ export default function RecordForm(props) {
         showMore,
         onValueChange,
         tabIndex,
-        setFormInvalid,
+        enableSaveButton,
+        disableSaveButton,
     } = props;
     const classes = useStyles(props);
     const contexts = prepareLookupContexts(groups);
-    const requiredState = React.useState(prepareValidationLists(groups));
-    const triggers = React.useState(prepareValidationLists(groups));
-
-    const validateUserName = (field) => {
-        if (!firstCall) {
-            triggers[field.identifier] = true;
-        }
-        const value = values[field.identifier];
-        if (value) {
-            const temporary = value.toLowerCase();
-            // eslint-disable-next-line
-            const pattern = /^[\D][\w]{2,}/;
-            return pattern.test(temporary);
-        }
-        return !field.required;
-    };
-
-    const validateEmail = (field) => {
-        if (!firstCall) {
-            triggers[field.identifier] = true;
-        }
-        const value = values[field.identifier];
-        if (value) {
-            const temporary = value.toLowerCase();
-            // eslint-disable-next-line
-            const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return pattern.test(temporary);
-        }
-        return !field.required;
-    };
-
-    const validatePhoneNumber = (field) => {
-        if (!firstCall) {
-            triggers[field.identifier] = true;
-        }
-        const value = values[field.identifier];
-        if (value) {
-            const temporary = value.toLowerCase();
-            // eslint-disable-next-line
-            const pattern1 = /(\d{3}[.-]?){2}\d{4}$/;
-            const pattern2 = /(\d{4}[.-]?)(\d{3}[.-]?)\d{4}$/;
-            return pattern1.test(temporary) || pattern2.test(temporary);
-        }
-        return !field.required;
-    };
-
-    const validateName = (field) => {
-        if (!firstCall) {
-            triggers[field.identifier] = true;
-        }
-        const value = values[field.identifier];
-        if (value) {
-            const temporary = value.toLowerCase();
-            // eslint-disable-next-line
-            const pattern = /^[\D]{3,}$/;
-            return pattern.test(temporary);
-        }
-        return !field.required;
-    };
-
-    const validators = {
-        userName: validateUserName,
-        firstName: validateName,
-        lastName: validateName,
-        emailAddress: validateEmail,
-        phoneNumber: validatePhoneNumber,
-    };
-    const updateValidationLists = (field) => {
-        const validator = validators[field.identifier];
-        if (validator) {
-            requiredState[field.identifier] = validator(field);
-        } else {
-            requiredState[field.identifier] = true;
-        }
-        let arr = [];
-        for (let i in requiredState) {
-            arr.push(requiredState[i]);
-        }
-        if (!arr.includes(false)) {
-            setFormInvalid(false);
-        } else {
-            setFormInvalid(true);
-        }
-    };
 
     const makeChangeHandler = (field) => (event) => {
-        firstCall = false;
         onValueChange(field, event.target.value);
     };
 
@@ -290,29 +194,6 @@ export default function RecordForm(props) {
         </FormControl>
     );
 
-    // const validators = {
-    //     "name": validateName,
-    //     "user_name": validateUserName,
-    //     "phone_number": validatePhoneNumber,
-    //     "email_address": validateEmail,
-    // }
-    // let result = true;
-    // outer: for (let i = 0; i < groups.length; i++) {
-    //     const group = groups[i];
-    //     const children = group.children;
-    //     for (let j = 0; j < children.length; j++) {
-    //         const field = children[j];
-    //         const validator = validators[field.type];
-    //         if (validator) {
-    //             result = validator(field);
-    //             if (!result) {
-    //                 break outer;
-    //             }
-    //         }
-    //     }
-    // }
-    // onValidityUpdate(result);
-
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container={true} className={classes.root}>
@@ -326,12 +207,11 @@ export default function RecordForm(props) {
                                 lg={12}
                                 className={classes.field}
                             >
-                                {updateValidationLists(field)}
-
-                                {field.type === "text" &&
-                                    field.identifier !== "userName" &&
-                                    field.identifier !== "firstName" &&
-                                    field.identifier !== "lastName" && (
+                                <Formsy
+                                    onValid={enableSaveButton}
+                                    onInvalid={disableSaveButton}
+                                >
+                                    {field.type === "text" && (
                                         <TextField
                                             label={field.label}
                                             id={field.identifier}
@@ -343,359 +223,319 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations="isAlphanumeric,minLength:3"
+                                            validationErrors={{
+                                                isAlphanumeric:
+                                                    "You have to type a valid alpha-numberic text.",
+                                                minLength:
+                                                    "You have to type more than 3 characters.",
+                                            }}
                                         />
                                     )}
 
-                                {field.type === "password" && (
-                                    <TextField
-                                        label={field.label}
-                                        id={field.identifier}
-                                        name={field.identifier}
-                                        type="password"
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        size="medium"
-                                    />
-                                )}
-
-                                {field.type === "large_text" && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="text"
-                                        multiline={true}
-                                        rows={field.rows || 4}
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        size="medium"
-                                    />
-                                )}
-
-                                {field.type === "number" && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="number"
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        size="medium"
-                                    />
-                                )}
-
-                                {field.type === "date" && (
-                                    <KeyboardDatePicker
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        format="MM/dd/yyyy"
-                                        fullWidth={true}
-                                        inputVariant="outlined"
-                                        required={field.required}
-                                        value={
-                                            !values[field.identifier]
-                                                ? new Date()
-                                                : new Date(
-                                                      values[field.identifier]
-                                                  )
-                                        }
-                                        margin="normal"
-                                        onChange={(value) =>
-                                            onValueChange(field, value)
-                                        }
-                                        size="medium"
-                                    />
-                                )}
-
-                                {field.type === "switch" && (
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            id={field.identifier}
+                                    {field.type === "password" && (
+                                        <TextField
                                             label={field.label}
+                                            id={field.identifier}
                                             name={field.identifier}
-                                            control={<Switch color="primary" />}
+                                            type="password"
+                                            variant="outlined"
+                                            fullWidth={true}
                                             required={field.required}
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
-                                        />
-                                    </FormGroup>
-                                )}
-
-                                {field.type === "date_range" && (
-                                    <div>
-                                        <FormControl
-                                            variant="outlined"
-                                            fullWidth={true}
                                             size="medium"
-                                        >
-                                            <InputLabel id={field.identifier}>
-                                                {field.title}
-                                            </InputLabel>
-                                            <Select
-                                                labelId={field.identifier}
-                                                value={
-                                                    values[field.identifier]
-                                                        .option
+                                        />
+                                    )}
+
+                                    {field.type === "large_text" && (
+                                        <TextField
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            type="text"
+                                            multiline={true}
+                                            rows={field.rows || 4}
+                                            fullWidth={true}
+                                            variant="outlined"
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "number" && (
+                                        <TextField
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            type="number"
+                                            fullWidth={true}
+                                            variant="outlined"
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "date" && (
+                                        <KeyboardDatePicker
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            format="MM/dd/yyyy"
+                                            fullWidth={true}
+                                            inputVariant="outlined"
+                                            required={field.required}
+                                            value={
+                                                !values[field.identifier]
+                                                    ? new Date()
+                                                    : new Date(
+                                                          values[
+                                                              field.identifier
+                                                          ]
+                                                      )
+                                            }
+                                            margin="normal"
+                                            onChange={(value) =>
+                                                onValueChange(field, value)
+                                            }
+                                            size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "switch" && (
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                id={field.identifier}
+                                                label={field.label}
+                                                name={field.identifier}
+                                                control={
+                                                    <Switch color="primary" />
                                                 }
-                                                onChange={makeRangeHandler(
+                                                required={field.required}
+                                                value={values[field.identifier]}
+                                                onChange={makeChangeHandler(
                                                     field
                                                 )}
-                                                label={field.title}
+                                            />
+                                        </FormGroup>
+                                    )}
+
+                                    {field.type === "date_range" && (
+                                        <div>
+                                            <FormControl
+                                                variant="outlined"
+                                                fullWidth={true}
+                                                size="medium"
                                             >
-                                                {field.options.map((option) => (
-                                                    <MenuItem
-                                                        value={option.value}
-                                                    >
-                                                        {option.title}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                        {values[field.identifier].option ===
-                                            "custom" && (
-                                            <React.Fragment>
-                                                <KeyboardDatePicker
-                                                    margin="normal"
-                                                    id={
-                                                        field.identifier +
-                                                        "Start"
-                                                    }
-                                                    label={field.startTitle}
-                                                    format="MM/dd/yyyy"
-                                                    inputVariant="outlined"
-                                                    fullWidth={true}
-                                                    size="medium"
+                                                <InputLabel
+                                                    id={field.identifier}
+                                                >
+                                                    {field.title}
+                                                </InputLabel>
+                                                <Select
+                                                    labelId={field.identifier}
                                                     value={
-                                                        !values[
-                                                            field.identifier
-                                                        ].startDate
-                                                            ? new Date()
-                                                            : new Date(
-                                                                  values[
-                                                                      field.identifier
-                                                                  ].startDate
-                                                              )
+                                                        values[field.identifier]
+                                                            .option
                                                     }
-                                                    onChange={makeDateChangeHandler(
-                                                        field,
-                                                        "startDate"
+                                                    onChange={makeRangeHandler(
+                                                        field
                                                     )}
-                                                />
-                                                <KeyboardDatePicker
-                                                    margin="normal"
-                                                    id={
-                                                        field.identifier + "End"
-                                                    }
-                                                    label={field.endTitle}
-                                                    format="MM/dd/yyyy"
-                                                    inputVariant="outlined"
-                                                    fullWidth={true}
-                                                    size="medium"
-                                                    value={
-                                                        !values[
-                                                            field.identifier
-                                                        ].endDate
-                                                            ? new Date()
-                                                            : new Date(
-                                                                  values[
-                                                                      field.identifier
-                                                                  ].endDate
-                                                              )
-                                                    }
-                                                    onChange={makeDateChangeHandler(
-                                                        field,
-                                                        "endDate"
+                                                    label={field.title}
+                                                >
+                                                    {field.options.map(
+                                                        (option) => (
+                                                            <MenuItem
+                                                                value={
+                                                                    option.value
+                                                                }
+                                                            >
+                                                                {option.title}
+                                                            </MenuItem>
+                                                        )
                                                     )}
-                                                />
-                                            </React.Fragment>
-                                        )}
-                                    </div>
-                                )}
+                                                </Select>
+                                            </FormControl>
+                                            {values[field.identifier].option ===
+                                                "custom" && (
+                                                <React.Fragment>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id={
+                                                            field.identifier +
+                                                            "Start"
+                                                        }
+                                                        label={field.startTitle}
+                                                        format="MM/dd/yyyy"
+                                                        inputVariant="outlined"
+                                                        fullWidth={true}
+                                                        size="medium"
+                                                        value={
+                                                            !values[
+                                                                field.identifier
+                                                            ].startDate
+                                                                ? new Date()
+                                                                : new Date(
+                                                                      values[
+                                                                          field.identifier
+                                                                      ].startDate
+                                                                  )
+                                                        }
+                                                        onChange={makeDateChangeHandler(
+                                                            field,
+                                                            "startDate"
+                                                        )}
+                                                    />
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id={
+                                                            field.identifier +
+                                                            "End"
+                                                        }
+                                                        label={field.endTitle}
+                                                        format="MM/dd/yyyy"
+                                                        inputVariant="outlined"
+                                                        fullWidth={true}
+                                                        size="medium"
+                                                        value={
+                                                            !values[
+                                                                field.identifier
+                                                            ].endDate
+                                                                ? new Date()
+                                                                : new Date(
+                                                                      values[
+                                                                          field.identifier
+                                                                      ].endDate
+                                                                  )
+                                                        }
+                                                        onChange={makeDateChangeHandler(
+                                                            field,
+                                                            "endDate"
+                                                        )}
+                                                    />
+                                                </React.Fragment>
+                                            )}
+                                        </div>
+                                    )}
 
-                                {field.type === "select" && renderSelect(field)}
+                                    {field.type === "select" &&
+                                        renderSelect(field)}
 
-                                {field.type === "multi_select" &&
-                                    renderMultiSelect(field)}
+                                    {field.type === "multi_select" &&
+                                        renderMultiSelect(field)}
 
-                                {field.identifier === "userName" && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="text"
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        error={
-                                            triggers[field.identifier]
-                                                ? !validateUserName(field)
-                                                : false
-                                        }
-                                        helperText={
-                                            triggers[field.identifier]
-                                                ? validateUserName(field)
-                                                    ? ""
-                                                    : "Please enter a valid username that is atleast 3 characters long and starts with an alphabet."
-                                                : ""
-                                        }
-                                        size="medium"
-                                    />
-                                )}
+                                    {field.type === "email_address" && (
+                                        <TextField
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            type="text"
+                                            fullWidth={true}
+                                            variant="outlined"
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            validations="isEmail"
+                                            validationError="Please specify a valid email address."
+                                            size="medium"
+                                        />
+                                    )}
 
-                                {(field.identifier === "firstName" ||
-                                    field.identifier === "lastName") && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="text"
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        error={
-                                            triggers[field.identifier]
-                                                ? !validateName(field)
-                                                : false
-                                        }
-                                        helperText={
-                                            triggers[field.identifier]
-                                                ? validateName(field)
-                                                    ? ""
-                                                    : "Please enter a valid name that is atleast 3 characters long, and doesn't have numbers."
-                                                : ""
-                                        }
-                                        size="medium"
-                                    />
-                                )}
+                                    {field.type === "phone_number" && (
+                                        <TextField
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            type="text"
+                                            fullWidth={true}
+                                            variant="outlined"
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            validations="isNumeric,isLength:10"
+                                            validationErrors={{
+                                                isNumeric:
+                                                    "You have to type a valid phone number.",
+                                                isLength:
+                                                    "You can not type more than 10 characters.",
+                                            }}
+                                            size="medium"
+                                        />
+                                    )}
 
-                                {field.type === "email_address" && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="text"
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        error={
-                                            triggers[field.identifier]
-                                                ? !validateEmail(field)
-                                                : false
-                                        }
-                                        helperText={
-                                            triggers[field.identifier]
-                                                ? validateEmail(field)
-                                                    ? ""
-                                                    : "Please specify a valid email address."
-                                                : ""
-                                        }
-                                        size="medium"
-                                    />
-                                )}
+                                    {field.type === "country" && (
+                                        <CountrySelect label={field.label} />
+                                    )}
 
-                                {field.type === "phone_number" && (
-                                    <TextField
-                                        id={field.identifier}
-                                        label={field.label}
-                                        name={field.identifier}
-                                        type="text"
-                                        fullWidth={true}
-                                        variant="outlined"
-                                        required={field.required}
-                                        value={values[field.identifier]}
-                                        onChange={makeChangeHandler(field)}
-                                        error={
-                                            triggers[field.identifier]
-                                                ? !validatePhoneNumber(field)
-                                                : false
-                                        }
-                                        helperText={
-                                            triggers[field.identifier]
-                                                ? validatePhoneNumber(field)
-                                                    ? ""
-                                                    : "Please specify a valid phone number."
-                                                : ""
-                                        }
-                                        size="medium"
-                                    />
-                                )}
+                                    {field.type === "account_lookup" && (
+                                        <Lookup
+                                            label={field.label}
+                                            options={
+                                                contexts[field.identifier]
+                                                    .options
+                                            }
+                                            updateOptions={(searchText) =>
+                                                contexts[
+                                                    field.identifier
+                                                ].updateOptions(
+                                                    field,
+                                                    searchText
+                                                )
+                                            }
+                                            onChange={makeLookupChangeHandler(
+                                                field
+                                            )}
+                                            value={values[field.identifier]}
+                                            renderOptionLabel={(option) =>
+                                                `${option.userName}`
+                                            }
+                                            renderOption={(option) => (
+                                                <React.Fragment>
+                                                    {`${option.userName} • ${option.firstName} ${option.lastName}`}
+                                                </React.Fragment>
+                                            )}
+                                            name={field.identifier}
+                                            required={field.required}
+                                        />
+                                    )}
 
-                                {field.type === "country" && (
-                                    <CountrySelect label={field.label} />
-                                )}
-
-                                {field.type === "account_lookup" && (
-                                    <Lookup
-                                        label={field.label}
-                                        options={
-                                            contexts[field.identifier].options
-                                        }
-                                        updateOptions={(searchText) =>
-                                            contexts[
-                                                field.identifier
-                                            ].updateOptions(field, searchText)
-                                        }
-                                        onChange={makeLookupChangeHandler(
-                                            field
-                                        )}
-                                        value={values[field.identifier]}
-                                        renderOptionLabel={(option) =>
-                                            `${option.userName}`
-                                        }
-                                        renderOption={(option) => (
-                                            <React.Fragment>
-                                                {`${option.userName} • ${option.firstName} ${option.lastName}`}
-                                            </React.Fragment>
-                                        )}
-                                        name={field.identifier}
-                                        required={field.required}
-                                    />
-                                )}
-
-                                {field.type === "plan_lookup" && (
-                                    <Lookup
-                                        label={field.label}
-                                        options={
-                                            contexts[field.identifier].options
-                                        }
-                                        updateOptions={(searchText) =>
-                                            contexts[
-                                                field.identifier
-                                            ].updateOptions(field, searchText)
-                                        }
-                                        onChange={makeLookupChangeHandler(
-                                            field
-                                        )}
-                                        value={values[field.identifier]}
-                                        renderOptionLabel={(option) =>
-                                            console.log(option) ||
-                                            `${option.name}`
-                                        }
-                                        renderOption={(option) => (
-                                            <React.Fragment>
-                                                {`${option.code} • ${option.name}`}
-                                            </React.Fragment>
-                                        )}
-                                        name={field.identifier}
-                                        required={field.required}
-                                    />
-                                )}
+                                    {field.type === "plan_lookup" && (
+                                        <Lookup
+                                            label={field.label}
+                                            options={
+                                                contexts[field.identifier]
+                                                    .options
+                                            }
+                                            updateOptions={(searchText) =>
+                                                contexts[
+                                                    field.identifier
+                                                ].updateOptions(
+                                                    field,
+                                                    searchText
+                                                )
+                                            }
+                                            onChange={makeLookupChangeHandler(
+                                                field
+                                            )}
+                                            value={values[field.identifier]}
+                                            renderOptionLabel={(option) =>
+                                                console.log(option) ||
+                                                `${option.name}`
+                                            }
+                                            renderOption={(option) => (
+                                                <React.Fragment>
+                                                    {`${option.code} • ${option.name}`}
+                                                </React.Fragment>
+                                            )}
+                                            name={field.identifier}
+                                            required={field.required}
+                                        />
+                                    )}
+                                </Formsy>
                             </Grid>
                         ) : null
                     )
