@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
     chip: {
         margin: 2,
+        fontWeight: 500,
     },
     field: {
         width: "100%",
@@ -191,6 +192,7 @@ export default function RecordForm(props) {
                             <Chip
                                 value={selected}
                                 label={getSelectedTitle(field, value)}
+                                className={classes.chip}
                             />
                         ))}
                     </div>

@@ -3,6 +3,7 @@ import * as ActionTypes from "./actionTypes";
 
 function dialogReducer(state = null, action) {
     switch (action.type) {
+        case ActionTypes.NEW_API_KEY:
         case ActionTypes.NEW_ACCOUNT:
         case ActionTypes.NEW_SUBSCRIPTION:
         case ActionTypes.NEW_INVOICE:

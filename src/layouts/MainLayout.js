@@ -18,6 +18,7 @@ import EditAccount from "../workspace/account/EditAccount";
 import SubscriptionFormDrawer from "../workspace/subscription/SubscriptionFormDrawer";
 import TransactionFormDrawer from "../workspace/transaction/TransactionFormDrawer";
 import PlanFormDrawer from "../workspace/plan/PlanFormDrawer";
+import APIKeyFormDrawer from "../workspace/api-key/APIKeyFormDrawer";
 import EditPlan from "../workspace/plan/EditPlan";
 import EditInvoice from "../workspace/invoice/EditInvoice";
 import EditTransaction from "../workspace/transaction/EditTransaction";
@@ -190,6 +191,11 @@ function MainLayout(props) {
                 title="New Plan"
                 onSave={createPlan}
                 open={openDialog === "NEW_PLAN"}
+            />
+            <APIKeyFormDrawer
+                title="New API Key"
+                onSave={() => {}}
+                open={openDialog === "NEW_API_KEY"}
             />
 
             {openDialog === "EDIT_INVOICE" && <EditInvoice />}

@@ -454,6 +454,7 @@ function ViewSubscriptions(props) {
                         />
                     )}
                 </Grid>
+                
                 {openFilter && (
                     <Grid item={true} lg={2}>
                         <WorkspaceFilter
@@ -464,7 +465,6 @@ function ViewSubscriptions(props) {
                         />
                     </Grid>
                 )}
-            </Grid>
         </div>
     );
 }
