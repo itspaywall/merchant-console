@@ -212,25 +212,33 @@ export default function RecordForm(props) {
                                     onInvalid={disableSaveButton}
                                 >
                                     {field.type === "text" && (
-                                        <TextField
-                                            label={field.label}
-                                            id={field.identifier}
-                                            name={field.identifier}
-                                            type="text"
-                                            variant="outlined"
-                                            fullWidth={true}
-                                            required={field.required}
-                                            value={values[field.identifier]}
-                                            onChange={makeChangeHandler(field)}
-                                            size="medium"
-                                            validations="isAlphanumeric,minLength:3"
-                                            validationErrors={{
-                                                isAlphanumeric:
-                                                    "You have to type a valid alpha-numberic text.",
-                                                minLength:
-                                                    "You have to type more than 3 characters.",
-                                            }}
-                                        />
+                                        <Formsy
+                                            onValid={enableSaveButton}
+                                            onInvalid={disableSaveButton}
+                                        >
+                                            <TextField
+                                                label={field.label}
+                                                id={field.identifier}
+                                                name={field.identifier}
+                                                type="text"
+                                                variant="outlined"
+                                                fullWidth={true}
+                                                required={field.required}
+                                                value={values[field.identifier]}
+                                                onChange={makeChangeHandler(
+                                                    field
+                                                )}
+                                                size="medium"
+                                                validations="isAlphanumeric,minLength:3"
+                                                validationErrors={{
+                                                    isAlphanumeric:
+                                                        "You have to type a valid alpha-numberic text.",
+                                                    minLength:
+                                                        "You have to type more than 3 characters.",
+                                                }}
+                                                preventFirstValidation={true}
+                                            />
+                                        </Formsy>
                                     )}
 
                                     {field.type === "password" && (
@@ -442,6 +450,7 @@ export default function RecordForm(props) {
                                             validations="isEmail"
                                             validationError="Please specify a valid email address."
                                             size="medium"
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -464,6 +473,7 @@ export default function RecordForm(props) {
                                                     "You can not type more than 10 characters.",
                                             }}
                                             size="medium"
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
