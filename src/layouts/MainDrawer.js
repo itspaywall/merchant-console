@@ -97,23 +97,6 @@ const navigationGroups = [
         ],
     },
     {
-        id: "configuration",
-        items: [
-            {
-                id: "plans",
-                title: "Plans",
-                icon: <PlansIcon />,
-                link: "/plans",
-            },
-            {
-                id: "preferences",
-                title: "Preferences",
-                icon: <PreferencesIcon />,
-                link: "/preferences",
-            },
-        ],
-    },
-    {
         id: "developers",
         items: [
             {
@@ -127,6 +110,23 @@ const navigationGroups = [
                 title: "Webhooks",
                 icon: <WebhooksIcon />,
                 link: "/webhooks",
+            },
+        ],
+    },
+    {
+        id: "configuration",
+        items: [
+            {
+                id: "plans",
+                title: "Plans",
+                icon: <PlansIcon />,
+                link: "/plans",
+            },
+            {
+                id: "preferences",
+                title: "Preferences",
+                icon: <PreferencesIcon />,
+                link: "/preferences",
             },
         ],
     },

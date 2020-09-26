@@ -7,6 +7,12 @@ const workspaceConfiguration = [
         component: React.lazy(() => import("./api-key/ViewAPIKeys")),
     },
 
+    // Webhooks
+    {
+        path: "/webhooks",
+        component: React.lazy(() => import("./webhook/ViewWebhooks")),
+    },
+
     // Account
     {
         path: "/accounts/:identifier",
