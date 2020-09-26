@@ -440,16 +440,15 @@ function ViewSubscriptions(props) {
                 </Grid>
             )}
 
-            {!subscriptions ||
-                (subscriptions.length === 0 && (
-                    <NoRecords
-                        message="You have not created any subscriptions yet."
-                        action={true}
-                        actionText="Create Subscription"
-                        actionHandler={newSubscription}
-                        image="assets/images/empty-subscriptions.svg"
-                    />
-                ))}
+            {(!subscriptions || subscriptions.records.length === 0) && (
+                <NoRecords
+                    message="You have not created any subscriptions yet."
+                    action={true}
+                    actionText="Create Subscription"
+                    actionHandler={newSubscription}
+                    image="assets/images/empty-subscriptions.svg"
+                />
+            )}
         </div>
     );
 }

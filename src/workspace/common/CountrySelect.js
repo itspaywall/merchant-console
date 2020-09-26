@@ -4,6 +4,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
+import { withFormsy } from "formsy-react";
 
 /* ISO 3166-1 alpha-2
  * ⚠️ No support for IE 11
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function CountrySelect(props) {
+function CountrySelect(props) {
     const { label } = props;
     const classes = useStyles();
 
@@ -314,3 +315,5 @@ const countries = [
     { code: "ZM", label: "Zambia" },
     { code: "ZW", label: "Zimbabwe" },
 ];
+
+export default withFormsy(CountrySelect);

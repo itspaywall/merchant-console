@@ -4,12 +4,13 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
+import { withFormsy } from "formsy-react";
 
 const useStyles = makeStyles({
     option: {},
 });
 
-export default function Lookup(props) {
+function Lookup(props) {
     const {
         label,
         options,
@@ -61,3 +62,5 @@ export default function Lookup(props) {
         />
     );
 }
+
+export default withFormsy(Lookup);
