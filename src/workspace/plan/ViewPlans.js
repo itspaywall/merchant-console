@@ -31,36 +31,42 @@ const headers = [
         numeric: false,
         disablePadding: false,
         label: "Name",
+        clickable: true,
     },
     {
         id: "code",
         numeric: false,
         disablePadding: false,
         label: "Code",
+        clickable: true,
     },
     {
         id: "price",
         numeric: false,
         disablePadding: false,
         label: "Price",
+        clickable: true,
     },
     {
         id: "setupFee",
         numeric: false,
         disablePadding: false,
         label: "Setup Fee",
+        clickable: true,
     },
     {
         id: "trial",
         numeric: false,
         disablePadding: false,
         label: "Trial",
+        clickable: true,
     },
     {
         id: "created",
         numeric: false,
         disablePadding: false,
         label: "Created",
+        clickable: true,
     },
 ];
 

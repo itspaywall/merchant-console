@@ -123,10 +123,16 @@ export default function WorkspaceTable(props) {
 
     const emptyRows = rowsPerPage - rows.length;
 
+    const makeHandleCellClick = (row, column) => () => {
+        if (column.clickable) {
+            onClick(row);
+        }
+    };
+
     const renderCells = (row, rowIndex) => (
         <React.Fragment>
             {headers.map((column, columnIndex) => (
-                <TableCell onClick={() => onClick(row)}>
+                <TableCell onClick={makeHandleCellClick(row, column)}>
                     {renderCellValue(row, rowIndex, column, columnIndex)}
                 </TableCell>
             ))}

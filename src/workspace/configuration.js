@@ -1,6 +1,12 @@
 import React from "react";
 
 const workspaceConfiguration = [
+    // API Key
+    {
+        path: "/api-keys",
+        component: React.lazy(() => import("./api-key/ViewAPIKeys")),
+    },
+
     // Account
     {
         path: "/accounts/:identifier",

@@ -28,36 +28,42 @@ const headers = [
         numeric: false,
         disablePadding: true,
         label: "Invoice Number",
+        clickable: true,
     },
     {
         identifier: "name",
         numeric: false,
         disablePadding: false,
         label: "Name",
+        clickable: true,
     },
     {
         identifier: "company",
         numeric: false,
         disablePadding: false,
         label: "Company",
+        clickable: true,
     },
     {
         identifier: "postedOn",
         numeric: false,
         disablePadding: false,
         label: "Posted On",
+        clickable: true,
     },
     {
         identifier: "status",
         numeric: false,
         disablePadding: false,
         label: "Status",
+        clickable: true,
     },
     {
         identifier: "total",
         numeric: false,
         disablePadding: false,
         label: "Total",
+        clickable: true,
     },
 ];
 

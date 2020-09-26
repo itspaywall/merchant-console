@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import { green, red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
 import WorkspaceTable from "../common/WorkspaceTable";
 import WorkspaceToolbar from "../common/WorkspaceToolbar";
@@ -17,34 +22,86 @@ import AddIcon from "@material-ui/icons/Add";
 import ListIcon from "@material-ui/icons/ViewList";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CompactIcon from "@material-ui/icons/ViewCompact";
-import queryString from "query-string";
+import EnabledIcon from "@material-ui/icons/CheckCircle";
+import DisabledIcon from "@material-ui/icons/Cancel";
+import MenuIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: 16,
     },
+    enabled: {
+        color: green[400],
+    },
+    disabled: {
+        color: red[400],
+    },
+    /*readChip: {
+        margin: 2,
+        background: yellow[800],
+        color: 'white'
+    },
+    readWriteChip: {
+        margin: 2,
+        background: green[400],
+        color: 'white'
+    },
+    chips: {
+        maxWidth: 400
+    }*/
 }));
+
+const sample = {
+    records: [
+        {
+            name: "primary",
+            permissions: [
+                "READ_ACCOUNTS",
+                "READ_SUBSCRIPTIONS",
+                "READ_WRITE_INVOICES",
+                "READ_WRITE_TRANSACIONS",
+                "READ_WRITE_PLANS",
+            ],
+            requests: 193,
+            createdAt: new Date(),
+            status: "ENABLED",
+        },
+        {
+            name: "secondary",
+            permissions: ["READ_ACCOUNTS", "READ_SUBSCRIPTIONS"],
+            requests: 1999,
+            createdAt: new Date(),
+            status: "DISABLED",
+        },
+    ],
+};
+
+/*const permissionLabels = {
+    "READ_ACCOUNTS": "Accounts",
+    "READ_WRITE_ACCOUNTS": "Accounts",
+    "READ_SUBSCRIPTIONS": "Subscriptions",
+    "READ_WRITE_SUBSCRIPTIONS": "Subscriptions",
+    "READ_INVOICES": "Invoices",
+    "READ_WRITE_INVOICES": "Invoices",
+    "READ_TRANSACTIONS": "Transactions",
+    "READ_WRITE_TRANSACIONS": "Transactions",
+    "READ_PLANS": "Plans",
+    "READ_WRITE_PLANS": "Plans",
+};*/
 
 const headers = [
     {
-        id: "referenceId",
+        id: "name",
         numeric: false,
         disablePadding: false,
-        label: "Reference ID",
+        label: "Name",
         clickable: true,
     },
     {
-        id: "action",
+        id: "requests",
         numeric: false,
         disablePadding: false,
-        label: "Action",
-        clickable: true,
-    },
-    {
-        id: "method",
-        numeric: false,
-        disablePadding: false,
-        label: "Payment Method",
+        label: "Requests",
         clickable: true,
     },
     {
@@ -55,18 +112,18 @@ const headers = [
         clickable: true,
     },
     {
-        id: "amount",
+        id: "status",
         numeric: false,
         disablePadding: false,
-        label: "Amount",
+        label: "Status",
         clickable: true,
     },
     {
-        id: "tax",
+        id: "actions",
         numeric: false,
-        disablePadding: false,
-        label: "Tax",
-        clickable: true,
+        disablePadding: true,
+        label: "",
+        clickable: false,
     },
 ];
 
@@ -120,53 +177,21 @@ const filterFields = [
         },
     },
     {
-        identifier: "action_type",
+        identifier: "api_key_status",
         type: "select",
-        title: "Action",
+        title: "API Key Status",
         options: [
-            {
-                value: "purchase",
-                title: "Purchase",
-            },
-            {
-                value: "verify",
-                title: "Verification",
-            },
-            {
-                value: "refund",
-                title: "Refund",
-            },
             {
                 value: "all",
                 title: "All",
             },
-        ],
-        defaultValue: "all",
-    },
-    {
-        identifier: "paymentMethod",
-        type: "select",
-        title: "Payment Method",
-        options: [
             {
-                value: "cash",
-                title: "Cash",
+                value: "enabled",
+                title: "Enabled",
             },
             {
-                value: "debit_card",
-                title: "Debit Card",
-            },
-            {
-                value: "credit_card",
-                title: "Credit Card",
-            },
-            {
-                value: "online",
-                title: "Online / Netbanking",
-            },
-            {
-                value: "all",
-                title: "All",
+                value: "disabled",
+                title: "Disabled",
             },
         ],
         defaultValue: "all",
@@ -229,16 +254,12 @@ const actions2 = [
 
 const DEFAULT_ROWS_PER_PAGE = 20;
 
-function ViewTransactions(props) {
-    const {
-        transactions,
-        fetchTransactions,
-        newTransaction,
-        history,
-        location,
-    } = props;
+function ViewAPIKeys(props) {
+    const { apiKeys, fetchAPIKeys, newAPIKey, history, location } = props;
     const params = queryString.parse(location.search);
     const classes = useStyles();
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [currentAPIKey, setCurrentAPIKey] = useState(null);
     const [selected, setSelected] = useState([]);
     const [openFilter, setOpenFilter] = useState(
         Object.keys(params).length > 0
@@ -248,6 +269,7 @@ function ViewTransactions(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(
         params.limit || DEFAULT_ROWS_PER_PAGE
     );
+    // TODO: Should we cache this?
     const defaultFilterValues = toFilterState(filterFields, params);
     const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
@@ -257,9 +279,10 @@ function ViewTransactions(props) {
         params.append("page", page);
         params.append("limit", rowsPerPage);
 
-        history.push("/transactions?" + params.toString());
+        history.push("/api-keys?" + params.toString());
     };
 
+    // Both the parameters must appear together. Otherwise, we automatically reset them both.
     if (!("page" in params) || !("limit" in params)) {
         generateURL(filterValues, page, rowsPerPage);
     }
@@ -273,7 +296,7 @@ function ViewTransactions(props) {
 
     const handleAction = (type) => {
         if (type === "new") {
-            newTransaction();
+            newAPIKey();
         } else if (type === "filter") {
             setOpenFilter(!openFilter);
         } else if (type === "compact" || type === "default") {
@@ -281,10 +304,11 @@ function ViewTransactions(props) {
         }
     };
 
-    const onClick = (transaction) => {
-        history.push("/transactions/" + transaction.id);
+    const onClick = (account) => {
+        history.push("/apiKeys/" + account.id);
     };
 
+    // TODO: Create a deep copy without serializing!
     const onFilterValueChange = (field, value) => {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
@@ -300,70 +324,51 @@ function ViewTransactions(props) {
         generateURL(defaultValues, page, rowsPerPage);
     };
 
-    const actionNames = {
-        purchase: "Purchase",
-        verify: "Verification",
-        refund: "Refund",
+    const makeHandleOpenMenu = (apiKey) => (event) => {
+        setMenuAnchor(event.target);
+        setCurrentAPIKey(apiKey);
     };
 
-    const methodNames = {
-        cash: "Cash",
-        credit_card: "Credit Card",
-        debit_card: "Debit Card",
-        online: "Online / Netbanking",
-    };
-
-    const descendingComparator = (transactionA, transactionB, orderBy) => {
-        const keys = {
-            referenceId: "referenceId",
-            action: "action",
-            method: "paymentMethod",
-            created: "createdAt",
-            amount: "amount",
-        };
-        const key = keys[orderBy];
-        let valueA = transactionA[key];
-        let valueB = transactionB[key];
-
-        if (typeof valueA === "string") {
-            valueA = valueA.toLowerCase();
-        } else if (valueA instanceof Date) {
-            valueA = valueA.getTime();
-        }
-
-        if (typeof valueB === "string") {
-            valueB = valueB.toLowerCase();
-        } else if (valueB instanceof Date) {
-            valueB = valueB.getTime();
-        }
-
-        return valueB < valueA ? -1 : valueB > valueA ? 1 : 0;
+    const handleCloseMenu = () => {
+        setMenuAnchor(null);
+        setCurrentAPIKey(null);
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
         switch (column.id) {
-            case "referenceId": {
-                return row.referenceId;
+            case "name": {
+                return row.name;
+            }
+
+            /*
+            case "permissions": {
+                return (<div className={classes.chips}>
+                    {row.permissions.map(permission => <Chip className={permission.startsWith("READ_WRITE")? classes.readWriteChip : classes.readChip} label={permissionLabels[permission]} />)}
+                </div>);
+            }*/
+
+            case "status": {
+                return row.status === "ENABLED" ? (
+                    <EnabledIcon className={classes.enabled} />
+                ) : (
+                    <DisabledIcon className={classes.disabled} />
+                );
+            }
+
+            case "requests": {
+                return row.requests;
             }
 
             case "created": {
                 return toDateString(row.createdAt);
             }
 
-            case "amount": {
-                return row.amount + " INR";
-            }
-
-            case "tax": {
-                return row.tax + " INR";
-            }
-
-            case "action": {
-                return actionNames[row.action];
-            }
-
-            case "method": {
-                return methodNames[row.paymentMethod];
+            case "actions": {
+                return (
+                    <IconButton onClick={makeHandleOpenMenu(row)}>
+                        <MenuIcon />
+                    </IconButton>
+                );
             }
 
             default: {
@@ -387,20 +392,20 @@ function ViewTransactions(props) {
         const flatValues = toURLParams(filterFields, filterValues);
         flatValues.page = page;
         flatValues.limit = rowsPerPage;
-        fetchTransactions(flatValues);
-    }, [fetchTransactions, filterValues, page, rowsPerPage]);
+        fetchAPIKeys(flatValues);
+    }, [fetchAPIKeys, filterValues, page, rowsPerPage]);
 
     return (
         <div>
             <WorkspaceToolbar
-                title="Transactions"
+                title="API Keys"
                 selectionCount={selected.length}
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            <Grid container={true} className={classes.container}>
-                <Grid item={true} lg={openFilter ? 10 : 12}>
-                    {transactions && transactions.records.length > 0 && (
+            {apiKeys && apiKeys.records.length > 0 && (
+                <Grid container={true} className={classes.container}>
+                    <Grid item={true} lg={openFilter ? 10 : 12}>
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -408,52 +413,69 @@ function ViewTransactions(props) {
                             compact={compact}
                             onClick={onClick}
                             renderCellValue={renderCellValue}
-                            rows={transactions.records}
-                            totalRows={transactions.totalRecords}
+                            rows={apiKeys.records}
+                            totalRows={apiKeys.totalRecords}
                             page={page}
                             rowsPerPage={rowsPerPage}
                             onChangePage={onChangePage}
                             onChangeRowsPerPage={onChangeRowsPerPage}
-                            descendingComparator={descendingComparator}
-                        />
-                    )}
-                    {(!transactions || transactions.records.length === 0) && (
-                        <NoRecords
-                            message="You have not created any transactions yet."
-                            action={true}
-                            actionText="Create Transaction"
-                            actionHandler={newTransaction}
-                            image="assets/images/empty-transactions.svg"
-                        />
-                    )}
-                </Grid>
-                {openFilter && (
-                    <Grid item={true} lg={2}>
-                        <WorkspaceFilter
-                            fields={filterFields}
-                            values={filterValues}
-                            onValueChange={onFilterValueChange}
-                            onClear={onFilterClear}
                         />
                     </Grid>
-                )}
-            </Grid>
+                    {openFilter && (
+                        <Grid item={true} lg={2} className={classes.filter}>
+                            <WorkspaceFilter
+                                fields={filterFields}
+                                values={filterValues}
+                                onValueChange={onFilterValueChange}
+                                onClear={onFilterClear}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
+            )}
+
+            {(!apiKeys || apiKeys.records.length === 0) && (
+                <NoRecords
+                    message="You have not created any API keys yet."
+                    action={true}
+                    actionText="Create API Key"
+                    actionHandler={newAPIKey}
+                    image="assets/images/empty-api-keys.svg"
+                />
+            )}
+
+            {menuAnchor && (
+                <Menu
+                    anchorEl={menuAnchor}
+                    keepMounted={true}
+                    open={Boolean(menuAnchor)}
+                    onClose={handleCloseMenu}
+                >
+                    <MenuItem onClick={handleCloseMenu}>Edit</MenuItem>
+                    <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
+                    <MenuItem onClick={handleCloseMenu}>
+                        {currentAPIKey.status === "ENABLED"
+                            ? "Disable"
+                            : "Enable"}
+                    </MenuItem>
+                </Menu>
+            )}
         </div>
     );
 }
 
 function mapStateToProps(state) {
     return {
-        transactions: state.transactions,
+        apiKeys: sample,
     };
 }
 
 const mapDispatchToProps = {
-    fetchTransactions: actions.fetchTransactions,
-    newTransaction: actions.newTransaction,
+    fetchAPIKeys: () => ({ type: "todo" }),
+    newAPIKey: actions.newAPIKey,
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withRouter(ViewTransactions));
+)(withRouter(ViewAPIKeys));
