@@ -66,6 +66,13 @@ const profileForm = [
                 tooltip: "The first name of the user.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:30",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The first name can contain only letters and digits.",
+                    minLength: "The first name must be 3-30 characters long.",
+                    maxLength: "The first name must be 3-30 characters long.",
+                },
             },
             {
                 label: "Last Name",
@@ -79,6 +86,13 @@ const profileForm = [
                 tooltip: "The last name of the user.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:30",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The last name can contain only letters and digits.",
+                    minLength: "The last name must be 3-30 characters long.",
+                    maxLength: "The last name must be 3-30 characters long.",
+                },
             },
             {
                 label: "Email Address",
@@ -92,6 +106,10 @@ const profileForm = [
                 tooltip: "The email address of the account.",
                 multipleValues: true,
                 defaultValue: "",
+                validations: "isEmail",
+                validationErrors: {
+                    isEmail: "Please enter a valid email address.",
+                },
             },
             {
                 label: "Phone Number",
@@ -126,6 +144,15 @@ const companyForm = [
                 tooltip: "The name of the company.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:100",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The company name can contain only letters and digits.",
+                    minLength:
+                        "The conmpany name must be 3-100 characters long.",
+                    maxLength:
+                        "The company name must be 3-100 characters long.",
+                },
             },
             {
                 label: "Email Address",
@@ -139,6 +166,10 @@ const companyForm = [
                 tooltip: "The email address of the account.",
                 multipleValues: true,
                 defaultValue: "",
+                validations: "isEmail",
+                validationErrors: {
+                    isEmail: "Please enter a valid email address.",
+                },
             },
             {
                 label: "Phone Number",

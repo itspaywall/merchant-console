@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -18,6 +17,7 @@ import {
 import Chip from "@material-ui/core/Chip";
 import CountrySelect from "./CountrySelect";
 import Lookup from "./Lookup";
+import FormsyTextField from "./FormsyTextField";
 import { newClient } from "../../server/api";
 import Formsy from "formsy-react";
 
@@ -25,6 +25,7 @@ const client = newClient();
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
+        paddingRight: 16,
     },
     extraAction: {
         textTransform: "none",
@@ -120,8 +121,7 @@ export default function RecordForm(props) {
         showMore,
         onValueChange,
         tabIndex,
-        enableSaveButton,
-        disableSaveButton,
+        onValidityChange,
     } = props;
     const classes = useStyles(props);
     const contexts = prepareLookupContexts(groups);
@@ -155,6 +155,7 @@ export default function RecordForm(props) {
                 value={values[field.identifier]}
                 onChange={makeChangeHandler(field)}
                 label={field.label}
+                name={field.identifier}
             >
                 {field.options.map((option) => (
                     <MenuItem value={option.value}>{option.title}</MenuItem>
@@ -176,6 +177,7 @@ export default function RecordForm(props) {
                 multiple={true}
                 onChange={makeChangeHandler(field)}
                 label={field.label}
+                name={field.identifier}
                 renderValue={(selected) => (
                     <div>
                         {selected.map((value) => (
@@ -196,53 +198,45 @@ export default function RecordForm(props) {
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container={true} className={classes.root}>
-                {groups.map((group, groupIndex) =>
-                    group.children.map((field, fieldIndex) =>
-                        (!showMore && field.quickAdd) ||
-                        (showMore && groupIndex === tabIndex) ? (
-                            <Grid
-                                key={field.identifier}
-                                item={true}
-                                lg={12}
-                                className={classes.field}
-                            >
-                                <Formsy
-                                    onValid={enableSaveButton}
-                                    onInvalid={disableSaveButton}
+            <Grid container={true}>
+                <Formsy
+                    onValid={() => onValidityChange(false)}
+                    onInvalid={() => onValidityChange(true)}
+                    className={classes.root}
+                >
+                    {groups.map((group, groupIndex) =>
+                        group.children.map((field, fieldIndex) =>
+                            (!showMore && field.quickAdd) ||
+                            (showMore && groupIndex === tabIndex) ? (
+                                <Grid
+                                    key={field.identifier}
+                                    item={true}
+                                    lg={12}
+                                    className={classes.field}
                                 >
+                                    {console.log(field.validationErrors)}
                                     {field.type === "text" && (
-                                        <Formsy
-                                            onValid={enableSaveButton}
-                                            onInvalid={disableSaveButton}
-                                        >
-                                            <TextField
-                                                label={field.label}
-                                                id={field.identifier}
-                                                name={field.identifier}
-                                                type="text"
-                                                variant="outlined"
-                                                fullWidth={true}
-                                                required={field.required}
-                                                value={values[field.identifier]}
-                                                onChange={makeChangeHandler(
-                                                    field
-                                                )}
-                                                size="medium"
-                                                validations="isAlphanumeric,minLength:3"
-                                                validationErrors={{
-                                                    isAlphanumeric:
-                                                        "You have to type a valid alpha-numberic text.",
-                                                    minLength:
-                                                        "You have to type more than 3 characters.",
-                                                }}
-                                                preventFirstValidation={true}
-                                            />
-                                        </Formsy>
+                                        <FormsyTextField
+                                            label={field.label}
+                                            id={field.identifier}
+                                            name={field.identifier}
+                                            type="text"
+                                            variant="outlined"
+                                            fullWidth={true}
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeChangeHandler(field)}
+                                            size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
+                                        />
                                     )}
 
                                     {field.type === "password" && (
-                                        <TextField
+                                        <FormsyTextField
                                             label={field.label}
                                             id={field.identifier}
                                             name={field.identifier}
@@ -257,7 +251,7 @@ export default function RecordForm(props) {
                                     )}
 
                                     {field.type === "large_text" && (
-                                        <TextField
+                                        <FormsyTextField
                                             id={field.identifier}
                                             label={field.label}
                                             name={field.identifier}
@@ -274,7 +268,7 @@ export default function RecordForm(props) {
                                     )}
 
                                     {field.type === "number" && (
-                                        <TextField
+                                        <FormsyTextField
                                             id={field.identifier}
                                             label={field.label}
                                             name={field.identifier}
@@ -345,6 +339,7 @@ export default function RecordForm(props) {
                                                     {field.title}
                                                 </InputLabel>
                                                 <Select
+                                                    name={field.identifier}
                                                     labelId={field.identifier}
                                                     value={
                                                         values[field.identifier]
@@ -381,6 +376,10 @@ export default function RecordForm(props) {
                                                         format="MM/dd/yyyy"
                                                         inputVariant="outlined"
                                                         fullWidth={true}
+                                                        name={
+                                                            field.identifier +
+                                                            "Start"
+                                                        }
                                                         size="medium"
                                                         value={
                                                             !values[
@@ -400,6 +399,10 @@ export default function RecordForm(props) {
                                                     />
                                                     <KeyboardDatePicker
                                                         margin="normal"
+                                                        name={
+                                                            field.identifier +
+                                                            "End"
+                                                        }
                                                         id={
                                                             field.identifier +
                                                             "End"
@@ -437,7 +440,7 @@ export default function RecordForm(props) {
                                         renderMultiSelect(field)}
 
                                     {field.type === "email_address" && (
-                                        <TextField
+                                        <FormsyTextField
                                             id={field.identifier}
                                             label={field.label}
                                             name={field.identifier}
@@ -447,15 +450,16 @@ export default function RecordForm(props) {
                                             required={field.required}
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
-                                            validations="isEmail"
-                                            validationError="Please specify a valid email address."
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
                                             size="medium"
-                                            preventFirstValidation={true}
                                         />
                                     )}
 
                                     {field.type === "phone_number" && (
-                                        <TextField
+                                        <FormsyTextField
                                             id={field.identifier}
                                             label={field.label}
                                             name={field.identifier}
@@ -465,20 +469,20 @@ export default function RecordForm(props) {
                                             required={field.required}
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
-                                            validations="isNumeric,isLength:10"
-                                            validationErrors={{
-                                                isNumeric:
-                                                    "You have to type a valid phone number.",
-                                                isLength:
-                                                    "You can not type more than 10 characters.",
-                                            }}
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
                                             size="medium"
                                             preventFirstValidation={true}
                                         />
                                     )}
 
                                     {field.type === "country" && (
-                                        <CountrySelect label={field.label} />
+                                        <CountrySelect
+                                            label={field.label}
+                                            name={field.identifier}
+                                        />
                                     )}
 
                                     {field.type === "account_lookup" && (
@@ -545,11 +549,11 @@ export default function RecordForm(props) {
                                             required={field.required}
                                         />
                                     )}
-                                </Formsy>
-                            </Grid>
-                        ) : null
-                    )
-                )}
+                                </Grid>
+                            ) : null
+                        )
+                    )}
+                </Formsy>
             </Grid>
         </MuiPickersUtilsProvider>
     );

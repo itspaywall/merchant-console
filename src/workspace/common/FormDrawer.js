@@ -141,15 +141,7 @@ function FormDrawer(props) {
     const [showMore, setShowMore] = React.useState(props.showMore);
     const [values, setValues] = React.useState(props.values);
     const [tabIndex, setTabIndex] = React.useState(0);
-    const [saveButton, setSaveButton] = React.useState(false);
-
-    const enableSaveButton = () => {
-        setSaveButton(true);
-    };
-
-    const disableSaveButton = () => {
-        setSaveButton(false);
-    };
+    const [saveDisabled, setSaveDisabled] = React.useState(true);
 
     const handleShowMore = () => {
         setShowMore(!showMore);
@@ -221,8 +213,7 @@ function FormDrawer(props) {
                             showMore={showMore}
                             options={options}
                             updateLookupOptions={updateLookupOptions}
-                            enableSaveButton={enableSaveButton}
-                            disableSaveButton={disableSaveButton}
+                            onValidityChange={setSaveDisabled}
                         />
                     </div>
                 </div>
@@ -236,7 +227,7 @@ function FormDrawer(props) {
                     }
                 >
                     <Button
-                        disabled={saveButton}
+                        disabled={saveDisabled}
                         onClick={handleSave}
                         color="primary"
                         className={classes.dialogAction}

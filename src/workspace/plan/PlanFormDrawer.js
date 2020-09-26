@@ -11,8 +11,8 @@ const groups = [
             {
                 label: "Name",
                 identifier: "name",
-                type: "name",
-                required: false,
+                type: "text",
+                required: true,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
@@ -20,6 +20,13 @@ const groups = [
                 tooltip: "The name of the plan.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:2,maxLength:100",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The plan name can contain only letters and digits.",
+                    minLength: "The plan name must be 2-100 characters long.",
+                    maxLength: "The plan name must be 2-100 characters long.",
+                },
             },
             {
                 label: "Code",
@@ -33,6 +40,13 @@ const groups = [
                 tooltip: "The code of the plan.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:2,maxLength:20",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The code name can contain only letters and digits.",
+                    minLength: "The code name must be 2-20 characters long.",
+                    maxLength: "The code name must be 2-20 characters long.",
+                },
             },
             {
                 label: "Description",
@@ -47,6 +61,10 @@ const groups = [
                 multipleValues: false,
                 defaultValue: "",
                 rows: 4,
+                validations: "maxLength:200",
+                validationErrors: {
+                    maxLength: "The description must be 0-200 characters long.",
+                },
             },
             {
                 label: "Billing Period",
@@ -60,6 +78,10 @@ const groups = [
                 tooltip: "The billing period of the plan.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Billing Period Unit",
@@ -96,6 +118,10 @@ const groups = [
                 tooltip: "The billing period unit of the plan.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Setup Fee",
@@ -109,6 +135,10 @@ const groups = [
                 tooltip: "The billing period unit of the plan.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Trial Period",
@@ -122,6 +152,10 @@ const groups = [
                 tooltip: "The trial period of the plan.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Trial Period Unit",
@@ -158,6 +192,10 @@ const groups = [
                 tooltip: "The term of the plan.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Term Unit",

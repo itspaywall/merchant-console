@@ -46,6 +46,10 @@ const groups = [
                 tooltip: "The quantity of the plan.",
                 multipleValues: false,
                 defaultValue: null,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Starts",
@@ -71,6 +75,10 @@ const groups = [
                 tooltip: "The billing period of the subscription.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Billing Period Unit",
@@ -107,6 +115,10 @@ const groups = [
                 tooltip: "The fee required for setup of the subscription.",
                 multipleValues: true,
                 defaultValue: 0,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Trial Period",
@@ -120,6 +132,10 @@ const groups = [
                 tooltip: "The period of the trail subscription.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Trial Period Unit",
@@ -156,6 +172,10 @@ const groups = [
                 tooltip: "Term of the subscription.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isInt",
+                validationErrors: {
+                    isInt: "Please enter a valid integer.",
+                },
             },
             {
                 label: "Term Unit",

@@ -34,6 +34,10 @@ const groups = [
                 multipleValues: false,
                 defaultValue: "",
                 rows: 4,
+                validations: "maxLength:200",
+                validationErrors: {
+                    maxLength: "The comment must be 0-200 characters long.",
+                },
             },
             {
                 label: "Amount",
@@ -47,6 +51,10 @@ const groups = [
                 tooltip: "Amount of the transaction.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Tax",
@@ -60,6 +68,10 @@ const groups = [
                 tooltip: "Tax of the transaction.",
                 multipleValues: false,
                 defaultValue: 0,
+                validations: "isNumeric",
+                validationErrors: {
+                    isNumeric: "Please enter a valid number.",
+                },
             },
             {
                 label: "Action",

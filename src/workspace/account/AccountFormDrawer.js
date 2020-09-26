@@ -31,6 +31,13 @@ const groups = [
                 tooltip: "The user name of the account.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:30",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The user name can contain only letters and digits.",
+                    minLength: "The user name must be 3-30 characters long.",
+                    maxLength: "The user name must be 3-30 characters long.",
+                },
             },
             {
                 label: "First Name",
@@ -44,6 +51,13 @@ const groups = [
                 tooltip: "The first name of the account.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:30",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The first name can contain only letters and digits.",
+                    minLength: "The first name must be 3-30 characters long.",
+                    maxLength: "The first name must be 3-30 characters long.",
+                },
             },
             {
                 label: "Last Name",
@@ -57,6 +71,13 @@ const groups = [
                 tooltip: "The last name of the account.",
                 multipleValues: false,
                 defaultValue: "",
+                validations: "isAlphanumeric,minLength:3,maxLength:30",
+                validationErrors: {
+                    isAlphanumeric:
+                        "The last name can contain only letters and digits.",
+                    minLength: "The last name must be 3-30 characters long.",
+                    maxLength: "The last name must be 3-30 characters long.",
+                },
             },
             {
                 label: "Email Address",
@@ -70,12 +91,16 @@ const groups = [
                 tooltip: "The email address of the account.",
                 multipleValues: true,
                 defaultValue: "",
+                validations: "isEmail",
+                validationErrors: {
+                    isEmail: "Please enter a valid email address.",
+                },
             },
             {
                 label: "Phone Number",
                 identifier: "phoneNumber",
                 type: "phone_number",
-                required: true,
+                required: false,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
