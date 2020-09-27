@@ -6,11 +6,17 @@ import AccountFormDrawer from "./AccountFormDrawer";
 
 function EditAccount(props) {
     const { account, saveAccount } = props;
+    const handleSave = (values) => {
+        saveAccount({
+            ...account,
+            ...values,
+        });
+    };
     return (
         <AccountFormDrawer
             title="Edit Account"
             showMore={true}
-            onSave={saveAccount}
+            onSave={handleSave}
             account={account}
             open={true}
         />

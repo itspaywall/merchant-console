@@ -214,7 +214,6 @@ export default function RecordForm(props) {
                                     lg={12}
                                     className={classes.field}
                                 >
-                                    {console.log(field.validationErrors)}
                                     {field.type === "text" && (
                                         <FormsyTextField
                                             label={field.label}
@@ -537,7 +536,6 @@ export default function RecordForm(props) {
                                             )}
                                             value={values[field.identifier]}
                                             renderOptionLabel={(option) =>
-                                                console.log(option) ||
                                                 `${option.name}`
                                             }
                                             renderOption={(option) => (
