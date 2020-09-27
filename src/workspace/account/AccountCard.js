@@ -63,26 +63,58 @@ const fields = [
         identifier: "address",
         title: "Address",
         size: 6,
-        render: (props) =>
-            props.addressLine1 ? (
+        render: (props) => {
+            const {
+                addressLine1,
+                addressLine2,
+                city,
+                state,
+                zipCode,
+                country,
+            } = props;
+            const available =
+                addressLine1 ||
+                addressLine2 ||
+                city ||
+                state ||
+                zipCode ||
+                country;
+            return available ? (
                 <React.Fragment>
-                    {props.addressLine1}
-                    <br />
-                    {props.addressLine2 && (
+                    {addressLine1 && (
                         <React.Fragment>
-                            {props.addressLine2}
+                            {addressLine1} <br />
+                        </React.Fragment>
+                    )}
+                    {addressLine2 && (
+                        <React.Fragment>
+                            {addressLine2}
                             <br />
                         </React.Fragment>
                     )}
-                    {props.city}
-                    <br />
-                    {props.state} {props.zipCode}
-                    <br />
-                    {props.country}
+                    {city && (
+                        <React.Fragment>
+                            {city}
+                            <br />
+                        </React.Fragment>
+                    )}
+                    {state && (
+                        <React.Fragment>
+                            {state}
+                            <br />
+                        </React.Fragment>
+                    )}
+                    {country && (
+                        <React.Fragment>
+                            {country}
+                            <br />
+                        </React.Fragment>
+                    )}
                 </React.Fragment>
             ) : (
                 "Unavailable"
-            ),
+            );
+        },
     },
 ];
 

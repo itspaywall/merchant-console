@@ -80,8 +80,6 @@ function ViewAccount(props) {
         return clearAccount;
     }, [identifier, fetchAccount, clearAccount]);
 
-    console.log(account);
-
     return (
         <div>
             <WorkspaceToolbar title="Account" />

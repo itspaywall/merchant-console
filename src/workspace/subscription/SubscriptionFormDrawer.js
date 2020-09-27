@@ -53,15 +53,16 @@ const groups = [
             },
             {
                 label: "Starts",
-                identifier: "starts",
+                identifier: "startsAt",
                 type: "date",
-                required: false,
+                required: true,
                 readOnly: false,
                 quickAdd: true,
                 unique: false,
                 hidden: false,
                 tooltip: "Start date of the subscription.",
                 multipleValues: false,
+                defaultValue: new Date(),
             },
             {
                 label: "Billing Period",
@@ -228,7 +229,10 @@ function SubscriptionFormDrawer(props) {
             showMore={showMore}
             groups={groups}
             values={values}
-            onSave={onSave}
+            onSave={(values) => {
+                console.log(values);
+                onSave(values);
+            }}
             open={open}
         />
     );

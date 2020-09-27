@@ -5,6 +5,21 @@ import crossStorage from "../common/crossStorage";
 
 const client = newClient();
 
+function handleError(dispatch, error, message) {
+    /* By default, if an instance of the Error class is printed, a lot of information is hidden.
+     * Therefore, we convert it to a regular object and then print it.
+     */
+    console.log(JSON.parse(JSON.stringify(error)));
+    let action;
+    if (error.response) {
+        // Assuming that we receive a JSON.
+        action = showNotification(error.response.data.message, "ERROR");
+    } else {
+        action = showNotification(message, "ERROR");
+    }
+    dispatch(action);
+}
+
 /* ACCOUNT
  *  1. newAccount()
  *  2. createAccount()
@@ -35,8 +50,7 @@ export function createAccount(account) {
                 showNotification("Successfully created account", "SUCCESS")
             );
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to create account", "ERROR"));
+            handleError(dispatch, error, "Failed to create account");
         }
     };
 }
@@ -51,8 +65,7 @@ export function saveAccount(account) {
             dispatch(fetchAccountComplete(newAccount));
             dispatch(showNotification("Successfully saved account", "SUCCESS"));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to save account", "ERROR"));
+            handleError(dispatch, error, "Failed to save account");
         }
     };
 }
@@ -72,8 +85,7 @@ export function fetchAccount(id) {
             const account = response.data;
             dispatch(fetchAccountComplete(account));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch account", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch account");
         }
     };
 }
@@ -82,13 +94,6 @@ export function fetchAccountsComplete(accounts) {
     return {
         type: ActionTypes.FETCH_ACCOUNTS_COMPLETE,
         payload: accounts,
-    };
-}
-
-export function internalRedirect(path) {
-    return {
-        type: ActionTypes.INTERNAL_REDIRECT,
-        payload: path,
     };
 }
 
@@ -105,8 +110,7 @@ export function fetchAccounts(params) {
             }
             dispatch(fetchAccountsComplete(accounts));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch accounts", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch accounts");
         }
     };
 }
@@ -149,15 +153,12 @@ export function createSubscription(subscription) {
         try {
             dispatch(showNotification("Saving subscription...", "LOADING"));
             await client.newSubscription(subscription);
-            // const newSubscription = response.data;
+            dispatch(fetchSubscriptions({}));
             dispatch(
                 showNotification("Successfully created subscription", "SUCCESS")
             );
         } catch (error) {
-            console.log(error);
-            dispatch(
-                showNotification("Failed to create subscription", "ERROR")
-            );
+            handleError(dispatch, error, "Failed to create subscription.");
         }
     };
 }
@@ -172,8 +173,7 @@ export function saveSubscription(subscription) {
                 showNotification("Successfully saved subscription", "SUCCESS")
             );
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to save subscription", "ERROR"));
+            handleError(dispatch, error, "Failed to save subscription");
         }
     };
 }
@@ -193,8 +193,7 @@ export function fetchSubscription(id) {
             const subscription = response.data;
             dispatch(fetchSubscriptionComplete(subscription));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch subscription", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch subscription");
         }
     };
 }
@@ -218,10 +217,7 @@ export function fetchSubscriptions(params) {
             }
             dispatch(fetchSubscriptionsComplete(subscriptions));
         } catch (error) {
-            console.log(error);
-            dispatch(
-                showNotification("Failed to fetch subscriptions", "ERROR")
-            );
+            handleError(dispatch, error, "Failed to fetch subscriptions");
         }
     };
 }
@@ -268,8 +264,7 @@ export function saveInvoice(invoice) {
             dispatch(fetchInvoiceComplete(newInvoice));
             dispatch(showNotification("Successfully saved invoice", "SUCCESS"));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to save invoice", "ERROR"));
+            handleError(dispatch, error, "Failed to save invoice");
         }
     };
 }
@@ -289,8 +284,7 @@ export function fetchInvoice(id) {
             const invoice = response.data;
             dispatch(fetchInvoiceComplete(invoice));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch invoice", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch invoice");
         }
     };
 }
@@ -314,8 +308,7 @@ export function fetchInvoices(params) {
             }
             dispatch(fetchInvoicesComplete(invoices));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch invoices", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch invoices");
         }
     };
 }
@@ -358,12 +351,12 @@ export function createTransaction(transaction) {
         try {
             dispatch(showNotification("Saving transaction...", "LOADING"));
             await client.newTransaction(transaction);
+            dispatch(fetchTransactions({}));
             dispatch(
                 showNotification("Successfully created transaction", "SUCCESS")
             );
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to create transaction", "ERROR"));
+            handleError(dispatch, error, "Failed to create transaction");
         }
     };
 }
@@ -379,7 +372,7 @@ export function saveTransaction(transaction) {
                 showNotification("Successfully saved transaction", "SUCCESS")
             );
         } catch (error) {
-            dispatch(showNotification("Failed to save transaction", "ERROR"));
+            handleError(dispatch, error, "Failed to save transaction");
         }
     };
 }
@@ -392,11 +385,10 @@ export function fetchTransactionComplete(transaction) {
 }
 
 export function fetchTransaction(id) {
-    return (dispatch) => {
-        return client.getTransaction(id).then((response) => {
-            const transaction = response.data;
-            dispatch(fetchTransactionComplete(transaction));
-        });
+    return async (dispatch) => {
+        const response = await client.getTransaction(id);
+        const transaction = response.data;
+        dispatch(fetchTransactionComplete(transaction));
     };
 }
 
@@ -419,8 +411,7 @@ export function fetchTransactions(params) {
             }
             dispatch(fetchTransactionsComplete(transactions));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch transactions", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch transactions");
         }
     };
 }
@@ -462,11 +453,11 @@ export function createPlan(plan) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving plan...", "LOADING"));
-            await client.newAccount(plan);
-            dispatch(fetchAccounts({}));
+            await client.newPlan(plan);
+            dispatch(fetchPlans({}));
             dispatch(showNotification("Successfully created plan", "SUCCESS"));
         } catch (error) {
-            dispatch(showNotification("Failed to create plan", "ERROR"));
+            handleError(dispatch, error, "Failed to create plan");
         }
     };
 }
@@ -481,8 +472,7 @@ export function savePlan(plan) {
             dispatch(fetchPlanComplete(newPlan));
             dispatch(showNotification("Successfully saved plan", "SUCCESS"));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to save plan", "ERROR"));
+            handleError(dispatch, error, "Failed to save plan");
         }
     };
 }
@@ -502,8 +492,7 @@ export function fetchPlan(id) {
             const plan = response.data;
             dispatch(fetchPlanComplete(plan));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to save plan", "ERROR"));
+            handleError(dispatch, error, "Failed to save plan");
         }
     };
 }
@@ -527,8 +516,7 @@ export function fetchPlans(params) {
             }
             dispatch(fetchPlansComplete(plans));
         } catch (error) {
-            console.log(error);
-            dispatch(showNotification("Failed to fetch plans", "ERROR"));
+            handleError(dispatch, error, "Failed to fetch plans");
         }
     };
 }
@@ -563,10 +551,7 @@ export function fetchAnalytics(params) {
             const analytics = response.data;
             dispatch(fetchAnalyticsComplete(analytics));
         } catch (error) {
-            console.log(error);
-            dispatch(
-                showNotification("Failed to fetch analytics data", "ERROR")
-            );
+            handleError(dispatch, error, "Failed to fetch analytics data");
         }
     };
 }
@@ -625,7 +610,7 @@ export function fetchUser() {
                 Authorization: `bearer ${user.accessToken}`,
             };
         } catch (error) {
-            console.log(error);
+            handleError(dispatch, error, "Cannot find an active user session.");
         }
 
         dispatch(user ? fetchUserComplete(user) : fetchUserFailed());
@@ -638,9 +623,16 @@ export function logout() {
             const csClient = await crossStorage.connection;
             await csClient.del("user");
         } catch (error) {
-            console.log(error);
+            handleError(dispatch, error, "Failed to logout!");
         }
         /* Redirect the user to the login page. */
         dispatch(fetchUserComplete(null));
+    };
+}
+
+export function internalRedirect(path) {
+    return {
+        type: ActionTypes.INTERNAL_REDIRECT,
+        payload: path,
     };
 }
