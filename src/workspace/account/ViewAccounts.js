@@ -395,9 +395,9 @@ function ViewAccounts(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {accounts && accounts.records.length > 0 && (
-                <Grid container={true} className={classes.container}>
-                    <Grid item={true} lg={openFilter ? 10 : 12}>
+            <Grid container={true} className={classes.container}>
+                <Grid item={true} lg={openFilter ? 10 : 12}>
+                    {accounts && accounts.records.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -413,29 +413,29 @@ function ViewAccounts(props) {
                             onChangeRowsPerPage={onChangeRowsPerPage}
                             descendingComparator={descendingComparator}
                         />
-                    </Grid>
-                    {openFilter && (
-                        <Grid item={true} lg={2} className={classes.filter}>
-                            <WorkspaceFilter
-                                fields={filterFields}
-                                values={filterValues}
-                                onValueChange={onFilterValueChange}
-                                onClear={onFilterClear}
-                            />
-                        </Grid>
+                    )}
+
+                    {(!accounts || accounts.records.length === 0) && (
+                        <NoRecords
+                            message="You have not created any accounts yet."
+                            action={true}
+                            actionText="Create Account"
+                            actionHandler={newAccount}
+                            image="assets/images/empty-accounts.svg"
+                        />
                     )}
                 </Grid>
-            )}
-
-            {(!accounts || accounts.records.length === 0) && (
-                <NoRecords
-                    message="You have not created any accounts yet."
-                    action={true}
-                    actionText="Create Account"
-                    actionHandler={newAccount}
-                    image="assets/images/empty-accounts.svg"
-                />
-            )}
+                {openFilter && (
+                    <Grid item={true} lg={2} className={classes.filter}>
+                        <WorkspaceFilter
+                            fields={filterFields}
+                            values={filterValues}
+                            onValueChange={onFilterValueChange}
+                            onClear={onFilterClear}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </div>
     );
 }

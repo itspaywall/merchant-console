@@ -392,9 +392,9 @@ function ViewTransactions(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {transactions && transactions.records.length > 0 && (
-                <Grid container={true} className={classes.container}>
-                    <Grid item={true} lg={openFilter ? 10 : 12}>
+            <Grid container={true} className={classes.container}>
+                <Grid item={true} lg={openFilter ? 10 : 12}>
+                    {transactions && transactions.records.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -410,29 +410,28 @@ function ViewTransactions(props) {
                             onChangeRowsPerPage={onChangeRowsPerPage}
                             descendingComparator={descendingComparator}
                         />
-                    </Grid>
-                    {openFilter && (
-                        <Grid item={true} lg={2}>
-                            <WorkspaceFilter
-                                fields={filterFields}
-                                values={filterValues}
-                                onValueChange={onFilterValueChange}
-                                onClear={onFilterClear}
-                            />
-                        </Grid>
+                    )}
+                    {(!transactions || transactions.records.length === 0) && (
+                        <NoRecords
+                            message="You have not created any transactions yet."
+                            action={true}
+                            actionText="Create Transaction"
+                            actionHandler={newTransaction}
+                            image="assets/images/empty-transactions.svg"
+                        />
                     )}
                 </Grid>
-            )}
-
-            {(!transactions || transactions.records.length === 0) && (
-                <NoRecords
-                    message="You have not created any transactions yet."
-                    action={true}
-                    actionText="Create Transaction"
-                    actionHandler={newTransaction}
-                    image="assets/images/empty-transactions.svg"
-                />
-            )}
+                {openFilter && (
+                    <Grid item={true} lg={2}>
+                        <WorkspaceFilter
+                            fields={filterFields}
+                            values={filterValues}
+                            onValueChange={onFilterValueChange}
+                            onClear={onFilterClear}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </div>
     );
 }
