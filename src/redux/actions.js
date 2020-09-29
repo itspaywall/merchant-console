@@ -194,6 +194,7 @@ export function fetchSubscription(id) {
             // dispatch(showNotification('Loading subscription...', 'LOADING'));
             const response = await client.getSubscription(id);
             const subscription = response.data;
+            subscription.createdAt = new Date(subscription.createdAt);
             dispatch(fetchSubscriptionComplete(subscription));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch subscription");
