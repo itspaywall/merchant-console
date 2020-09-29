@@ -13,7 +13,10 @@ function handleError(dispatch, error, message) {
     let action;
     if (error.response) {
         // Assuming that we receive a JSON.
-        action = showNotification(error.response.data.message, "ERROR");
+        action = showNotification(
+            error.response.data.message || message,
+            "ERROR"
+        );
     } else {
         action = showNotification(message, "ERROR");
     }
