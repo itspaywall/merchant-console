@@ -150,7 +150,12 @@ export default function RecordForm(props) {
     };
 
     const renderSelect = (field) => (
-        <FormControl variant="outlined" fullWidth={true} size="medium">
+        <FormControl
+            variant="outlined"
+            fullWidth={true}
+            size="medium"
+            required={field.required}
+        >
             <InputLabel id={field.identifier}>{field.label}</InputLabel>
             <Select
                 labelId={field.identifier}
@@ -248,6 +253,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -265,6 +275,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -280,6 +295,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -301,7 +321,6 @@ export default function RecordForm(props) {
                                                           ]
                                                       )
                                             }
-                                            margin="normal"
                                             onChange={(value) =>
                                                 onValueChange(field, value)
                                             }
@@ -326,7 +345,6 @@ export default function RecordForm(props) {
                                                           ]
                                                       )
                                             }
-                                            margin="normal"
                                             onChange={(value) =>
                                                 onValueChange(field, value)
                                             }
@@ -351,7 +369,6 @@ export default function RecordForm(props) {
                                                           ]
                                                       )
                                             }
-                                            margin="normal"
                                             onChange={(value) =>
                                                 onValueChange(field, value)
                                             }

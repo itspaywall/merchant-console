@@ -148,7 +148,9 @@ function FormDrawer(props) {
     };
     const handleSave = () => {
         closeDialog();
-        onSave(toRequest(groups, values));
+        const requestValues = toRequest(groups, values);
+        console.log(requestValues);
+        onSave(requestValues);
     };
     // TODO: Create a deep copy without serializing!
     const handleValueChange = (field, value) => {

@@ -45,12 +45,6 @@ const headers = [
         label: "Price",
     },
     {
-        id: "term",
-        numeric: false,
-        disablePadding: false,
-        label: "Term",
-    },
-    {
         id: "setupFee",
         numeric: false,
         disablePadding: false,
@@ -246,8 +240,7 @@ function ViewPlans(props) {
         const keys = {
             name: "name",
             code: "code",
-            price: "pricePerBillingPeriod",
-            term: "term",
+            price: "pricePerBillingCycle",
             setupFee: "setupFee",
             trial: "trialPeriod",
             created: "createdAt",
@@ -282,11 +275,7 @@ function ViewPlans(props) {
             }
 
             case "price": {
-                return row.pricePerBillingPeriod + " INR";
-            }
-
-            case "term": {
-                return row.term + " " + row.termUnit;
+                return row.pricePerBillingCycle + " INR";
             }
 
             case "setupFee": {

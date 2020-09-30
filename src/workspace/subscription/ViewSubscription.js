@@ -70,21 +70,22 @@ function ViewSubscription(props) {
                             planName={subscription.plan.name}
                             planCode={subscription.plan.code}
                             status={subscription.status}
-                            quantity={subscription.quantity}
-                            billingPeriod={subscription.billingPeriod}
-                            billingPeriodUnit={subscription.billingPeriodUnit}
-                            setupFee={subscription.setupFee}
-                            trialPeriod={subscription.trialPeriod}
-                            trialPeriodUnit={subscription.trialPeriodUnit}
-                            term={subscription.term}
-                            termUnit={subscription.termUnit}
-                            renews={subscription.renews}
-                            createdAt={subscription.createdAt}
-                            pricePerUnit={
-                                subscription.plan.pricePerBillingPeriod
+                            pricePerBillingCycle={
+                                subscription.plan.pricePerBillingCycle
                             }
+                            setupFee={subscription.setupFee}
+                            quantity={subscription.quantity}
+                            startsAt={subscription.startsAt}
+                            totalBillingCycles={subscription.totalBillingCycles}
+                            renews={subscription.renews}
+                            notes={subscription.notes}
+                            termsAndConditions={subscription.termsAndConditions}
+                            activatedAt={subscription.activatedAt}
+                            cancelledAt={subscription.cancelledAt}
+                            pausedAt={subscription.pausedAt}
                             currentPeriodStart={subscription.currentPeriodStart}
                             currentPeriodEnd={subscription.currentPeriodEnd}
+                            createdAt={subscription.createdAt}
                         />
                     </div>
                 </div>

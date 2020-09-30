@@ -88,31 +88,34 @@ const fields = [
         render: (subscription) => toDateString(subscription.createdAt),
     },
     {
+        identifier: "currentPeriodStart",
+        title: "Current Period Start",
+        size: 6,
+        render: (subscription) =>
+            subscription.currentPeriodStart
+                ? toDateString(subscription.currentPeriodStart)
+                : "Unavailable",
+    },
+    {
+        identifier: "currentPeriodEnd",
+        title: "Current Period End",
+        size: 6,
+        render: (subscription) =>
+            subscription.currentPeriodEnd
+                ? toDateString(subscription.currentPeriodEnd)
+                : "Unavailable",
+    },
+    {
         identifier: "renews",
         title: "Renews",
         size: 6,
         render: (subscription) => (subscription.renews ? "Yes" : "No"),
     },
     {
-        identifier: "term",
-        title: "Term",
+        identifier: "totalBillingCycles",
+        title: "Total Billing Cycles",
         size: 6,
-        render: (subscription) =>
-            `${subscription.term} ${subscription.termUnit}`,
-    },
-    {
-        identifier: "billingPeriod",
-        title: "Billing Period",
-        size: 6,
-        render: (subscription) =>
-            `${subscription.billingPeriod} ${subscription.billingPeriodUnit}`,
-    },
-    {
-        identifier: "trialPeriod",
-        title: "Trial Period",
-        size: 6,
-        render: (subscription) =>
-            `${subscription.trialPeriod} ${subscription.trialPeriodUnit}`,
+        render: (subscription) => subscription.totalBillingCycles,
     },
     {
         identifier: "quantity",
@@ -151,14 +154,14 @@ const fields = [
         identifier: "pricePerUnit",
         title: "Price Per Unit",
         size: 6,
-        render: (subscription) => `${subscription.pricePerUnit} INR`,
+        render: (subscription) => `${subscription.pricePerBillingCycle} INR`,
     },
     {
         identifier: "estimatedTotal",
         title: "Estimated Total",
         size: 6,
         render: (subscription) =>
-            `${subscription.pricePerUnit * subscription.quantity} INR`,
+            `${subscription.pricePerBillingCycle * subscription.quantity} INR`,
     },
 ];
 
@@ -176,6 +179,8 @@ function SubscriptionCard(props) {
         planId,
         planName,
         planCode,
+        notes,
+        termsAndConditions,
     } = props;
     const [menuAnchor, setMenuAnchor] = useState(null);
 
@@ -261,6 +266,28 @@ function SubscriptionCard(props) {
                             </Grid>
                         </React.Fragment>
                     ))}
+                    {notes && (
+                        <Grid item={true} sm={12}>
+                            <Typography
+                                color="textSecondary"
+                                className={classes.title}
+                            >
+                                Notes
+                            </Typography>
+                            <Typography>{notes}</Typography>
+                        </Grid>
+                    )}
+                    {termsAndConditions && (
+                        <Grid item={true} sm={12}>
+                            <Typography
+                                color="textSecondary"
+                                className={classes.title}
+                            >
+                                Terms and Conditions
+                            </Typography>
+                            <Typography>{termsAndConditions}</Typography>
+                        </Grid>
+                    )}
                 </Grid>
             </CardContent>
         </Card>
