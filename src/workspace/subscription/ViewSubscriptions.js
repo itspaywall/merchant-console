@@ -44,12 +44,12 @@ const headers = [
         disablePadding: false,
         label: "Quantity",
     },
-    /*{
+    {
         identifier: "status",
         numeric: false,
         disablePadding: false,
         label: "Status",
-    },*/
+    },
     {
         identifier: "created",
         numeric: false,
@@ -133,7 +133,7 @@ const filterFields = [
             },
         ],
         defaultValue: "all",
-    },
+    },*/
     {
         identifier: "subscription_status",
         type: "select",
@@ -144,44 +144,40 @@ const filterFields = [
                 title: "All",
             },
             {
-                value: "active",
-                title: "Active",
-            },
-            {
-                value: "renewing",
-                title: "Renewing",
-            },
-            {
-                value: "non_renewing",
-                title: "Non-renewing",
-            },
-            {
-                value: "future_start_date",
-                title: "Future Start Date",
+                value: "future",
+                title: "Future",
             },
             {
                 value: "in_trial",
                 title: "In Trial",
             },
             {
-                value: "paused",
-                title: "Paused",
+                value: "active",
+                title: "Active",
             },
             {
-                value: "cancelled",
-                title: "Cancelled",
+                value: "pending",
+                title: "Pending",
+            },
+            {
+                value: "halted",
+                title: "Halted",
+            },
+            {
+                value: "canceled",
+                title: "Canceled",
             },
             {
                 value: "expired",
                 title: "Expired",
             },
             {
-                value: "past_due",
-                title: "Past Due",
+                value: "paused",
+                title: "Paused",
             },
         ],
         defaultValue: "all",
-    },*/
+    },
 ];
 
 const actions1 = [
@@ -237,6 +233,17 @@ const actions2 = [
         primary: false,
     },
 ];
+
+const statuses = {
+    future: "Future",
+    in_trial: "In Trial",
+    active: "Active",
+    pending: "Pending",
+    halted: "Halted",
+    canceled: "Canceled",
+    expired: "Expired",
+    paused: "Paused",
+};
 
 const DEFAULT_ROWS_PER_PAGE = 20;
 
@@ -371,6 +378,10 @@ function ViewSubscriptions(props) {
                 return toDateString(row.createdAt);
             }
 
+            case "status": {
+                return statuses[row.status];
+            }
+
             case "nextInvoice": {
                 return "TODO";
             }
@@ -408,9 +419,9 @@ function ViewSubscriptions(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {subscriptions && subscriptions.records.length > 0 && (
-                <Grid container={true} className={classes.container}>
-                    <Grid item={true} lg={openFilter ? 10 : 12}>
+            <Grid container={true} className={classes.container}>
+                <Grid item={true} lg={openFilter ? 10 : 12}>
+                    {subscriptions && subscriptions.records.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -426,29 +437,29 @@ function ViewSubscriptions(props) {
                             onChangeRowsPerPage={onChangeRowsPerPage}
                             descendingComparator={descendingComparator}
                         />
-                    </Grid>
-                    {openFilter && (
-                        <Grid item={true} lg={2}>
-                            <WorkspaceFilter
-                                fields={filterFields}
-                                values={filterValues}
-                                onValueChange={onFilterValueChange}
-                                onClear={onFilterClear}
-                            />
-                        </Grid>
+                    )}
+
+                    {(!subscriptions || subscriptions.records.length === 0) && (
+                        <NoRecords
+                            message="You have not created any subscriptions yet."
+                            action={true}
+                            actionText="Create Subscription"
+                            actionHandler={newSubscription}
+                            image="assets/images/empty-subscriptions.svg"
+                        />
                     )}
                 </Grid>
-            )}
-
-            {(!subscriptions || subscriptions.records.length === 0) && (
-                <NoRecords
-                    message="You have not created any subscriptions yet."
-                    action={true}
-                    actionText="Create Subscription"
-                    actionHandler={newSubscription}
-                    image="assets/images/empty-subscriptions.svg"
-                />
-            )}
+                {openFilter && (
+                    <Grid item={true} lg={2}>
+                        <WorkspaceFilter
+                            fields={filterFields}
+                            values={filterValues}
+                            onValueChange={onFilterValueChange}
+                            onClear={onFilterClear}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </div>
     );
 }

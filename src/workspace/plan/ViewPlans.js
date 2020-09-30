@@ -45,12 +45,6 @@ const headers = [
         label: "Price",
     },
     {
-        id: "term",
-        numeric: false,
-        disablePadding: false,
-        label: "Term",
-    },
-    {
         id: "setupFee",
         numeric: false,
         disablePadding: false,
@@ -246,8 +240,7 @@ function ViewPlans(props) {
         const keys = {
             name: "name",
             code: "code",
-            price: "pricePerBillingPeriod",
-            term: "term",
+            price: "pricePerBillingCycle",
             setupFee: "setupFee",
             trial: "trialPeriod",
             created: "createdAt",
@@ -282,11 +275,7 @@ function ViewPlans(props) {
             }
 
             case "price": {
-                return row.pricePerBillingPeriod + " INR";
-            }
-
-            case "term": {
-                return row.term + " " + row.termUnit;
+                return row.pricePerBillingCycle + " INR";
             }
 
             case "setupFee": {
@@ -332,9 +321,9 @@ function ViewPlans(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {plans && plans.records.length > 0 && (
-                <Grid container={true} className={classes.container}>
-                    <Grid item={true} lg={openFilter ? 10 : 12}>
+            <Grid container={true} className={classes.container}>
+                <Grid item={true} lg={openFilter ? 10 : 12}>
+                    {plans && plans.records.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -350,29 +339,29 @@ function ViewPlans(props) {
                             onChangeRowsPerPage={onChangeRowsPerPage}
                             descendingComparator={descendingComparator}
                         />
-                    </Grid>
-                    {openFilter && (
-                        <Grid item={true} lg={2} className={classes.filter}>
-                            <WorkspaceFilter
-                                fields={filterFields}
-                                values={filterValues}
-                                onValueChange={onFilterValueChange}
-                                onClear={onFilterClear}
-                            />
-                        </Grid>
+                    )}
+
+                    {(!plans || plans.records.length === 0) && (
+                        <NoRecords
+                            message="You have not created any plans yet."
+                            action={true}
+                            actionText="Create Plan"
+                            actionHandler={newPlan}
+                            image="assets/images/empty-plans.svg"
+                        />
                     )}
                 </Grid>
-            )}
-
-            {(!plans || plans.records.length === 0) && (
-                <NoRecords
-                    message="You have not created any plans yet."
-                    action={true}
-                    actionText="Create Plan"
-                    actionHandler={newPlan}
-                    image="assets/images/empty-plans.svg"
-                />
-            )}
+                {openFilter && (
+                    <Grid item={true} lg={2} className={classes.filter}>
+                        <WorkspaceFilter
+                            fields={filterFields}
+                            values={filterValues}
+                            onValueChange={onFilterValueChange}
+                            onClear={onFilterClear}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </div>
     );
 }

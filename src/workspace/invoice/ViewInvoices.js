@@ -375,9 +375,9 @@ function ViewInvoices(props) {
                 actions={compact ? actions1 : actions2}
                 onAction={handleAction}
             />
-            {invoices.length > 0 && (
-                <Grid container={true} className={classes.container}>
-                    <Grid item={true} lg={openFilter ? 10 : 12}>
+            <Grid container={true} className={classes.container}>
+                <Grid item={true} lg={openFilter ? 10 : 12}>
+                    {invoices.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -387,27 +387,27 @@ function ViewInvoices(props) {
                             onClick={onClick}
                             renderCellValue={renderCellValue}
                         />
-                    </Grid>
-                    {openFilter && (
-                        <Grid item={true} lg={2}>
-                            <WorkspaceFilter
-                                fields={filterFields}
-                                values={filterValues}
-                                onValueChange={onFilterValueChange}
-                                onClear={onFilterClear}
-                            />
-                        </Grid>
+                    )}
+
+                    {invoices.length === 0 && (
+                        <NoRecords
+                            message="There are no invoices yet."
+                            image="assets/images/empty-invoices.svg"
+                            action={false}
+                        />
                     )}
                 </Grid>
-            )}
-
-            {invoices.length === 0 && (
-                <NoRecords
-                    message="There are no invoices yet."
-                    image="assets/images/empty-invoices.svg"
-                    action={false}
-                />
-            )}
+                {openFilter && (
+                    <Grid item={true} lg={2}>
+                        <WorkspaceFilter
+                            fields={filterFields}
+                            values={filterValues}
+                            onValueChange={onFilterValueChange}
+                            onClear={onFilterClear}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </div>
     );
 }

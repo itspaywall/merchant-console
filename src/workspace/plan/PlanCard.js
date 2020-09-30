@@ -49,21 +49,21 @@ const fields = [
             toDateString(new Date(props.createdAt.substring(0, 10))),
     },
     {
-        identifier: "billingPeriod",
-        title: "Billing Period",
+        identifier: "billingCyclePeriod",
+        title: "Billing Cycle Period",
         size: 6,
         render: (props) =>
-            props.billingPeriod
-                ? props.billingPeriod + " " + props.billingPeriodUnit
+            props.billingCyclePeriod
+                ? props.billingCyclePeriod + " " + props.billingCyclePeriodUnit
                 : "Unavailable",
     },
     {
-        identifier: "pricePerBillingPeriod",
+        identifier: "pricePerBillingCycle",
         title: "Price",
         size: 6,
         render: (props) =>
-            props.pricePerBillingPeriod
-                ? props.pricePerBillingPeriod + " INR"
+            props.pricePerBillingCycle
+                ? props.pricePerBillingCycle + " INR"
                 : "Unavailable",
     },
     {
@@ -83,11 +83,10 @@ const fields = [
                 : "Unavailable",
     },
     {
-        identifier: "term",
-        title: "Term",
+        identifier: "totalBillingCycles",
+        title: "Total Billing Cycles",
         size: 6,
-        render: (props) =>
-            props.term ? props.term + " " + props.termUnit : "Unavailable",
+        render: (props) => props.totalBillingCycles,
     },
     {
         identifier: "renew",

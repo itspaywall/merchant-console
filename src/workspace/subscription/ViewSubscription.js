@@ -62,34 +62,30 @@ function ViewSubscription(props) {
                         </Typography>
                         <SubscriptionCard
                             className={classes.subscriptionCard}
-                            currentPeriodStart={
-                                /* subscription.currentPeriodStart */ "TODO"
+                            accountId={subscription.account.id}
+                            accountUserName={subscription.account.userName}
+                            accountFirstName={subscription.account.firstName}
+                            accountLastName={subscription.account.lastName}
+                            planId={subscription.plan.id}
+                            planName={subscription.plan.name}
+                            planCode={subscription.plan.code}
+                            status={subscription.status}
+                            pricePerBillingCycle={
+                                subscription.plan.pricePerBillingCycle
                             }
-                            currentPeriodEnd={
-                                /* subscription.currentPeriodEnd */ "TODO"
-                            }
-                            plan={subscription.plan.name}
-                            billingPeriod={subscription.billingPeriod}
-                            billingPeriodUnit={subscription.billingPeriodUnit}
                             setupFee={subscription.setupFee}
-                            trialPeriod={subscription.trialPeriod}
-                            trialPeriodUnit={subscription.trialPeriodUnit}
-                            startedOn={subscription.starts}
-                            term={subscription.term}
-                            termUnit={subscription.termUnit}
-                            renews={/*subscription.renews*/ "TODO"}
-                            createdOn={subscription.createdOn}
-                            status={"active"}
-                            collection={"TODO"}
-                            renewsOn={"TODO"}
-                            pricePerUnit={
-                                subscription.plan.pricePerBillingPeriod
-                            }
-                            estimatedTotal={
-                                subscription.plan.pricePerBillingPeriod +
-                                " * units"
-                            }
-                            showMore={false}
+                            quantity={subscription.quantity}
+                            startsAt={subscription.startsAt}
+                            totalBillingCycles={subscription.totalBillingCycles}
+                            renews={subscription.renews}
+                            notes={subscription.notes}
+                            termsAndConditions={subscription.termsAndConditions}
+                            activatedAt={subscription.activatedAt}
+                            cancelledAt={subscription.cancelledAt}
+                            pausedAt={subscription.pausedAt}
+                            currentPeriodStart={subscription.currentPeriodStart}
+                            currentPeriodEnd={subscription.currentPeriodEnd}
+                            createdAt={subscription.createdAt}
                         />
                     </div>
                 </div>

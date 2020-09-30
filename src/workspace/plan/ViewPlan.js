@@ -47,6 +47,8 @@ function ViewPlan(props) {
         return clearPlan;
     }, [identifier, fetchPlan, clearPlan]);
 
+    console.log(plan);
+
     return (
         <div>
             <WorkspaceToolbar title="Plan" />
@@ -69,11 +71,10 @@ function ViewPlan(props) {
                             code={plan.code}
                             description={plan.description}
                             createdAt={plan.createdAt}
-                            pricePerBillingPeriod={plan.pricePerBillingPeriod}
-                            billingPeriod={plan.billingPeriod}
-                            billingPeriodUnit={plan.billingPeriodUnit}
-                            term={plan.term}
-                            termUnit={plan.termUnit}
+                            pricePerBillingCycle={plan.pricePerBillingCycle}
+                            billingCyclePeriod={plan.billingCyclePeriod}
+                            billingCyclePeriodUnit={plan.billingCyclePeriodUnit}
+                            totalBillingCycles={plan.totalBillingCycles}
                             setupFee={plan.setupFee}
                             trialPeriod={plan.trialPeriod}
                             trialPeriodUnit={plan.trialPeriodUnit}

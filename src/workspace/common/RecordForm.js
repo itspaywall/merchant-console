@@ -13,6 +13,8 @@ import { format } from "date-fns";
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
+    KeyboardTimePicker,
+    KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Chip from "@material-ui/core/Chip";
 import CountrySelect from "./CountrySelect";
@@ -148,7 +150,12 @@ export default function RecordForm(props) {
     };
 
     const renderSelect = (field) => (
-        <FormControl variant="outlined" fullWidth={true} size="medium">
+        <FormControl
+            variant="outlined"
+            fullWidth={true}
+            size="medium"
+            required={field.required}
+        >
             <InputLabel id={field.identifier}>{field.label}</InputLabel>
             <Select
                 labelId={field.identifier}
@@ -246,6 +253,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -263,6 +275,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -278,6 +295,11 @@ export default function RecordForm(props) {
                                             value={values[field.identifier]}
                                             onChange={makeChangeHandler(field)}
                                             size="medium"
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            preventFirstValidation={true}
                                         />
                                     )}
 
@@ -299,11 +321,59 @@ export default function RecordForm(props) {
                                                           ]
                                                       )
                                             }
-                                            margin="normal"
                                             onChange={(value) =>
                                                 onValueChange(field, value)
                                             }
                                             size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "time" && (
+                                        <KeyboardTimePicker
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            fullWidth={true}
+                                            inputVariant="outlined"
+                                            required={field.required}
+                                            value={
+                                                !values[field.identifier]
+                                                    ? new Date()
+                                                    : new Date(
+                                                          values[
+                                                              field.identifier
+                                                          ]
+                                                      )
+                                            }
+                                            onChange={(value) =>
+                                                onValueChange(field, value)
+                                            }
+                                            size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "date_time" && (
+                                        <KeyboardDateTimePicker
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            fullWidth={true}
+                                            inputVariant="outlined"
+                                            required={field.required}
+                                            value={
+                                                !values[field.identifier]
+                                                    ? new Date()
+                                                    : new Date(
+                                                          values[
+                                                              field.identifier
+                                                          ]
+                                                      )
+                                            }
+                                            onChange={(value) =>
+                                                onValueChange(field, value)
+                                            }
+                                            size="medium"
+                                            format="MM/dd/yyyy, hh:mm a"
                                         />
                                     )}
 

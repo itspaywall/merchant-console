@@ -13,7 +13,10 @@ function handleError(dispatch, error, message) {
     let action;
     if (error.response) {
         // Assuming that we receive a JSON.
-        action = showNotification(error.response.data.message, "ERROR");
+        action = showNotification(
+            error.response.data.message || message,
+            "ERROR"
+        );
     } else {
         action = showNotification(message, "ERROR");
     }
@@ -191,6 +194,7 @@ export function fetchSubscription(id) {
             // dispatch(showNotification('Loading subscription...', 'LOADING'));
             const response = await client.getSubscription(id);
             const subscription = response.data;
+            subscription.createdAt = new Date(subscription.createdAt);
             dispatch(fetchSubscriptionComplete(subscription));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch subscription");
