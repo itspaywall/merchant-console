@@ -43,7 +43,7 @@ function Lookup(props) {
                     inputProps={{
                         ...params.inputProps,
                         autoComplete:
-                            "new-password" /* Disable autocomplete and autofill */,
+                            "off" /* Disable autocomplete and autofill */,
                     }}
                     required={required}
                     name={name}

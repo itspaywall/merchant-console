@@ -13,6 +13,8 @@ import { format } from "date-fns";
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
+    KeyboardTimePicker,
+    KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Chip from "@material-ui/core/Chip";
 import CountrySelect from "./CountrySelect";
@@ -304,6 +306,57 @@ export default function RecordForm(props) {
                                                 onValueChange(field, value)
                                             }
                                             size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "time" && (
+                                        <KeyboardTimePicker
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            fullWidth={true}
+                                            inputVariant="outlined"
+                                            required={field.required}
+                                            value={
+                                                !values[field.identifier]
+                                                    ? new Date()
+                                                    : new Date(
+                                                          values[
+                                                              field.identifier
+                                                          ]
+                                                      )
+                                            }
+                                            margin="normal"
+                                            onChange={(value) =>
+                                                onValueChange(field, value)
+                                            }
+                                            size="medium"
+                                        />
+                                    )}
+
+                                    {field.type === "date_time" && (
+                                        <KeyboardDateTimePicker
+                                            id={field.identifier}
+                                            label={field.label}
+                                            name={field.identifier}
+                                            fullWidth={true}
+                                            inputVariant="outlined"
+                                            required={field.required}
+                                            value={
+                                                !values[field.identifier]
+                                                    ? new Date()
+                                                    : new Date(
+                                                          values[
+                                                              field.identifier
+                                                          ]
+                                                      )
+                                            }
+                                            margin="normal"
+                                            onChange={(value) =>
+                                                onValueChange(field, value)
+                                            }
+                                            size="medium"
+                                            format="MM/dd/yyyy, hh:mm a"
                                         />
                                     )}
 
