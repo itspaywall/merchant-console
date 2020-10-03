@@ -9,6 +9,7 @@ function handleError(dispatch, error, message) {
     /* By default, if an instance of the Error class is printed, a lot of information is hidden.
      * Therefore, we convert it to a regular object and then print it.
      */
+    console.log(error);
     console.log(JSON.parse(JSON.stringify(error)));
     let action;
     if (error.response) {
@@ -62,9 +63,8 @@ export function saveAccount(account) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving account...", "LOADING"));
-            const response = await client.saveAccount(account);
+            const newAccount = await client.saveAccount(account);
             dispatch(fetchAccounts({}));
-            const newAccount = response.data;
             dispatch(fetchAccountComplete(newAccount));
             dispatch(showNotification("Successfully saved account", "SUCCESS"));
         } catch (error) {
@@ -84,8 +84,7 @@ export function fetchAccount(id) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading account...', 'LOADING'));
-            const response = await client.getAccount(id);
-            const account = response.data;
+            const account = await client.getAccount(id);
             dispatch(fetchAccountComplete(account));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch account");
@@ -104,13 +103,7 @@ export function fetchAccounts(params) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading accounts...', 'LOADING'));
-            const response = await client.getAccounts(params);
-            const accounts = response.data;
-            const records = accounts.records;
-            for (let i = 0; i < records.length; i++) {
-                const account = records[i];
-                account.createdAt = new Date(account.createdAt);
-            }
+            const accounts = await client.getAccounts(params);
             dispatch(fetchAccountsComplete(accounts));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch accounts");
@@ -170,8 +163,9 @@ export function saveSubscription(subscription) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving subscription...", "LOADING"));
-            await client.saveSubscription(subscription);
-            dispatch(fetchSubscriptionComplete(subscription));
+            const newSubscription = await client.saveSubscription(subscription);
+            dispatch(fetchSubscriptions());
+            dispatch(fetchSubscriptionComplete(newSubscription));
             dispatch(
                 showNotification("Successfully saved subscription", "SUCCESS")
             );
@@ -192,9 +186,7 @@ export function fetchSubscription(id) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading subscription...', 'LOADING'));
-            const response = await client.getSubscription(id);
-            const subscription = response.data;
-            subscription.createdAt = new Date(subscription.createdAt);
+            const subscription = await client.getSubscription(id);
             dispatch(fetchSubscriptionComplete(subscription));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch subscription");
@@ -212,13 +204,7 @@ export function fetchSubscriptionsComplete(subscriptions) {
 export function fetchSubscriptions(params) {
     return async (dispatch) => {
         try {
-            const response = await client.getSubscriptions(params);
-            const subscriptions = response.data;
-            const records = subscriptions.records;
-            for (let i = 0; i < records.length; i++) {
-                const subscription = records[i];
-                subscription.createdAt = new Date(subscription.createdAt);
-            }
+            const subscriptions = await client.getSubscriptions(params);
             dispatch(fetchSubscriptionsComplete(subscriptions));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch subscriptions");
@@ -263,8 +249,8 @@ export function saveInvoice(invoice) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving invoice...", "LOADING"));
-            const response = await client.saveInvoice(invoice);
-            const newInvoice = response.data;
+            const newInvoice = await client.saveInvoice(invoice);
+            dispatch(fetchInvoices({})); // BUG: This action does not acknowledge the filters.
             dispatch(fetchInvoiceComplete(newInvoice));
             dispatch(showNotification("Successfully saved invoice", "SUCCESS"));
         } catch (error) {
@@ -284,8 +270,7 @@ export function fetchInvoice(id) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading invoice...', 'LOADING'));
-            const response = await client.getInvoice(id);
-            const invoice = response.data;
+            const invoice = await client.getInvoice(id);
             dispatch(fetchInvoiceComplete(invoice));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch invoice");
@@ -304,12 +289,7 @@ export function fetchInvoices(params) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading invoices...', 'LOADING'));
-            const response = await client.getInvoices(params);
-            const invoices = response.data;
-            for (let i = 0; i < invoices.length; i++) {
-                const invoice = invoices[i];
-                invoice.createdAt = new Date(invoice.createdAt);
-            }
+            const invoices = await client.getInvoices(params);
             dispatch(fetchInvoicesComplete(invoices));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch invoices");
@@ -369,8 +349,8 @@ export function saveTransaction(transaction) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving transaction...", "LOADING"));
-            const response = await client.saveTransaction(transaction);
-            const newTransaction = response.data;
+            const newTransaction = await client.saveTransaction(transaction);
+            dispatch(fetchTransactions({})); // BUG: This action does not acknowledge the filters.
             dispatch(fetchTransactionComplete(newTransaction));
             dispatch(
                 showNotification("Successfully saved transaction", "SUCCESS")
@@ -390,8 +370,7 @@ export function fetchTransactionComplete(transaction) {
 
 export function fetchTransaction(id) {
     return async (dispatch) => {
-        const response = await client.getTransaction(id);
-        const transaction = response.data;
+        const transaction = await client.getTransaction(id);
         dispatch(fetchTransactionComplete(transaction));
     };
 }
@@ -406,13 +385,7 @@ export function fetchTransactionsComplete(transactions) {
 export function fetchTransactions(params) {
     return async (dispatch) => {
         try {
-            const response = await client.getTransactions(params);
-            const transactions = response.data;
-            const records = transactions.records;
-            for (let i = 0; i < records.length; i++) {
-                const transaction = records[i];
-                transaction.createdAt = new Date(transaction.createdAt);
-            }
+            const transactions = await client.getTransactions(params);
             dispatch(fetchTransactionsComplete(transactions));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch transactions");
@@ -470,9 +443,8 @@ export function savePlan(plan) {
     return async (dispatch) => {
         try {
             dispatch(showNotification("Saving plan...", "LOADING"));
-            const response = await client.savePlan(plan);
+            const newPlan = await client.savePlan(plan);
             dispatch(fetchPlans({}));
-            const newPlan = response.data;
             dispatch(fetchPlanComplete(newPlan));
             dispatch(showNotification("Successfully saved plan", "SUCCESS"));
         } catch (error) {
@@ -492,8 +464,7 @@ export function fetchPlan(id) {
     return async (dispatch) => {
         try {
             // dispatch(showNotification('Loading plan...', 'LOADING'));
-            const response = await client.getPlan(id);
-            const plan = response.data;
+            const plan = await client.getPlan(id);
             dispatch(fetchPlanComplete(plan));
         } catch (error) {
             handleError(dispatch, error, "Failed to save plan");
@@ -511,13 +482,7 @@ export function fetchPlansComplete(plans) {
 export function fetchPlans(params) {
     return async (dispatch) => {
         try {
-            const response = await client.getPlans(params);
-            const plans = response.data;
-            const records = plans.records;
-            for (let i = 0; i < records.length; i++) {
-                const plan = records[i];
-                plan.createdAt = new Date(plan.createdAt);
-            }
+            const plans = await client.getPlans(params);
             dispatch(fetchPlansComplete(plans));
         } catch (error) {
             handleError(dispatch, error, "Failed to fetch plans");

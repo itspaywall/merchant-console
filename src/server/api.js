@@ -2,58 +2,212 @@ import axios from "axios";
 
 const DEFAULT_API_VERSION = "v1";
 
+function initializeAccount(account) {
+    account.createdAt = new Date(account.createdAt);
+    account.updatedAt = new Date(account.updatedAt);
+    return account;
+}
+
+function initializeSubscription(subscription) {
+    const {
+        startsAt,
+        activatedAt,
+        cancelledAt,
+        pausedAt,
+        currentPeriodStart,
+        currentPeriodEnd,
+        createdAt,
+        updatedAt,
+    } = subscription;
+
+    subscription.startsAt = new Date(startsAt);
+    subscription.activatedAt = activatedAt ? new Date(activatedAt) : null;
+    subscription.cancelledAt = cancelledAt ? new Date(cancelledAt) : null;
+    subscription.pausedAt = pausedAt ? new Date(pausedAt) : null;
+    subscription.currentPeriodStart = currentPeriodStart
+        ? new Date(currentPeriodStart)
+        : null;
+    subscription.currentPeriodEnd = currentPeriodEnd
+        ? new Date(currentPeriodEnd)
+        : null;
+    subscription.createdAt = new Date(createdAt);
+    subscription.updatedAt = new Date(updatedAt);
+
+    return subscription;
+}
+
+function initializeInvoice(invoice) {
+    const { closedAt, dueAt, updatedAt, createdAt, subscriptions } = invoice;
+    invoice.closedAt = new Date(closedAt);
+    invoice.dueAt = new Date(dueAt);
+    invoice.updatedAt = new Date(updatedAt);
+    invoice.createdAt = new Date(createdAt);
+
+    for (let i = 0; i < subscriptions.length; i++) {
+        const subscription = subscriptions[i];
+        subscription.startedAt = new Date(subscription.startedAt);
+        subscription.endedAt = new Date(subscription.endedAt);
+    }
+
+    return invoice;
+}
+
+function initializeTransaction(transaction) {
+    transaction.createdAt = new Date(transaction.createdAt);
+    transaction.updatedAt = new Date(transaction.updatedAt);
+
+    return transaction;
+}
+
+function initializePlan(plan) {
+    plan.createdAt = new Date(plan.createdAt);
+    plan.updatedAt = new Date(plan.updatedAt);
+
+    return plan;
+}
+
 export function newClient(version = DEFAULT_API_VERSION) {
     axios.defaults.baseURL = `${process.env.REACT_APP_API_URL}/api/${version}`;
 
     return {
         // Account
 
-        newAccount: (account) => axios.post(`/accounts`, account),
+        newAccount: async (account) => {
+            const response = await axios.post(`/accounts`, account);
+            return initializeAccount(response.data);
+        },
 
-        saveAccount: (account) => axios.put(`/accounts/${account.id}`, account),
+        saveAccount: async (account) => {
+            const response = await axios.put(
+                `/accounts/${account.id}`,
+                account
+            );
+            return initializeAccount(response.data);
+        },
 
-        getAccount: (id) => axios.get(`/accounts/${id}`),
+        getAccount: async (id) => {
+            const response = await axios.get(`/accounts/${id}`);
+            return initializeAccount(response.data);
+        },
 
-        getAccounts: (params) => axios.get(`/accounts`, { params }),
+        getAccounts: async (params) => {
+            const response = await axios.get(`/accounts`, { params });
+            const accounts = response.data;
+            const { records } = accounts;
+            for (let i = 0; i < records.length; i++) {
+                records[i] = initializeAccount(records[i]);
+            }
+            return accounts;
+        },
 
         // Subscription
-        newSubscription: (subscription) =>
-            axios.post(`/subscriptions`, subscription),
+        newSubscription: async (subscription) => {
+            const response = await axios.post(`/subscriptions`, subscription);
+            return initializeSubscription(response.data);
+        },
 
-        saveSubscription: (subscription) =>
-            axios.put(`/subscriptions/${subscription.id}`, subscription),
+        saveSubscription: async (subscription) => {
+            const response = await axios.put(
+                `/subscriptions/${subscription.id}`,
+                subscription
+            );
+            return initializeSubscription(response.data);
+        },
 
-        getSubscription: (id) => axios.get(`/subscriptions/${id}`),
+        getSubscription: async (id) => {
+            const response = await axios.get(`/subscriptions/${id}`);
+            return initializeSubscription(response.data);
+        },
 
-        getSubscriptions: (params) => axios.get(`/subscriptions`, { params }),
+        getSubscriptions: async (params) => {
+            const response = await axios.get(`/subscriptions`, { params });
+            const subscriptions = response.data;
+            const { records } = subscriptions;
+            for (let i = 0; i < records.length; i++) {
+                records[i] = initializeSubscription(records[i]);
+            }
+            return subscriptions;
+        },
 
         // Invoice
-        saveInvoice: (invoice) => axios.put(`/invoices/${invoice.id}`, invoice),
+        saveInvoice: async (invoice) => {
+            const response = await axios.put(
+                `/invoices/${invoice.id}`,
+                invoice
+            );
+            return initializeInvoice(response.data);
+        },
 
-        getInvoice: (id) => axios.get(`/invoices/${id}`),
+        getInvoice: async (id) => {
+            const response = await axios.get(`/invoices/${id}`);
+            return initializeInvoice(response.data);
+        },
 
-        getInvoices: (params) => axios.get(`/invoices`, { params }),
+        getInvoices: async (params) => {
+            const response = await axios.get(`/invoices`, { params });
+            const invoices = response.data;
+            const { records } = invoices;
+            for (let i = 0; i < records.length; i++) {
+                records[i] = initializeInvoice(records[i]);
+            }
+            return invoices;
+        },
 
         // Transaction
-        newTransaction: (transaction) =>
-            axios.post(`/transactions`, transaction),
+        newTransaction: async (transaction) => {
+            const response = await axios.post(`/transactions`, transaction);
+            return initializeTransaction(response.data);
+        },
 
-        saveTransaction: (transaction) =>
-            axios.put(`/transactions/${transaction.id}`, transaction),
+        saveTransaction: async (transaction) => {
+            const response = await axios.put(
+                `/transactions/${transaction.id}`,
+                transaction
+            );
+            return initializeTransaction(response.data);
+        },
 
-        getTransaction: (id) => axios.get(`/transactions/${id}`),
+        getTransaction: async (id) => {
+            const response = await axios.get(`/transactions/${id}`);
+            return initializeTransaction(response.data);
+        },
 
-        getTransactions: (params) => axios.get(`/transactions`, { params }),
+        getTransactions: async (params) => {
+            const response = await axios.get(`/transactions`, { params });
+            const transactions = response.data;
+            const { records } = transactions;
+            for (let i = 0; i < records.length; i++) {
+                records[i] = initializeTransaction(records[i]);
+            }
+            return transactions;
+        },
 
         // Plan
 
-        newPlan: (plan) => axios.post(`/plans`, plan),
+        newPlan: async (plan) => {
+            const response = await axios.post(`/plans`, plan);
+            return initializePlan(response);
+        },
 
-        savePlan: (plan) => axios.put(`/plans/${plan.id}`, plan),
+        savePlan: async (plan) => {
+            const response = await axios.put(`/plans/${plan.id}`, plan);
+            return initializePlan(response);
+        },
 
-        getPlan: (id) => axios.get(`/plans/${id}`),
+        getPlan: async (id) => {
+            const response = await axios.get(`/plans/${id}`);
+            return initializePlan(response.data);
+        },
 
-        getPlans: (params) => axios.get(`/plans`, { params }),
+        getPlans: async (params) => {
+            const response = await axios.get(`/plans`, { params });
+            const plans = response.data;
+            const { records } = plans;
+            for (let i = 0; i < records.length; i++) {
+                records[i] = initializePlan(records[i]);
+            }
+            return plans;
+        },
 
         // Analytics
         getAnalytics: (params) => axios.get(`/analytics`, { params }),

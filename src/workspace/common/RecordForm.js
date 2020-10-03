@@ -549,8 +549,21 @@ export default function RecordForm(props) {
 
                                     {field.type === "country" && (
                                         <CountrySelect
+                                            id={field.identifier}
                                             label={field.label}
                                             name={field.identifier}
+                                            fullWidth={true}
+                                            required={field.required}
+                                            value={values[field.identifier]}
+                                            onChange={makeLookupChangeHandler(
+                                                field
+                                            )}
+                                            validations={field.validations}
+                                            validationErrors={
+                                                field.validationErrors
+                                            }
+                                            size="medium"
+                                            preventFirstValidation={true}
                                         />
                                     )}
 

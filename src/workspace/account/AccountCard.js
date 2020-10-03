@@ -14,6 +14,8 @@ import CardActions from "@material-ui/core/CardActions";
 import EditIcon from "@material-ui/icons/Edit";
 // import CloseIcon from "@material-ui/icons/Close";
 
+import { findCountryByCode } from "../../common/countries";
+
 const useStyles = makeStyles((theme) => ({
     root: {},
     avatar: {
@@ -43,6 +45,15 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 16,
     },
 }));
+
+function getCountryName(code) {
+    if (!code) {
+        return null;
+    }
+    const country = findCountryByCode(code);
+    console.log(country);
+    return country ? country.label : null;
+}
 
 const fields = [
     {
@@ -106,7 +117,7 @@ const fields = [
                     )}
                     {country && (
                         <React.Fragment>
-                            {country}
+                            {getCountryName(country)}
                             <br />
                         </React.Fragment>
                     )}

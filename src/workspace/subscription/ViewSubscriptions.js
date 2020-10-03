@@ -144,6 +144,10 @@ const filterFields = [
                 title: "All",
             },
             {
+                value: "new",
+                title: "New",
+            },
+            {
                 value: "future",
                 title: "Future",
             },
@@ -235,6 +239,7 @@ const actions2 = [
 ];
 
 const statuses = {
+    new: "New",
     future: "Future",
     in_trial: "In Trial",
     active: "Active",
