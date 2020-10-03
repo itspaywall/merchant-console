@@ -63,7 +63,7 @@ const headers = [
 
 const filterFields = [
     {
-        identifier: "dateRange",
+        identifier: "date_range",
         type: "time_range",
         title: "Time Range",
         startTitle: "Start Date",
@@ -111,7 +111,7 @@ const filterFields = [
         },
     },
     {
-        identifier: "invoiceStatus",
+        identifier: "invoice_status",
         type: "select",
         title: "Invoice Status",
         options: [
@@ -146,26 +146,6 @@ const filterFields = [
             {
                 value: "closed",
                 title: "Closed",
-            },
-        ],
-        defaultValue: "all",
-    },
-    {
-        identifier: "collectionMethod",
-        type: "select",
-        title: "Collection Method",
-        options: [
-            {
-                value: "all",
-                title: "All",
-            },
-            {
-                value: "automatic",
-                title: "Automatic",
-            },
-            {
-                value: "manual",
-                title: "Manual",
             },
         ],
         defaultValue: "all",
@@ -377,7 +357,7 @@ function ViewInvoices(props) {
             />
             <Grid container={true} className={classes.container}>
                 <Grid item={true} lg={openFilter ? 10 : 12}>
-                    {invoices.length > 0 && (
+                    {invoices && invoices.records.length > 0 && (
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
@@ -389,7 +369,7 @@ function ViewInvoices(props) {
                         />
                     )}
 
-                    {invoices.length === 0 && (
+                    {(!invoices || invoices.records.length === 0) && (
                         <NoRecords
                             message="There are no invoices yet."
                             image="assets/images/empty-invoices.svg"

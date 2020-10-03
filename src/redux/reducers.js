@@ -106,7 +106,7 @@ function subscriptionReducer(state = null, action) {
     }
 }
 
-function invoicesReducer(state = [], action) {
+function invoicesReducer(state = null, action) {
     switch (action.type) {
         case ActionTypes.FETCH_INVOICES_COMPLETE: {
             return action.payload;

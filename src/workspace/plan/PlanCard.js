@@ -45,8 +45,7 @@ const fields = [
         identifier: "createdAt",
         title: "Created At",
         size: 6,
-        render: (props) =>
-            toDateString(new Date(props.createdAt.substring(0, 10))),
+        render: (props) => toDateString(props.createdAt),
     },
     {
         identifier: "billingCyclePeriod",

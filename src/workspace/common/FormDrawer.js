@@ -117,6 +117,11 @@ function toRequest(groups, values) {
                     break;
                 }
 
+                case "country": {
+                    result[field.identifier] = values[field.identifier].code;
+                    break;
+                }
+
                 default: {
                     result[field.identifier] = values[field.identifier];
                     break;
