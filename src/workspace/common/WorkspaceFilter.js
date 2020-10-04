@@ -46,8 +46,6 @@ export function extractFilterState(fields) {
 }
 
 export function toURLParams(fields, values) {
-    console.log(values);
-
     const result = {};
     fields.forEach((field) => {
         if (field.type === "time_range") {
@@ -64,7 +62,6 @@ export function toURLParams(fields, values) {
             result[field.identifier] = values[field.identifier];
         }
     });
-    console.log(result);
     return result;
 }
 

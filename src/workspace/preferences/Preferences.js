@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -9,6 +9,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import WorkspaceToolbar from "../../workspace/common/WorkspaceToolbar";
 import PreferenceForms from "./PreferenceForms";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import * as actions from "../../redux/actions";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -386,13 +389,20 @@ const securityForm = [
     },
 ];
 
-export default function Preferences() {
+function Preferences(props) {
+    const { user, fetchUserComplete } = props;
     const classes = useStyles();
     const [tabIndex, setValue] = React.useState(0);
+
+    console.log(user);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        fetchUserComplete(user);
+    }, [fetchUserComplete, user]);
 
     return (
         <div>
@@ -430,3 +440,18 @@ export default function Preferences() {
         </div>
     );
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.user,
+    };
+}
+
+const mapDispatchToProps = {
+    fetchUserComplete: actions.fetchUserComplete,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withRouter(Preferences));
