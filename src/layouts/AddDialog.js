@@ -13,6 +13,7 @@ import {
     newInvoice,
     newTransaction,
     newPlan,
+    newAPIKey,
 } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +92,12 @@ const groups = [
                 icon: "local_offer",
                 action: "newPlan",
             },
+            {
+                id: "api-key",
+                title: "API Key",
+                icon: "code",
+                action: "newAPIKey",
+            },
         ],
     },
 ];
@@ -163,6 +170,7 @@ const mapDispatchToProps = {
     newInvoice,
     newTransaction,
     newPlan,
+    newAPIKey,
 };
 
 export default connect(null, mapDispatchToProps)(AddDialog);

@@ -24,6 +24,13 @@ function handleError(dispatch, error, message) {
     dispatch(action);
 }
 
+export function newAPIKey() {
+    return {
+        type: ActionTypes.NEW_API_KEY,
+        payload: null,
+    };
+}
+
 /* ACCOUNT
  *  1. newAccount()
  *  2. createAccount()
@@ -207,6 +214,7 @@ export function fetchSubscriptions(params) {
             const subscriptions = await client.getSubscriptions(params);
             dispatch(fetchSubscriptionsComplete(subscriptions));
         } catch (error) {
+
             handleError(dispatch, error, "Failed to fetch subscriptions");
         }
     };

@@ -19,6 +19,8 @@ import TransactionsIcon from "@material-ui/icons/MonetizationOn";
 import SubscriptionsIcon from "@material-ui/icons/Autorenew";
 import IvoicesIcon from "@material-ui/icons/Receipt";
 import PlansIcon from "@material-ui/icons/LocalOffer";
+import APIKeysIcon from "@material-ui/icons/Code";
+import WebhooksIcon from "@material-ui/icons/CallReceived";
 
 const drawerWidth = 240;
 
@@ -91,6 +93,23 @@ const navigationGroups = [
                 title: "Analytics",
                 icon: <AnalyticsIcon />,
                 link: "/analytics",
+            },
+        ],
+    },
+    {
+        id: "developers",
+        items: [
+            {
+                id: "api-keys",
+                title: "API Keys",
+                icon: <APIKeysIcon />,
+                link: "/api-keys",
+            },
+            {
+                id: "webhooks",
+                title: "Webhooks",
+                icon: <WebhooksIcon />,
+                link: "/webhooks",
             },
         ],
     },

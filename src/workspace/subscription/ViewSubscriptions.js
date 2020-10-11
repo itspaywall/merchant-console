@@ -31,18 +31,21 @@ const headers = [
         numeric: false,
         disablePadding: false,
         label: "Name",
+        clickable: true,
     },
     {
         identifier: "plan",
         numeric: false,
         disablePadding: false,
         label: "Plan",
+        clickable: true,
     },
     {
         identifier: "quantity",
         numeric: false,
         disablePadding: false,
         label: "Quantity",
+        clickable: true,
     },
     {
         identifier: "status",
@@ -55,6 +58,7 @@ const headers = [
         numeric: false,
         disablePadding: false,
         label: "Created",
+        clickable: true,
     },
     /*{
         identifier: "nextInvoice",
@@ -454,6 +458,7 @@ function ViewSubscriptions(props) {
                         />
                     )}
                 </Grid>
+                
                 {openFilter && (
                     <Grid item={true} lg={2}>
                         <WorkspaceFilter
