@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { grey } from "@material-ui/core/colors";
+import { toDateString } from "../../utils";
 
 const useStyles = makeStyles({
     table: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
         backgroundColor: grey[200],
     },
     dateCell: {
-        width: 225,
+        width: 300,
     },
 });
 
@@ -35,7 +36,7 @@ export default function InvoiceCardTable(props) {
             <Table className={classes.table} size="small">
                 <TableHead className={classes.head}>
                     <TableRow>
-                        <TableCell>Date</TableCell>
+                        <TableCell>Period</TableCell>
                         <TableCell>Description</TableCell>
                         <TableCell align="right">Quantity</TableCell>
                         <TableCell align="right">Price</TableCell>
@@ -46,7 +47,9 @@ export default function InvoiceCardTable(props) {
                     {rows.map((row) => (
                         <TableRow>
                             <TableCell className={classes.dateCell}>
-                                {row.startDate + "—" + row.endDate}
+                                {toDateString(row.startedAt) +
+                                    "—" +
+                                    toDateString(row.endedAt)}
                             </TableCell>
                             <TableCell>{row.description}</TableCell>
                             <TableCell align="right">{row.quantity}</TableCell>
