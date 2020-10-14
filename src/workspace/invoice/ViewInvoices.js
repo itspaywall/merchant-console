@@ -10,6 +10,7 @@ import WorkspaceFilter from "../common/WorkspaceFilter";
 import NoRecords from "../common/NoRecords";
 import { toURLParams, toFilterState } from "../common/WorkspaceFilter";
 import * as actions from "../../redux/actions";
+import { toDateString } from "../../utils";
 
 import ListIcon from "@material-ui/icons/ViewList";
 import FilterIcon from "@material-ui/icons/FilterList";
@@ -24,42 +25,42 @@ const useStyles = makeStyles((theme) => ({
 
 const headers = [
     {
-        identifier: "invoiceNumber",
+        id: "invoiceNumber",
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: "Invoice Number",
         clickable: true,
     },
     {
-        identifier: "name",
+        id: "name",
         numeric: false,
         disablePadding: false,
         label: "Name",
         clickable: true,
     },
     {
-        identifier: "company",
+        id: "createdAt",
         numeric: false,
         disablePadding: false,
-        label: "Company",
+        label: "Created On",
         clickable: true,
     },
     {
-        identifier: "postedOn",
+        id: "dueAt",
         numeric: false,
         disablePadding: false,
-        label: "Posted On",
+        label: "Due On",
         clickable: true,
     },
     {
-        identifier: "status",
+        id: "status",
         numeric: false,
         disablePadding: false,
         label: "Status",
         clickable: true,
     },
     {
-        identifier: "total",
+        id: "total",
         numeric: false,
         disablePadding: false,
         label: "Total",
@@ -254,12 +255,39 @@ const statusNames = {
     closed: "Closed",
 };
 
+const DEFAULT_ROWS_PER_PAGE = 20;
+
 /* [TODO]
  * 1. Filter logic
  */
 function ViewInvoices(props) {
     const { invoices, fetchInvoices, history, location } = props;
     const params = queryString.parse(location.search);
+    const classes = useStyles();
+    const [selected, setSelected] = useState([]);
+    const [openFilter, setOpenFilter] = useState(
+        Object.keys(params).length > 0
+    );
+    const [compact, setCompact] = useState(false);
+    const [page, setPage] = useState(parseInt(params.page, 10) || 0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        params.limit || DEFAULT_ROWS_PER_PAGE
+    );
+    const defaultFilterValues = toFilterState(filterFields, params);
+    const [filterValues, setFilterValues] = useState(defaultFilterValues);
+
+    const generateURL = (values, page, rowsPerPage) => {
+        const flatValues = toURLParams(filterFields, values);
+        const params = new URLSearchParams(flatValues);
+        params.append("page", page);
+        params.append("limit", rowsPerPage);
+
+        history.push("/invoices?" + params.toString());
+    };
+
+    if (!("page" in params) || !("limit" in params)) {
+        generateURL(filterValues, page, rowsPerPage);
+    }
 
     if ("start_date" in params) {
         params["start_date"] = new Date(Number(params["start_date"]));
@@ -267,17 +295,6 @@ function ViewInvoices(props) {
     if ("end_date" in params) {
         params["end_date"] = new Date(Number(params["end_date"]));
     }
-
-    const classes = useStyles();
-    const [selected, setSelected] = useState([]);
-    const [openFilter, setOpenFilter] = useState(
-        Object.keys(params).length > 0
-    );
-    const [compact, setCompact] = useState(false);
-
-    // TODO: Should we cache this?
-    const defaultFilterValues = toFilterState(filterFields, params);
-    const [filterValues, setFilterValues] = useState(defaultFilterValues);
 
     const handleAction = (type) => {
         if (type === "filter") {
@@ -287,37 +304,55 @@ function ViewInvoices(props) {
         }
     };
 
-    const generateURL = (values) => {
-        if (values) {
-            const flatValues = toURLParams(filterFields, values);
-            const params = new URLSearchParams(flatValues);
-
-            history.push("/invoices?" + params.toString());
-        } else {
-            history.push("/invoices");
-        }
-    };
-
     const onClick = (invoice) => {
-        history.push("/invoices/" + invoice.identifier);
+        history.push("/invoices/" + invoice.id);
     };
 
-    // TODO: Create a deep copy without serializing !
+    // TODO: Create a deep copy without serializing!
     const onFilterValueChange = (field, value) => {
         const newValues = Object.assign({}, filterValues);
         newValues[field] = value;
         setFilterValues(newValues);
-        generateURL(newValues);
+
+        generateURL(newValues, page, rowsPerPage);
     };
 
     const onFilterClear = () => {
         const defaultValues = toFilterState(filterFields, {});
         setFilterValues(defaultValues);
-        generateURL(null);
+
+        generateURL(defaultValues, page, rowsPerPage);
+    };
+
+    const descendingComparator = (invoiceA, invoiceB, orderBy) => {
+        const keys = {
+            invoiceNumber: "invoiceNumber",
+            createdAt: "createdAt",
+            dueAt: "dueAt",
+            status: "status",
+            total: "total",
+        };
+        const key = keys[orderBy];
+        let valueA = invoiceA[key];
+        let valueB = invoiceB[key];
+
+        if (typeof valueA === "string") {
+            valueA = valueA.toLowerCase();
+        } else if (valueA instanceof Date) {
+            valueA = valueA.getTime();
+        }
+
+        if (typeof valueB === "string") {
+            valueB = valueB.toLowerCase();
+        } else if (valueB instanceof Date) {
+            valueB = valueB.getTime();
+        }
+
+        return valueB < valueA ? -1 : valueB > valueA ? 1 : 0;
     };
 
     const renderCellValue = (row, rowIndex, column, columnIndex) => {
-        switch (column.identifier) {
+        switch (column.id) {
             case "invoiceNumber": {
                 return row.invoiceNumber;
             }
@@ -326,12 +361,12 @@ function ViewInvoices(props) {
                 return row.account.firstName + " " + row.account.lastName;
             }
 
-            case "company": {
-                return row.account.companyName;
+            case "createdAt": {
+                return toDateString(row.createdAt);
             }
 
-            case "postedOn": {
-                return row.postedOn;
+            case "dueAt": {
+                return toDateString(row.dueAt);
             }
 
             case "status": {
@@ -348,10 +383,23 @@ function ViewInvoices(props) {
         }
     };
 
+    const onChangePage = (newPage) => {
+        setPage(newPage);
+        generateURL(filterValues, newPage, rowsPerPage);
+    };
+
+    const onChangeRowsPerPage = (newRowsPerPage) => {
+        setPage(0);
+        setRowsPerPage(newRowsPerPage);
+        generateURL(filterValues, 0, newRowsPerPage);
+    };
+
     useEffect(() => {
         const flatValues = toURLParams(filterFields, filterValues);
+        flatValues.page = page;
+        flatValues.limit = rowsPerPage;
         fetchInvoices(flatValues);
-    }, [fetchInvoices, filterValues]);
+    }, [fetchInvoices, filterValues, page, rowsPerPage]);
 
     return (
         <div>
@@ -367,11 +415,17 @@ function ViewInvoices(props) {
                         <WorkspaceTable
                             headers={headers}
                             onSelected={setSelected}
-                            rows={invoices}
                             selected={selected}
                             compact={compact}
                             onClick={onClick}
+                            rows={invoices.records}
                             renderCellValue={renderCellValue}
+                            totalRows={invoices.totalRecords}
+                            page={page}
+                            rowsPerPage={rowsPerPage}
+                            onChangePage={onChangePage}
+                            onChangeRowsPerPage={onChangeRowsPerPage}
+                            descendingComparator={descendingComparator}
                         />
                     )}
 

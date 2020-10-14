@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import InvoiceCardTable from "./InvoiceCardTable";
+import { toDateString } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -94,13 +95,13 @@ const fields = [
         identifier: "invoiceDate",
         title: "Invoice Date",
         size: 12,
-        render: (props) => props.invoice.postedOn,
+        render: (props) => toDateString(props.invoice.createdAt),
     },
     {
         identifier: "dueDate",
         title: "Due Date",
         size: 12,
-        render: (props) => props.invoice.dueOn,
+        render: (props) => toDateString(props.invoice.dueAt),
     },
 ];
 
@@ -117,12 +118,12 @@ const paymentFields = [
         size: 12,
         render: (props) => props.invoice.total + " INR",
     },
-    {
+    /*{
         identifier: "paid",
         title: "Paid",
         size: 12,
         render: (props) => props.invoice.paid + " INR",
-    },
+    },*/
 ];
 
 function InvoiceCard(props) {
@@ -187,13 +188,13 @@ function InvoiceCard(props) {
                         </div>
                     </div>
                     <div className={classes.rightHeader}>
-                        <Typography
+                        {/*<Typography
                             variant="subtitle1"
                             color="textSecondary"
                             className={classes.invoice}
                         >
                             Invoice
-                        </Typography>
+                        </Typography>*/}
                         <Grid container={true} spacing={0}>
                             {fields.map((field) => (
                                 <React.Fragment>
@@ -264,34 +265,38 @@ function InvoiceCard(props) {
                             color="textPrimary"
                             className={classes.paymentValue}
                         >
-                            {props.invoice.amountDue} INR
+                            {props.invoice.total} INR
                         </Typography>
                     </Grid>
                 </Grid>
-                <div className={classes.notes}>
-                    <Typography
-                        variant="subtitle1"
-                        color="textSecondary"
-                        className={classes.notesTitle}
-                    >
-                        Notes
-                    </Typography>
-                    <Typography className={classes.notesText}>
-                        {invoice.notes}
-                    </Typography>
-                </div>
-                <div className={classes.terms}>
-                    <Typography
-                        variant="subtitle1"
-                        color="textSecondary"
-                        className={classes.invoice}
-                    >
-                        Terms and Conditions
-                    </Typography>
-                    <Typography className={classes.termsText}>
-                        {invoice.termsAndConditions}
-                    </Typography>
-                </div>
+                {invoice.notes && (
+                    <div className={classes.notes}>
+                        <Typography
+                            variant="subtitle1"
+                            color="textSecondary"
+                            className={classes.notesTitle}
+                        >
+                            Notes
+                        </Typography>
+                        <Typography className={classes.notesText}>
+                            {invoice.notes}
+                        </Typography>
+                    </div>
+                )}
+                {invoice.termsAndConditions && (
+                    <div className={classes.terms}>
+                        <Typography
+                            variant="subtitle1"
+                            color="textSecondary"
+                            className={classes.invoice}
+                        >
+                            Terms and Conditions
+                        </Typography>
+                        <Typography className={classes.termsText}>
+                            {invoice.termsAndConditions}
+                        </Typography>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

@@ -301,6 +301,7 @@ function ViewPlans(props) {
             }
         }
     };
+
     const onChangePage = (newPage) => {
         setPage(newPage);
         generateURL(filterValues, newPage, rowsPerPage);

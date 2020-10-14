@@ -6,11 +6,17 @@ import InvoiceFormDrawer from "./InvoiceFormDrawer";
 
 function EditInvoice(props) {
     const { invoice, saveInvoice } = props;
+    const handleSave = (values) => {
+        saveInvoice({
+            ...invoice,
+            ...values,
+        });
+    };
     return (
         <InvoiceFormDrawer
             title="Edit Invoice"
             showMore={true}
-            onSave={saveInvoice}
+            onSave={handleSave}
             invoice={invoice}
             open={true}
         />

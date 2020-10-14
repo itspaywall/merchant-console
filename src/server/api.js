@@ -37,16 +37,16 @@ function initializeSubscription(subscription) {
 }
 
 function initializeInvoice(invoice) {
-    const { closedAt, dueAt, updatedAt, createdAt, subscriptions } = invoice;
-    invoice.closedAt = new Date(closedAt);
+    const { closedAt, dueAt, updatedAt, createdAt, items } = invoice;
+    invoice.closedAt = closedAt ? new Date(closedAt) : null;
     invoice.dueAt = new Date(dueAt);
     invoice.updatedAt = new Date(updatedAt);
     invoice.createdAt = new Date(createdAt);
 
-    for (let i = 0; i < subscriptions.length; i++) {
-        const subscription = subscriptions[i];
-        subscription.startedAt = new Date(subscription.startedAt);
-        subscription.endedAt = new Date(subscription.endedAt);
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        item.startedAt = new Date(item.startedAt);
+        item.endedAt = new Date(item.endedAt);
     }
 
     return invoice;
